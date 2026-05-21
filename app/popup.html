@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Safechat — Get Help Now</title>
+<meta name="description" content="Find crisis support near you. Free, confidential helplines available 24/7.">
+<meta name="theme-color" content="#0a0b10">
+<link rel="manifest" href="manifest.json">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0b10;
+    color: rgba(255,255,255,0.85);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    text-align: center;
+    padding: 40px 20px 20px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+
+  .location-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+  .location-bar .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(100,220,160,0.7);
+    flex-shrink: 0;
+  }
+  .location-bar .dot.offline { background: rgba(255,180,100,0.7); }
+  .location-bar select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    outline: none;
+  }
+  .location-bar select option { background: #1a1b24; }
+
+  .emergency-bar {
+    text-align: center;
+    padding: 14px 20px;
+    margin: 0 16px 12px;
+    background: rgba(255,80,80,0.08);
+    border: 1px solid rgba(255,80,80,0.15);
+    border-radius: 12px;
+  }
+  .emergency-bar a {
+    color: rgba(255,120,120,0.9);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .emergency-bar .label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .resources {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 100px;
+  }
+
+  .resource-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px;
+    transition: border-color 200ms;
+  }
+  .resource-card:hover { border-color: rgba(255,255,255,0.14); }
+
+  .resource-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 4px;
+  }
+  .resource-meta {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .resource-meta .specialty {
+    background: rgba(180,160,220,0.1);
+    border: 1px solid rgba(180,160,220,0.15);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+    color: rgba(180,160,220,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 150ms;
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .action-call {
+    background: rgba(100,220,160,0.12);
+    border: 1px solid rgba(100,220,160,0.2);
+    color: rgba(100,220,160,0.9);
+  }
+  .action-call:hover { background: rgba(100,220,160,0.2); }
+
+  .action-text {
+    background: rgba(100,180,255,0.1);
+    border: 1px solid rgba(100,180,255,0.18);
+    color: rgba(100,180,255,0.85);
+  }
+  .action-text:hover { background: rgba(100,180,255,0.18); }
+
+  .action-chat {
+    background: rgba(180,160,220,0.1);
+    border: 1px solid rgba(180,160,220,0.18);
+    color: rgba(180,160,220,0.85);
+  }
+  .action-chat:hover { background: rgba(180,160,220,0.18); }
+
+  .action-whatsapp {
+    background: rgba(37,211,102,0.1);
+    border: 1px solid rgba(37,211,102,0.2);
+    color: rgba(37,211,102,0.9);
+  }
+  .action-whatsapp:hover { background: rgba(37,211,102,0.18); }
+
+  .action-email {
+    background: rgba(255,180,100,0.1);
+    border: 1px solid rgba(255,180,100,0.18);
+    color: rgba(255,180,100,0.85);
+  }
+  .action-email:hover { background: rgba(255,180,100,0.18); }
+
+  .fallback-section {
+    text-align: center;
+    padding: 24px 20px;
+    margin: 0 16px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+  }
+  .fallback-section p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .fallback-section a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: rgba(180,160,220,0.12);
+    border: 1px solid rgba(180,160,220,0.2);
+    border-radius: 10px;
+    color: rgba(180,160,220,0.9);
+    text-decoration: none;
+    font-size: 14px;
+    margin: 4px;
+  }
+
+  .offline-notice {
+    display: none;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: rgba(255,180,100,0.7);
+    background: rgba(255,180,100,0.06);
+    border-bottom: 1px solid rgba(255,180,100,0.1);
+  }
+  .offline-notice.active { display: block; }
+
+  .update-info {
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .powered-by {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+    padding: 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    background: linear-gradient(to top, #0a0b10 60%, transparent);
+    pointer-events: none;
+  }
+  .powered-by a { color: rgba(180,160,220,0.4); text-decoration: none; pointer-events: auto; }
+</style>
+</head>
+<body>
+
+<div class="offline-notice" id="offlineNotice">
+  You're offline — showing cached resources from your last visit.
+</div>
+
+<div class="header">
+  <h1>You don't have to carry this alone.</h1>
+  <p>Someone is available right now. Tap to call, text, or chat.</p>
+</div>
+
+<div class="location-bar">
+  <span class="dot" id="statusDot"></span>
+  <span id="locationLabel">Detecting location...</span>
+  <select id="countrySelect" aria-label="Change country"></select>
+</div>
+
+<div class="emergency-bar" id="emergencyBar" style="display:none">
+  <div class="label">Emergency services</div>
+  <a href="#" id="emergencyLink">—</a>
+</div>
+
+<div class="resources" id="resourcesList"></div>
+
+<div class="fallback-section" id="fallbackSection" style="display:none">
+  <p>Can't find your country? These directories cover 175+ countries worldwide.</p>
+  <a href="https://findahelpline.com" target="_blank" rel="noopener">Find a Helpline</a>
+  <a href="https://www.befrienders.org" target="_blank" rel="noopener">Befrienders Worldwide</a>
+</div>
+
+<div class="update-info" id="updateInfo"></div>
+
+<div class="powered-by">
+  <a href="https://github.com/rob-e-graham/safechat">safechat</a> — open source crisis safety
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  SAFECHAT POPUP — works online and offline
+// ═══════════════════════════════════════════════════════════
+
+const STORAGE_KEY = 'safechat_resources';
+const COUNTRY_KEY = 'safechat_country';
+const UPDATED_KEY = 'safechat_updated';
+
+// CDN URL for latest crisis resources (jsDelivr serves GitHub raw files with CDN caching)
+const RESOURCES_CDN = 'https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json';
+const RESOURCES_FALLBACK = 'https://raw.githubusercontent.com/rob-e-graham/safechat/main/data/crisis-resources.json';
+
+// ── Inline fallback data (works even if CDN and cache both fail) ──
+const EMERGENCY_FALLBACK = {
+  AU:"000",AT:"112",BE:"112",BR:"192",CA:"911",CN:"120",DK:"112",FI:"112",
+  FR:"15",DE:"112",GH:"999",HK:"999",IN:"112",IE:"112",IL:"101",IT:"118",
+  JP:"119",KE:"999",MX:"911",NL:"112",NZ:"111",NG:"199",NO:"113",PK:"115",
+  PH:"911",PT:"112",RU:"112",ZA:"10177",KR:"119",ES:"112",SE:"112",CH:"144",
+  GB:"999",US:"911"
+};
+
+let crisisData = null;
+let currentCountry = null;
+let isOnline = navigator.onLine;
+
+// ── Register Service Worker for offline support ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+// ── Geo-detection (same cascade as SDK) ──
+function detectCountry() {
+  try {
+    const locale = navigator.language || '';
+    const parts = locale.split('-');
+    if (parts.length >= 2) {
+      const code = parts[parts.length - 1].toUpperCase();
+      if (code.length === 2) return code;
+    }
+  } catch (_) {}
+
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    const tzMap = {
+      "Australia":"AU","Europe/Vienna":"AT","Europe/Brussels":"BE","America/Sao_Paulo":"BR",
+      "America/Toronto":"CA","America/Vancouver":"CA","Asia/Shanghai":"CN","Europe/Copenhagen":"DK",
+      "Europe/Helsinki":"FI","Europe/Paris":"FR","Europe/Berlin":"DE","Africa/Accra":"GH",
+      "Asia/Hong_Kong":"HK","Asia/Kolkata":"IN","Asia/Calcutta":"IN","Europe/Dublin":"IE",
+      "Asia/Jerusalem":"IL","Europe/Rome":"IT","Asia/Tokyo":"JP","Africa/Nairobi":"KE",
+      "America/Mexico_City":"MX","Europe/Amsterdam":"NL","Pacific/Auckland":"NZ","Africa/Lagos":"NG",
+      "Europe/Oslo":"NO","Asia/Karachi":"PK","Asia/Manila":"PH","Europe/Lisbon":"PT",
+      "Europe/Moscow":"RU","Africa/Johannesburg":"ZA","Asia/Seoul":"KR","Europe/Madrid":"ES",
+      "Europe/Stockholm":"SE","Europe/Zurich":"CH","Europe/London":"GB",
+      "America/New_York":"US","America/Chicago":"US","America/Los_Angeles":"US",
+      "America/Denver":"US","America/Phoenix":"US"
+    };
+    for (const [prefix, code] of Object.entries(tzMap)) {
+      if (tz.startsWith(prefix) || tz.includes(prefix)) return code;
+    }
+  } catch (_) {}
+
+  // Last known country from storage
+  const cached = localStorage.getItem(COUNTRY_KEY);
+  if (cached) return cached;
+
+  return null;
+}
+
+// ── Load resources: CDN → cache → inline fallback ──
+async function loadResources() {
+  // Try CDN first (gets latest from GitHub)
+  if (navigator.onLine) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(RESOURCES_CDN, { signal: controller.signal });
+      clearTimeout(timeout);
+      if (res.ok) {
+        const data = await res.json();
+        crisisData = data;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(UPDATED_KEY, new Date().toISOString());
+        return;
+      }
+    } catch (_) {}
+
+    // Try GitHub raw fallback
+    try {
+      const res = await fetch(RESOURCES_FALLBACK);
+      if (res.ok) {
+        const data = await res.json();
+        crisisData = data;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(UPDATED_KEY, new Date().toISOString());
+        return;
+      }
+    } catch (_) {}
+  }
+
+  // Use cached version
+  try {
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) {
+      crisisData = JSON.parse(cached);
+      return;
+    }
+  } catch (_) {}
+
+  // Absolute fallback — null means we use inline emergency numbers only
+  crisisData = null;
+}
+
+// ── Format phone number for tel: link ──
+function telHref(phone) {
+  return 'tel:' + phone.replace(/[\s()-]/g, '');
+}
+
+// ── Format phone number for WhatsApp ──
+function whatsappHref(phone) {
+  const clean = phone.replace(/[\s()\-+]/g, '');
+  return 'https://wa.me/' + clean;
+}
+
+// ── Build action buttons for a resource ──
+function buildActions(resource) {
+  const actions = [];
+  const phones = Array.isArray(resource.phone) ? resource.phone : resource.phone ? [resource.phone] : [];
+
+  if (phones.length > 0) {
+    actions.push(`<a href="${telHref(phones[0])}" class="action-btn action-call">📞 Call ${phones[0]}</a>`);
+    // WhatsApp link for phone resources (many helplines now support WhatsApp)
+    if (resource.whatsapp || (phones[0].startsWith('+') || phones[0].length > 8)) {
+      actions.push(`<a href="${whatsappHref(phones[0])}" class="action-btn action-whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>`);
+    }
+  }
+
+  if (resource.sms) {
+    // Parse SMS instructions like "Text HOME to 741741" → sms:741741?body=HOME
+    const smsMatch = resource.sms.match(/(?:text|sms)\s+(\S+)\s+to\s+(\S+)/i);
+    if (smsMatch) {
+      actions.push(`<a href="sms:${smsMatch[2]}?body=${encodeURIComponent(smsMatch[1])}" class="action-btn action-text">💬 Text ${smsMatch[1]} to ${smsMatch[2]}</a>`);
+    } else {
+      actions.push(`<a href="sms:${resource.sms.replace(/\D/g, '')}" class="action-btn action-text">💬 ${resource.sms}</a>`);
+    }
+  }
+
+  if (resource.chat_url) {
+    actions.push(`<a href="${resource.chat_url}" class="action-btn action-chat" target="_blank" rel="noopener">🔗 Online Chat</a>`);
+  }
+
+  if (resource.email) {
+    actions.push(`<a href="mailto:${resource.email}?subject=${encodeURIComponent('I need someone to talk to')}" class="action-btn action-email">📧 Email</a>`);
+  }
+
+  if (resource.url) {
+    actions.push(`<a href="${resource.url}" class="action-btn action-chat" target="_blank" rel="noopener">🔗 Visit Website</a>`);
+  }
+
+  return actions.join('');
+}
+
+// ── Render resources for a country ──
+function renderCountry(countryCode) {
+  currentCountry = countryCode;
+  if (countryCode) localStorage.setItem(COUNTRY_KEY, countryCode);
+
+  const list = document.getElementById('resourcesList');
+  const emergencyBar = document.getElementById('emergencyBar');
+  const emergencyLink = document.getElementById('emergencyLink');
+  const fallbackSection = document.getElementById('fallbackSection');
+  const locationLabel = document.getElementById('locationLabel');
+
+  let country = null;
+  let resources = [];
+  let emergency = null;
+
+  if (crisisData && crisisData.countries && crisisData.countries[countryCode]) {
+    country = crisisData.countries[countryCode];
+    resources = country.resources || [];
+    emergency = country.emergency;
+  } else {
+    emergency = EMERGENCY_FALLBACK[countryCode] || null;
+  }
+
+  // Location label
+  if (country) {
+    locationLabel.textContent = country.name || countryCode;
+  } else if (countryCode) {
+    locationLabel.textContent = countryCode + ' (limited data)';
+  } else {
+    locationLabel.textContent = 'Location not detected';
+  }
+
+  // Emergency bar
+  if (emergency) {
+    emergencyBar.style.display = '';
+    emergencyLink.textContent = emergency;
+    emergencyLink.href = telHref(emergency);
+  } else {
+    emergencyBar.style.display = 'none';
+  }
+
+  // Resource cards
+  if (resources.length > 0) {
+    list.innerHTML = resources.map(r => {
+      const specialties = (r.specialties || [])
+        .filter(s => !['general','crisis','suicide'].includes(s))
+        .map(s => `<span class="specialty">${s}</span>`)
+        .join('');
+      const hours = r.hours ? `<span>${r.hours}</span>` : '';
+      const langs = (r.languages || []).length > 1 ? `<span>${r.languages.join(', ')}</span>` : '';
+
+      return `<div class="resource-card">
+        <div class="resource-name">${r.name}</div>
+        <div class="resource-meta">${hours}${langs}${specialties}</div>
+        <div class="actions">${buildActions(r)}</div>
+      </div>`;
+    }).join('');
+    fallbackSection.style.display = 'none';
+  } else {
+    list.innerHTML = '';
+    fallbackSection.style.display = '';
+  }
+
+  // Always show fallback at the bottom if we have resources too
+  if (resources.length > 0) {
+    fallbackSection.style.display = '';
+    fallbackSection.querySelector('p').textContent = 'More countries and helplines available:';
+  }
+
+  // Update info
+  const lastUpdated = localStorage.getItem(UPDATED_KEY);
+  const updateEl = document.getElementById('updateInfo');
+  if (lastUpdated) {
+    const d = new Date(lastUpdated);
+    updateEl.textContent = `Resources last updated: ${d.toLocaleDateString()} — data auto-refreshes when online`;
+  } else {
+    updateEl.textContent = 'Using built-in fallback data';
+  }
+}
+
+// ── Build country selector dropdown ──
+function buildCountrySelect() {
+  const select = document.getElementById('countrySelect');
+  const countries = crisisData?.countries ? Object.entries(crisisData.countries) : [];
+
+  // Add all known countries + emergency fallback countries
+  const allCodes = new Set([
+    ...countries.map(([code]) => code),
+    ...Object.keys(EMERGENCY_FALLBACK)
+  ]);
+
+  const options = [];
+  for (const code of allCodes) {
+    const name = crisisData?.countries?.[code]?.name || code;
+    options.push({ code, name });
+  }
+  options.sort((a, b) => a.name.localeCompare(b.name));
+
+  select.innerHTML = options.map(o =>
+    `<option value="${o.code}" ${o.code === currentCountry ? 'selected' : ''}>${o.name}</option>`
+  ).join('');
+
+  select.addEventListener('change', () => renderCountry(select.value));
+}
+
+// ── Online/offline handling ──
+function updateOnlineStatus() {
+  isOnline = navigator.onLine;
+  const notice = document.getElementById('offlineNotice');
+  const dot = document.getElementById('statusDot');
+  notice.classList.toggle('active', !isOnline);
+  dot.classList.toggle('offline', !isOnline);
+
+  if (isOnline && !crisisData) {
+    loadResources().then(() => {
+      buildCountrySelect();
+      renderCountry(currentCountry);
+    });
+  }
+}
+
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+
+// ── Initialize ──
+async function init() {
+  const country = detectCountry();
+  currentCountry = country;
+
+  await loadResources();
+  buildCountrySelect();
+  renderCountry(country || 'US');
+  updateOnlineStatus();
+}
+
+init();
+</script>
+</body>
+</html>

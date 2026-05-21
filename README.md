@@ -18,13 +18,27 @@ AI apps that have personal conversations with users — journaling, coaching, ta
 2. **Finds the user's country** without GPS — using browser locale, timezone, CDN headers, or IP fallback
 3. **Returns verified local helplines** — phone, text, chat, with hours and specialties
 4. **Generates AI prompt overrides** that tell your LLM to stop its normal behavior and respond with crisis resources
-5. **Provides ready-made UI** — modal and banner components you can drop into any web app
+5. **Provides ready-made UI** — modal, banner, and full-page popup components
+6. **Works offline** — Service Worker caches resources, falls back to last-known location
+
+---
+
+## Integration options
+
+| Method | Best for | Setup |
+|--------|----------|-------|
+| **npm package** | Node.js / full-stack apps | `npm install safechat` |
+| **Browser script** | Any website, no build step | Single `<script>` tag |
+| **Embed script** | Drop-in auto-monitoring | Single `<script>` tag |
+| **Express middleware** | Server-side API protection | One-line middleware |
+| **Popup embed** | Standalone crisis help page | `<iframe>` or link |
+| **Hosted popup** | Link from any app | Direct URL |
 
 ---
 
 ## Quick start
 
-### npm
+### 1. npm (Node.js)
 
 ```bash
 npm install safechat
@@ -37,24 +51,22 @@ const safechat = require('safechat');
 const safety = safechat.check(userMessage);
 
 if (safety.level === 'high') {
-  // User expressed suicidal thoughts or self-harm intent
   // Override your AI's system prompt with crisis response
   systemPrompt = safechat.promptOverride('high', safety.country)
                  + '\n\n' + systemPrompt;
 }
 
 if (safety.level === 'low') {
-  // User expressed hopelessness, worthlessness, feeling trapped
-  // AI will respond normally but end with a safety footer
+  // AI responds normally but ends with a safety footer
   systemPrompt = safechat.promptOverride('low', safety.country)
                  + '\n\n' + systemPrompt;
 }
 ```
 
-### Browser (no build step)
+### 2. Browser (no build step)
 
 ```html
-<script src="https://unpkg.com/safechat/src/browser.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js"></script>
 <script>
   // Auto-monitor all text inputs for crisis signals
   Safechat.protect();
@@ -67,7 +79,20 @@ if (safety.level === 'low') {
 </script>
 ```
 
-### Express middleware
+### 3. Embed script (one line, auto-monitors everything)
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js"
+        data-safechat-monitor="true"></script>
+```
+
+This loads Safechat and automatically monitors all text inputs on the page. When a user types a crisis signal and presses Enter, the crisis modal appears with local helplines.
+
+Options:
+- `data-safechat-monitor="true"` — auto-monitor all text inputs
+- `data-safechat-popup="true"` — prefetch the offline popup for instant access
+
+### 4. Express middleware
 
 ```javascript
 const safechat = require('safechat');
@@ -86,6 +111,33 @@ app.post('/api/chat', (req, res) => {
 });
 ```
 
+### 5. Popup embed (iframe)
+
+Embed the crisis help popup directly in your app:
+
+```html
+<iframe src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/app/popup.html"
+        style="width:100%;max-width:480px;height:700px;border:none;border-radius:16px;">
+</iframe>
+```
+
+Or link to the hosted version:
+
+```html
+<a href="https://rob-e-graham.github.io/safechat/app/popup.html"
+   target="_blank">Find crisis help near you</a>
+```
+
+### 6. Hosted popup (GitHub Pages)
+
+The popup is hosted at:
+
+```
+https://rob-e-graham.github.io/safechat/app/popup.html
+```
+
+Works offline after first visit. Installable as a PWA. No server required.
+
 ---
 
 ## How geo-detection works
@@ -103,6 +155,43 @@ Safechat finds the user's country **without location permissions** using a casca
 | 7 | **Global fallback** | findahelpline.com (175+ countries) | None |
 
 If none of the above produce a country, the user still gets connected to global crisis directories.
+
+---
+
+## Auto-updating crisis data
+
+Crisis helpline numbers change. Safechat handles this at multiple layers:
+
+### CDN delivery (automatic)
+
+The browser bundle and popup load crisis data from jsDelivr CDN, which mirrors the GitHub repo. When the JSON is updated on GitHub, the CDN updates automatically (typically within 24 hours, or instantly with versioned URLs).
+
+### Automated verification (GitHub Actions)
+
+A [GitHub Actions workflow](.github/workflows/verify-resources.yml) runs twice monthly:
+
+1. Validates all phone number formats
+2. Checks chat/website URLs are reachable
+3. Flags missing required fields (name, type, hours)
+4. Opens a GitHub Issue for any failures, tagged `verification` + `help wanted`
+5. Updates the `last_verified` timestamp in the data file
+
+### Offline fallback chain
+
+The popup and browser bundle use a 4-layer fallback:
+
+```
+1. jsDelivr CDN (latest data) ← primary
+2. GitHub raw (same data, different CDN) ← if jsDelivr is down
+3. localStorage cache (last successful load) ← if offline
+4. Inline emergency numbers (built into the JS) ← if never loaded
+```
+
+The user always gets *something*, even on first visit with no internet.
+
+### Community updates
+
+Anyone can submit a PR to update `data/crisis-resources.json`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the verification checklist and entry format.
 
 ---
 
