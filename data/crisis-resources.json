@@ -1,0 +1,898 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "last_updated": "2026-05-18",
+    "maintainers": ["community"],
+    "license": "CC0-1.0",
+    "source_notes": "Community maintained. Please verify before use. Submit corrections via pull request.",
+    "contributing": "See CONTRIBUTING.md",
+    "findahelpline_api": "https://findahelpline.com — covers 175+ countries, consider this a fallback"
+  },
+  "countries": {
+    "AU": {
+      "name": "Australia",
+      "emergency": "000",
+      "resources": [
+        {
+          "name": "Lifeline Australia",
+          "type": ["phone", "chat"],
+          "phone": "13 11 14",
+          "chat_url": "https://www.lifeline.org.au/crisis-chat/",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["general", "suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Beyond Blue",
+          "type": ["phone", "chat"],
+          "phone": "1300 22 4636",
+          "chat_url": "https://www.beyondblue.org.au/get-support/talk-to-a-counsellor",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["anxiety", "depression", "suicide"],
+          "verified": true
+        },
+        {
+          "name": "Kids Helpline",
+          "type": ["phone", "chat"],
+          "phone": "1800 55 1800",
+          "chat_url": "https://kidshelpline.com.au/get-help/webchat-counselling",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["youth"],
+          "age_range": "5-25",
+          "verified": true
+        },
+        {
+          "name": "13YARN (Indigenous Crisis Support)",
+          "type": ["phone"],
+          "phone": "13 92 76",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["indigenous", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "AT": {
+      "name": "Austria",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Telefonseelsorge",
+          "type": ["phone", "chat", "email"],
+          "phone": "142",
+          "chat_url": "https://onlineberatung-telefonseelsorge.at",
+          "hours": "24/7",
+          "languages": ["de"],
+          "specialties": ["general", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Rat auf Draht (Youth)",
+          "type": ["phone"],
+          "phone": "147",
+          "hours": "24/7",
+          "languages": ["de"],
+          "specialties": ["youth"],
+          "verified": true
+        }
+      ]
+    },
+    "BE": {
+      "name": "Belgium",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Centrum ter Preventie van Zelfdoding",
+          "type": ["phone", "chat"],
+          "phone": "0800 32 123",
+          "chat_url": "https://www.zelfmoord1813.be",
+          "hours": "24/7",
+          "languages": ["nl"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "SOS Suicide",
+          "type": ["phone"],
+          "phone": "0800 32 123",
+          "hours": "24/7",
+          "languages": ["fr"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "BR": {
+      "name": "Brazil",
+      "emergency": "192",
+      "resources": [
+        {
+          "name": "CVV (Centro de Valorização da Vida)",
+          "type": ["phone", "chat", "email"],
+          "phone": "188",
+          "chat_url": "https://www.cvv.org.br/chat/",
+          "email": "atendimento@cvv.org.br",
+          "hours": "24/7",
+          "languages": ["pt"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "CA": {
+      "name": "Canada",
+      "emergency": "911",
+      "resources": [
+        {
+          "name": "Crisis Services Canada",
+          "type": ["phone", "text"],
+          "phone": "1-833-456-4566",
+          "sms": "45645",
+          "hours": "24/7",
+          "languages": ["en", "fr"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Kids Help Phone",
+          "type": ["phone", "text", "chat"],
+          "phone": "1-800-668-6868",
+          "sms": "686868",
+          "chat_url": "https://kidshelpphone.ca",
+          "hours": "24/7",
+          "languages": ["en", "fr"],
+          "specialties": ["youth"],
+          "age_range": "under-20",
+          "verified": true
+        },
+        {
+          "name": "Hope for Wellness Helpline (Indigenous)",
+          "type": ["phone", "chat"],
+          "phone": "1-855-242-3310",
+          "hours": "24/7",
+          "languages": ["en", "fr", "cree", "ojibway", "inuktitut"],
+          "specialties": ["indigenous", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "CN": {
+      "name": "China",
+      "emergency": "120",
+      "resources": [
+        {
+          "name": "Beijing Suicide Research and Prevention Centre",
+          "type": ["phone"],
+          "phone": "800-810-1117",
+          "hours": "24/7",
+          "languages": ["zh"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Shanghai Mental Health Centre",
+          "type": ["phone"],
+          "phone": "021-12320-5",
+          "hours": "24/7",
+          "languages": ["zh"],
+          "specialties": ["mental_health"],
+          "verified": true
+        }
+      ]
+    },
+    "DK": {
+      "name": "Denmark",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Livslinien",
+          "type": ["phone", "chat"],
+          "phone": "70 201 201",
+          "chat_url": "https://www.livslinien.dk",
+          "hours": "11:00-05:00 daily",
+          "languages": ["da"],
+          "specialties": ["suicide"],
+          "verified": true
+        },
+        {
+          "name": "Børns Vilkår (Children's Helpline)",
+          "type": ["phone"],
+          "phone": "116 111",
+          "hours": "daily 11:00-23:00",
+          "languages": ["da"],
+          "specialties": ["youth"],
+          "verified": true
+        }
+      ]
+    },
+    "FI": {
+      "name": "Finland",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Suomen Mielenterveysseura",
+          "type": ["phone", "chat"],
+          "phone": "09 2525 0111",
+          "chat_url": "https://mieli.fi/tukea-ja-apua/kriisikeskukset/",
+          "hours": "24/7",
+          "languages": ["fi", "sv"],
+          "specialties": ["mental_health", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "FR": {
+      "name": "France",
+      "emergency": "15",
+      "resources": [
+        {
+          "name": "SOS Amitié",
+          "type": ["phone", "chat"],
+          "phone": "09 72 39 40 50",
+          "chat_url": "https://www.sos-amitie.com",
+          "hours": "24/7",
+          "languages": ["fr"],
+          "specialties": ["general", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Numéro National Prévention Suicide",
+          "type": ["phone"],
+          "phone": "3114",
+          "hours": "24/7",
+          "languages": ["fr"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "DE": {
+      "name": "Germany",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Telefonseelsorge",
+          "type": ["phone", "chat", "email"],
+          "phone": ["0800 111 0 111", "0800 111 0 222"],
+          "chat_url": "https://online.telefonseelsorge.de",
+          "hours": "24/7",
+          "languages": ["de"],
+          "specialties": ["general", "crisis"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "Nummer gegen Kummer (Youth)",
+          "type": ["phone"],
+          "phone": "0800 111 0 550",
+          "hours": "Mon-Sat 14:00-20:00",
+          "languages": ["de"],
+          "specialties": ["youth"],
+          "verified": true
+        }
+      ]
+    },
+    "GH": {
+      "name": "Ghana",
+      "emergency": "999",
+      "resources": [
+        {
+          "name": "Mental Health Authority Ghana",
+          "type": ["phone"],
+          "phone": "+233 800 111 222",
+          "hours": "Business hours",
+          "languages": ["en"],
+          "specialties": ["mental_health"],
+          "verified": false,
+          "needs_verification": true
+        }
+      ]
+    },
+    "HK": {
+      "name": "Hong Kong",
+      "emergency": "999",
+      "resources": [
+        {
+          "name": "Samaritans of Hong Kong",
+          "type": ["phone"],
+          "phone": "2389 2222",
+          "hours": "24/7",
+          "languages": ["en", "zh"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Suicide Prevention Services",
+          "type": ["phone"],
+          "phone": "2382 0000",
+          "hours": "24/7",
+          "languages": ["zh"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "IN": {
+      "name": "India",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "iCall",
+          "type": ["phone", "email"],
+          "phone": "9152987821",
+          "email": "icall@tiss.edu",
+          "hours": "Mon-Sat 08:00-22:00",
+          "languages": ["en", "hi"],
+          "specialties": ["general", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Vandrevala Foundation",
+          "type": ["phone", "chat"],
+          "phone": "1860-2662-345",
+          "hours": "24/7",
+          "languages": ["en", "hi"],
+          "specialties": ["mental_health", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Samaritans Mumbai",
+          "type": ["phone", "email"],
+          "phone": "+91 8422984528",
+          "email": "talk2samaritans@gmail.com",
+          "hours": "15:00-21:00 daily",
+          "languages": ["en"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "IE": {
+      "name": "Ireland",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Samaritans Ireland",
+          "type": ["phone", "email"],
+          "phone": "116 123",
+          "email": "jo@samaritans.ie",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis", "suicide"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "Pieta House",
+          "type": ["phone", "text"],
+          "phone": "1800 247 247",
+          "sms": "Text HELP to 51444",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["suicide", "self_harm"],
+          "verified": true
+        }
+      ]
+    },
+    "IL": {
+      "name": "Israel",
+      "emergency": "101",
+      "resources": [
+        {
+          "name": "ERAN (Emotional First Aid)",
+          "type": ["phone", "chat"],
+          "phone": "1201",
+          "chat_url": "https://www.eran.org.il",
+          "hours": "24/7",
+          "languages": ["he", "ar", "en", "ru", "fr"],
+          "specialties": ["crisis", "suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "IT": {
+      "name": "Italy",
+      "emergency": "118",
+      "resources": [
+        {
+          "name": "Telefono Amico",
+          "type": ["phone"],
+          "phone": "02 2327 2327",
+          "hours": "16:00-22:00 daily",
+          "languages": ["it"],
+          "specialties": ["general"],
+          "verified": true
+        },
+        {
+          "name": "Telefono Azzurro (Youth)",
+          "type": ["phone", "chat"],
+          "phone": "19696",
+          "hours": "24/7",
+          "languages": ["it"],
+          "specialties": ["youth"],
+          "verified": true
+        }
+      ]
+    },
+    "JP": {
+      "name": "Japan",
+      "emergency": "119",
+      "resources": [
+        {
+          "name": "Inochi no Denwa",
+          "type": ["phone"],
+          "phone": "0120-783-556",
+          "hours": "24/7",
+          "languages": ["ja"],
+          "specialties": ["crisis", "suicide"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "Kokoro no Health Consultation",
+          "type": ["phone"],
+          "phone": "0570-064-556",
+          "hours": "24/7",
+          "languages": ["ja"],
+          "specialties": ["mental_health"],
+          "verified": true
+        }
+      ]
+    },
+    "KE": {
+      "name": "Kenya",
+      "emergency": "999",
+      "resources": [
+        {
+          "name": "Befrienders Kenya",
+          "type": ["phone", "email"],
+          "phone": "0800 723 253",
+          "email": "befrienderskenya@gmail.com",
+          "hours": "24/7",
+          "languages": ["en", "sw"],
+          "specialties": ["crisis", "suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "MX": {
+      "name": "Mexico",
+      "emergency": "911",
+      "resources": [
+        {
+          "name": "SAPTEL",
+          "type": ["phone"],
+          "phone": "55 5259-8121",
+          "hours": "24/7",
+          "languages": ["es"],
+          "specialties": ["crisis", "mental_health"],
+          "verified": true
+        },
+        {
+          "name": "CONASAMA Crisis Line",
+          "type": ["phone"],
+          "phone": "800-290-0024",
+          "hours": "24/7",
+          "languages": ["es"],
+          "specialties": ["mental_health"],
+          "verified": true
+        }
+      ]
+    },
+    "NL": {
+      "name": "Netherlands",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Stichting 113 Zelfmoordpreventie",
+          "type": ["phone", "chat"],
+          "phone": "0900 0113",
+          "chat_url": "https://www.113.nl",
+          "hours": "24/7",
+          "languages": ["nl"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "NZ": {
+      "name": "New Zealand",
+      "emergency": "111",
+      "resources": [
+        {
+          "name": "Lifeline Aotearoa",
+          "type": ["phone", "text"],
+          "phone": "0800 543 354",
+          "sms": "4357",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis", "suicide"],
+          "verified": true
+        },
+        {
+          "name": "Youthline",
+          "type": ["phone", "text", "chat"],
+          "phone": "0800 376 633",
+          "sms": "234",
+          "chat_url": "https://www.youthline.co.nz",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["youth"],
+          "verified": true
+        }
+      ]
+    },
+    "NG": {
+      "name": "Nigeria",
+      "emergency": "199",
+      "resources": [
+        {
+          "name": "Suicide Research and Prevention Initiative (SURPIN)",
+          "type": ["phone"],
+          "phone": "08111909909",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "NO": {
+      "name": "Norway",
+      "emergency": "113",
+      "resources": [
+        {
+          "name": "Mental Helse",
+          "type": ["phone", "chat"],
+          "phone": "116 123",
+          "chat_url": "https://mentalhelse.no",
+          "hours": "24/7",
+          "languages": ["no"],
+          "specialties": ["mental_health", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Kirkens SOS",
+          "type": ["phone", "chat"],
+          "phone": "22 40 00 40",
+          "chat_url": "https://www.kirkens-sos.no",
+          "hours": "24/7",
+          "languages": ["no"],
+          "specialties": ["general", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "PK": {
+      "name": "Pakistan",
+      "emergency": "115",
+      "resources": [
+        {
+          "name": "Umang Pakistan",
+          "type": ["phone"],
+          "phone": "0317-4288665",
+          "hours": "Mon-Sat 16:00-20:00",
+          "languages": ["en", "ur"],
+          "specialties": ["mental_health", "crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "PH": {
+      "name": "Philippines",
+      "emergency": "911",
+      "resources": [
+        {
+          "name": "Hopeline Philippines",
+          "type": ["phone", "text"],
+          "phone": "2919",
+          "hours": "24/7",
+          "languages": ["en", "fil"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "In Touch Crisis Line",
+          "type": ["phone"],
+          "phone": "02 893-7603",
+          "hours": "Mon-Fri 10:00-20:00",
+          "languages": ["en"],
+          "specialties": ["crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "PT": {
+      "name": "Portugal",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "SOS Voz Amiga",
+          "type": ["phone"],
+          "phone": ["213 544 545", "912 802 669", "963 524 660"],
+          "hours": "15:30-00:30 daily",
+          "languages": ["pt"],
+          "specialties": ["crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "RU": {
+      "name": "Russia",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Moscow Psychological Help",
+          "type": ["phone"],
+          "phone": "8-800-2000-122",
+          "hours": "24/7",
+          "languages": ["ru"],
+          "specialties": ["mental_health", "crisis"],
+          "free": true,
+          "verified": true
+        }
+      ]
+    },
+    "ZA": {
+      "name": "South Africa",
+      "emergency": "10177",
+      "resources": [
+        {
+          "name": "SADAG (South African Depression and Anxiety Group)",
+          "type": ["phone"],
+          "phone": "0800 456 789",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["suicide", "crisis"],
+          "verified": true
+        },
+        {
+          "name": "Lifeline South Africa",
+          "type": ["phone"],
+          "phone": "0861 322 322",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "KR": {
+      "name": "South Korea",
+      "emergency": "119",
+      "resources": [
+        {
+          "name": "Korea Suicide Prevention Hotline",
+          "type": ["phone"],
+          "phone": "1393",
+          "hours": "24/7",
+          "languages": ["ko"],
+          "specialties": ["suicide"],
+          "verified": true
+        },
+        {
+          "name": "Mental Health Welfare Centre",
+          "type": ["phone"],
+          "phone": "1577-0199",
+          "hours": "24/7",
+          "languages": ["ko"],
+          "specialties": ["mental_health"],
+          "verified": true
+        }
+      ]
+    },
+    "ES": {
+      "name": "Spain",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Teléfono de la Esperanza",
+          "type": ["phone"],
+          "phone": "717 003 717",
+          "hours": "24/7",
+          "languages": ["es"],
+          "specialties": ["crisis", "suicide"],
+          "verified": true
+        },
+        {
+          "name": "024 Línea de atención a conducta suicida",
+          "type": ["phone"],
+          "phone": "024",
+          "hours": "24/7",
+          "languages": ["es"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "SE": {
+      "name": "Sweden",
+      "emergency": "112",
+      "resources": [
+        {
+          "name": "Mind Självmordslinjen",
+          "type": ["phone", "chat"],
+          "phone": "90101",
+          "chat_url": "https://mind.se/hitta-hjalp/sjalvmordslinjen/",
+          "hours": "24/7",
+          "languages": ["sv"],
+          "specialties": ["suicide"],
+          "verified": true
+        }
+      ]
+    },
+    "CH": {
+      "name": "Switzerland",
+      "emergency": "144",
+      "resources": [
+        {
+          "name": "Die Dargebotene Hand",
+          "type": ["phone", "chat"],
+          "phone": "143",
+          "chat_url": "https://www.143.ch",
+          "hours": "24/7",
+          "languages": ["de", "fr", "it"],
+          "specialties": ["crisis"],
+          "verified": true
+        }
+      ]
+    },
+    "GB": {
+      "name": "United Kingdom",
+      "emergency": "999",
+      "resources": [
+        {
+          "name": "Samaritans",
+          "type": ["phone", "email"],
+          "phone": "116 123",
+          "email": "jo@samaritans.org",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis", "suicide"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "Crisis Text Line UK",
+          "type": ["text"],
+          "sms": "Text HELLO to 85258",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "PAPYRUS (Youth Suicide Prevention)",
+          "type": ["phone", "text", "email"],
+          "phone": "0800 068 4141",
+          "sms": "Text PAP to 85258",
+          "email": "pat@papyrus-uk.org",
+          "hours": "Mon-Fri 10:00-22:00, Weekends 14:00-22:00",
+          "languages": ["en"],
+          "specialties": ["youth", "suicide"],
+          "verified": true
+        },
+        {
+          "name": "Mind Infoline",
+          "type": ["phone", "email"],
+          "phone": "0300 123 3393",
+          "email": "info@mind.org.uk",
+          "hours": "Mon-Fri 09:00-18:00",
+          "languages": ["en"],
+          "specialties": ["mental_health"],
+          "verified": true
+        },
+        {
+          "name": "Shout (Text Crisis Support)",
+          "type": ["text"],
+          "sms": "Text SHOUT to 85258",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis"],
+          "free": true,
+          "verified": true
+        }
+      ]
+    },
+    "US": {
+      "name": "United States",
+      "emergency": "911",
+      "resources": [
+        {
+          "name": "988 Suicide & Crisis Lifeline",
+          "type": ["phone", "text", "chat"],
+          "phone": "988",
+          "sms": "988",
+          "chat_url": "https://988lifeline.org/chat/",
+          "hours": "24/7",
+          "languages": ["en", "es"],
+          "specialties": ["suicide", "crisis"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "Crisis Text Line",
+          "type": ["text"],
+          "sms": "Text HOME to 741741",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["crisis"],
+          "free": true,
+          "verified": true
+        },
+        {
+          "name": "The Trevor Project (LGBTQ+ Youth)",
+          "type": ["phone", "text", "chat"],
+          "phone": "1-866-488-7386",
+          "sms": "Text START to 678-678",
+          "chat_url": "https://www.thetrevorproject.org/get-help/",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["lgbtq", "youth"],
+          "verified": true
+        },
+        {
+          "name": "Veterans Crisis Line",
+          "type": ["phone", "text", "chat"],
+          "phone": "988 then press 1",
+          "sms": "Text 838255",
+          "chat_url": "https://www.veteranscrisisline.net/get-help-now/chat/",
+          "hours": "24/7",
+          "languages": ["en"],
+          "specialties": ["veterans", "military"],
+          "verified": true
+        },
+        {
+          "name": "Trans Lifeline",
+          "type": ["phone"],
+          "phone": "877-565-8860",
+          "hours": "varies",
+          "languages": ["en"],
+          "specialties": ["lgbtq", "transgender"],
+          "verified": true
+        },
+        {
+          "name": "NAMI Helpline",
+          "type": ["phone", "text", "chat"],
+          "phone": "1-800-950-6264",
+          "sms": "Text NAMI to 741741",
+          "chat_url": "https://www.nami.org/help",
+          "hours": "Mon-Fri 10:00-22:00 ET",
+          "languages": ["en", "es"],
+          "specialties": ["mental_health"],
+          "verified": true
+        }
+      ]
+    }
+  },
+  "fallback": {
+    "note": "If country not listed, use these global resources",
+    "resources": [
+      {
+        "name": "Find A Helpline (Global Directory)",
+        "type": ["web"],
+        "url": "https://findahelpline.com",
+        "coverage": "175+ countries",
+        "verified": true
+      },
+      {
+        "name": "Befrienders Worldwide",
+        "type": ["web"],
+        "url": "https://www.befrienders.org",
+        "coverage": "50+ countries",
+        "verified": true
+      },
+      {
+        "name": "IASP Crisis Centre Directory",
+        "type": ["web"],
+        "url": "https://www.iasp.info/resources/Crisis_Centres/",
+        "coverage": "Global",
+        "verified": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "safechat",
+  "version": "1.0.0",
+  "description": "Crisis safety for AI apps. Detects distress, finds local help. Zero location permissions.",
+  "main": "src/index.js",
+  "browser": "src/browser.js",
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./src/index.mjs",
+      "browser": "./src/browser.js"
+    },
+    "./data": "./data/crisis-resources.json"
+  },
+  "scripts": {
+    "test": "node test/run.js",
+    "demo": "npx serve app -l 3333"
+  },
+  "keywords": [
+    "crisis",
+    "safety",
+    "mental-health",
+    "suicide-prevention",
+    "ai-safety",
+    "chatbot-safety",
+    "helpline",
+    "crisis-resources",
+    "content-safety",
+    "wellbeing"
+  ],
+  "author": "Rob Graham",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robgraham/safechat"
+  },
+  "homepage": "https://github.com/robgraham/safechat#readme",
+  "bugs": {
+    "url": "https://github.com/robgraham/safechat/issues"
+  },
+  "files": [
+    "src/",
+    "data/"
+  ]
+}
