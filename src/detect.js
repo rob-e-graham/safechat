@@ -74,6 +74,8 @@ const FP_GUARDS = {
   overdose_idiom: /\boverdose[ds]? on (coffee|caffeine|sugar|chocolate|candy|pizza|food|information|data)\b/i,
   // HTML class names / prevention resources containing "suicid"
   html_class: /class\s*=\s*['"][^'"]*suicid/i,
+  // "the game is over for me" — not crisis
+  over_idiom: /\b(game|match|race|show|round|season|movie|film|series|tournament|semester|chapter)\b.*\bover for me\b/i,
 };
 
 function isFalsePositive(text, matchedPattern) {
@@ -84,6 +86,7 @@ function isFalsePositive(text, matchedPattern) {
   if (/suicid/.test(matchedPattern) && (FP_GUARDS.suicide_idiom.test(text) || FP_GUARDS.suicide_idiom2.test(text) || FP_GUARDS.html_class.test(text))) return true;
   if (/jump/.test(matchedPattern) && FP_GUARDS.jump_idiom.test(text)) return true;
   if (/overdose/.test(matchedPattern) && FP_GUARDS.overdose_idiom.test(text)) return true;
+  if (/over for me/.test(matchedPattern) && FP_GUARDS.over_idiom.test(text)) return true;
   return false;
 }
 
@@ -125,12 +128,20 @@ const HIGH_SIGNALS = [
   /\b(easiest|best|fastest|quickest|simplest) way to die\b/i,
   /\bhow (to|do i|can i|would i) (kill|end|off) (myself|my life|it all)\b/i,
 
+  // Finality about self
+  /\b(this is )?the end (for|of) me\b/i,
+  /\bwant (it all|everything|this) to (end|be over|stop)\b/i,
+  /\bwant the pain to (stop|end|go away)\b/i,
+  /\b(it|this) will (all )?be over soon\b/i,
+
   // Indirect warning signs — behavioural
   /\b(writing|wrote|write) (my )?(goodbye|suicide) (letters?|notes?)\b/i,
   /\bgave away (all |everything|my stuff|my things|my possessions)\b/i,
   /\bwon'?t be (here|around|alive) (much )?longer\b/i,
+  /\bwon'?t (be a problem|have to worry about me|bother anyone)\b/i,
   /\bdon'?t care if i (wake|die|live)\b/i,
   /\bi have a plan\b.*\b(tonight|today|tomorrow|this week|the night)\b/i,
+  /\b(do|doing) something (stupid|drastic|rash|permanent)\b/i,
 ];
 
 const LOW_SIGNALS = [
@@ -144,7 +155,7 @@ const LOW_SIGNALS = [
   /\bnot worth (living|it)\b/i,
   /\bgive up on (life|everything|myself)\b/i,
   /\bwhat('?s| is) the point\b/i,
-  /\bi (just )?can'?t (do this|take it|anymore)\b/i,
+  /\bi (just )?can'?t (do this|take (it|this)( anymore)?|anymore)\b/i,
   /\bno way out\b/i,
   /\btoo much to bear\b/i,
   /\bno one (cares|understands|would miss)\b/i,
@@ -158,6 +169,9 @@ const LOW_SIGNALS = [
   // Passive / indirect low-risk signals
   /\bdon'?t see a future\b/i,
   /\b(easier|better) if i (wasn'?t|weren'?t|am not) here\b/i,
+  /\b(it'?s |it is )?over for me\b/i,
+  /\bdone with (life|everything|all of this|living)\b/i,
+  /\bno hope (for me|left|anymore)\b/i,
 ];
 
 function detect(text) {

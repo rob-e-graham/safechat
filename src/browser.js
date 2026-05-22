@@ -41,6 +41,7 @@
   var FP_JUMP = /\bjump(ing)? (off|from) (the topic|that|this topic|there|here|one thing)\b/i;
   var FP_OD = /\boverdose[ds]? on (coffee|caffeine|sugar|chocolate|candy|pizza|food|information|data)\b/i;
   var FP_HTML = /class\s*=\s*['"][^'"]*suicid/i;
+  var FP_OVER = /\b(game|match|race|show|round|season|movie|film|series|tournament|semester|chapter)\b.*\bover for me\b/i;
 
   function isFP(t, matched) {
     if (/cut/.test(matched) && FP_CUT.test(t)) return true;
@@ -49,6 +50,7 @@
     if (/suicid/.test(matched) && (FP_SUICIDE.test(t) || FP_HTML.test(t))) return true;
     if (/jump/.test(matched) && FP_JUMP.test(t)) return true;
     if (/overdose/.test(matched) && FP_OD.test(t)) return true;
+    if (/over for me/.test(matched) && FP_OVER.test(t)) return true;
     return false;
   }
 
@@ -73,11 +75,17 @@
     /\boff myself\b/i, /\btop myself\b/i, /\bbetter off dead\b/i,
     /\b(easiest|best|fastest|quickest|simplest) way to die\b/i,
     /\bhow (to|do i|can i|would i) (kill|end|off) (myself|my life|it all)\b/i,
+    /\b(this is )?the end (for|of) me\b/i,
+    /\bwant (it all|everything|this) to (end|be over|stop)\b/i,
+    /\bwant the pain to (stop|end|go away)\b/i,
+    /\b(it|this) will (all )?be over soon\b/i,
     /\b(writing|wrote|write) (my )?(goodbye|suicide) (letters?|notes?)\b/i,
     /\bgave away (all |everything|my stuff|my things|my possessions)\b/i,
     /\bwon'?t be (here|around|alive) (much )?longer\b/i,
+    /\bwon'?t (be a problem|have to worry about me|bother anyone)\b/i,
     /\bdon'?t care if i (wake|die|live)\b/i,
     /\bi have a plan\b.*\b(tonight|today|tomorrow|this week|the night)\b/i,
+    /\b(do|doing) something (stupid|drastic|rash|permanent)\b/i,
   ];
 
   var LOW_SIGNALS = [
@@ -85,7 +93,7 @@
     /\beveryone (would be |is )?better off (without me)?\b/i, /\bworthless\b/i,
     /\b(completely |utterly |totally )?hopeless\b/i, /\bending it (all)?\b/i,
     /\bnot worth (living|it)\b/i, /\bgive up on (life|everything|myself)\b/i,
-    /\bwhat('?s| is) the point\b/i, /\bi (just )?can'?t (do this|take it|anymore)\b/i,
+    /\bwhat('?s| is) the point\b/i, /\bi (just )?can'?t (do this|take (it|this)( anymore)?|anymore)\b/i,
     /\bno way out\b/i, /\btoo much to bear\b/i, /\bno one (cares|understands|would miss)\b/i,
     /\bi('?m| am) (a |so |such a )?burden\b/i, /\blife is(n'?t| not) worth\b/i,
     /\bwish i (wasn'?t|weren'?t) (here|alive|born)\b/i,
@@ -93,6 +101,9 @@
     /\btrapped\b.*\b(no|can'?t|won'?t)\b/i, /\bnothing (left|matters|to live for)\b/i,
     /\bdon'?t see a future\b/i,
     /\b(easier|better) if i (wasn'?t|weren'?t|am not) here\b/i,
+    /\b(it'?s |it is )?over for me\b/i,
+    /\bdone with (life|everything|all of this|living)\b/i,
+    /\bno hope (for me|left|anymore)\b/i,
   ];
 
   function detect(text) {

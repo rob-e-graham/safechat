@@ -253,6 +253,34 @@ assert("passive: wish I weren't alive",
 assert("passive: better off dead",
   detect("I'd be better off dead").level !== "none");
 
+section("False Negatives — Natural crisis phrases");
+assert("natural: this is the end for me",
+  detect("In feeling like this is the end for me!").level === "high");
+assert("natural: I want it all to end",
+  detect("I want it all to end").level === "high");
+assert("natural: I want this to be over",
+  detect("I want this to be over").level === "high");
+assert("natural: want the pain to stop",
+  detect("I just want the pain to stop").level === "high");
+assert("natural: this will all be over soon",
+  detect("this will all be over soon").level === "high");
+assert("natural: do something stupid",
+  detect("I'm going to do something stupid").level === "high");
+assert("natural: won't be a problem",
+  detect("you won't have to worry about me anymore").level === "high");
+assert("natural: it is over for me",
+  detect("it is over for me").level === "low");
+assert("natural: I am done with life",
+  detect("I am done with life").level === "low");
+assert("natural: can't take this anymore",
+  detect("I cant take this anymore").level === "low");
+assert("natural: no hope for me",
+  detect("there is no hope for me").level === "low");
+assert("FP: game is over for me",
+  detect("the game is over for me").level === "none");
+assert("FP: the movie is over for me",
+  detect("that movie is over for me now").level === "none");
+
 
 // ── 2. FALSE POSITIVE TESTS ──
 // Triggering on safe messages creates alarm fatigue, which can be deadly too.
