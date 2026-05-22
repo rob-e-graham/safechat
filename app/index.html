@@ -143,17 +143,13 @@
   .btn-primary:hover { background: rgba(180,160,220,0.3); text-decoration: none; }
   .btn-secondary { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.08); }
   .btn-secondary:hover { background: rgba(255,255,255,0.1); text-decoration: none; }
-  .btn-donate { background: rgba(100,180,140,0.15); color: #7cc9a0; border: 1px solid rgba(100,180,140,0.2); font-weight: 500; }
-  .btn-donate:hover { background: rgba(100,180,140,0.25); text-decoration: none; }
   .btn-paypal { background: rgba(0,112,186,0.15); color: #5ba8d4; border: 1px solid rgba(0,112,186,0.2); }
   .btn-paypal:hover { background: rgba(0,112,186,0.25); text-decoration: none; }
-  .support-note,
   .legal-disclaimer {
     font-size: 12px;
     color: rgba(255,255,255,0.42);
     line-height: 1.6;
   }
-  .support-note { margin-top: 12px; }
   .legal-disclaimer {
     margin-top: 14px;
     padding: 14px;
@@ -162,6 +158,29 @@
     border-radius: 12px;
   }
   .legal-disclaimer strong { color: rgba(255,255,255,0.72); }
+  .legal-framework {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+  }
+  .legal-item {
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+  }
+  .legal-item strong {
+    display: block;
+    color: rgba(255,255,255,0.78);
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+  .legal-item span {
+    display: block;
+    color: rgba(255,255,255,0.42);
+    font-size: 12px;
+    line-height: 1.5;
+  }
 
   /* Sections */
   .section {
@@ -380,10 +399,8 @@
   <div class="actions">
     <a href="./popup.html" class="btn btn-primary">Get Help Now</a>
     <a href="https://github.com/rob-e-graham/safechat" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
-    <a href="https://www.paypal.com/paypalme/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Support via PayPal</a>
-    <a href="mailto:rob@fineartmedia.tech?subject=SafeChat%20support" class="btn btn-donate">Donation Options</a>
+    <a href="https://www.paypal.com/paypalme/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Support SafeChat</a>
   </div>
-  <p class="support-note">Buy Me a Coffee is currently unavailable. Use PayPal or email for donation options.</p>
 </div>
 
 <hr class="divider">
@@ -563,6 +580,33 @@
 
   <div class="legal-disclaimer">
     <strong>Legal disclaimer:</strong> SafeChat is provided as is and is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services. By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, unlawful use, failure to obtain help, failure to detect crisis content, or other harm arising from installation or use. If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat.
+  </div>
+
+  <div class="legal-framework">
+    <div class="legal-item">
+      <strong>License</strong>
+      <span>Business Source License 1.1, changing to MPL 2.0 on 2029-01-01.</span>
+    </div>
+    <div class="legal-item">
+      <strong>Free Use Grant</strong>
+      <span>Free for personal, research, education, nonprofit, community, public-interest, crisis-support, and small commercial use under the license terms.</span>
+    </div>
+    <div class="legal-item">
+      <strong>Commercial Trigger</strong>
+      <span>Commercial entities over $100,000 USD annual revenue from products substantially incorporating SafeChat need a commercial license.</span>
+    </div>
+    <div class="legal-item">
+      <strong>User Responsibility</strong>
+      <span>Implementers are responsible for installation, testing, supervision, compliance, privacy, safeguarding, and local legal obligations.</span>
+    </div>
+    <div class="legal-item">
+      <strong>No Warranty or Liability</strong>
+      <span>SafeChat is provided as is. The authors, FAMTEC, maintainers, and contributors disclaim liability to the maximum extent permitted by law.</span>
+    </div>
+    <div class="legal-item">
+      <strong>Crisis-Care Limitation</strong>
+      <span>SafeChat is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services.</span>
+    </div>
   </div>
 </div>
 

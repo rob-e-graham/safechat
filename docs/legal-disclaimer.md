@@ -16,7 +16,7 @@ If you do not accept these terms, do not download, install, deploy, integrate, o
 
 ## 2026-05-22 Update Log
 
-- Replaced broken Buy Me a Coffee link with an email fallback because `https://buymeacoffee.com/famtec` currently returns 404.
-- Changed PayPal links to the canonical `https://www.paypal.com/paypalme/specialrequest` URL.
+- Replaced the broken Buy Me a Coffee link because `https://buymeacoffee.com/famtec` currently returns 404.
+- Standardised support links on the canonical `https://www.paypal.com/paypalme/specialrequest` URL.
 - Added the disclaimer to `LICENSE`, `README.md`, and the app download section.
 - Corrected `package.json` license metadata from `MIT` to `SEE LICENSE IN LICENSE` to match the BSL license file.

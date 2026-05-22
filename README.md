@@ -237,8 +237,7 @@ If you do not accept these terms, do not download, install, deploy, integrate, o
 
 ## Support the Project
 
-- [PayPal](https://www.paypal.com/paypalme/specialrequest)
-- Buy Me a Coffee is currently unavailable. For support or donation options, contact [rob@fineartmedia.tech](mailto:rob@fineartmedia.tech).
+- [Support SafeChat](https://www.paypal.com/paypalme/specialrequest)
 
 ---
 
