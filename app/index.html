@@ -181,6 +181,35 @@
     font-size: 12px;
     line-height: 1.5;
   }
+  .acceptance-box {
+    margin: 16px 0;
+    padding: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: rgba(180,160,220,0.08);
+    border: 1px solid rgba(180,160,220,0.18);
+    border-radius: 12px;
+  }
+  .acceptance-box input {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    accent-color: #b4a0dc;
+  }
+  .acceptance-box label {
+    color: rgba(255,255,255,0.68);
+    font-size: 12px;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .btn-disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(0.4);
+  }
 
   /* Sections */
   .section {
@@ -547,37 +576,6 @@
   <h2>Download Pack</h2>
   <p class="section-sub">Everything you need to add crisis safety to your app. Free. No account required.</p>
 
-  <div class="install-banner">
-    <h3>Install as App (PWA)</h3>
-    <p><strong>iPhone/iPad:</strong> Open popup.html in Safari &rarr; tap Share &rarr; "Add to Home Screen"</p>
-    <p><strong>Android:</strong> Open in Chrome &rarr; tap menu &rarr; "Install App" or "Add to Home Screen"</p>
-    <p><strong>Desktop:</strong> Open in Chrome/Edge &rarr; click install icon in address bar</p>
-    <a href="./popup.html" class="btn btn-primary" style="margin-top:12px;">Open Crisis Popup</a>
-  </div>
-
-  <div class="download-grid">
-    <div class="download-card">
-      <h3>Browser Bundle</h3>
-      <p>Single JS file. Drop into any page. Auto-monitors inputs.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js" class="btn btn-secondary" download>Download browser.js</a>
-    </div>
-    <div class="download-card">
-      <h3>Embed Script</h3>
-      <p>One-line script tag. Auto-detects and shows crisis modal.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js" class="btn btn-secondary" download>Download embed.js</a>
-    </div>
-    <div class="download-card">
-      <h3>Crisis Popup (PWA)</h3>
-      <p>Offline-capable popup. Installable. Native device links.</p>
-      <a href="./popup.html" class="btn btn-primary">Open PWA</a>
-    </div>
-    <div class="download-card">
-      <h3>Helpline Database</h3>
-      <p>34 countries, 100+ helplines. JSON format. CC0 public domain.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json" class="btn btn-secondary" download>Download JSON</a>
-    </div>
-  </div>
-
   <div class="legal-disclaimer">
     <strong>Legal disclaimer:</strong> SafeChat is provided as is and is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services. By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, unlawful use, failure to obtain help, failure to detect crisis content, or other harm arising from installation or use. If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat.
   </div>
@@ -606,6 +604,42 @@
     <div class="legal-item">
       <strong>Crisis-Care Limitation</strong>
       <span>SafeChat is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services.</span>
+    </div>
+  </div>
+
+  <div class="acceptance-box">
+    <input type="checkbox" id="legal-acceptance">
+    <label for="legal-acceptance">I have read and accept the SafeChat license, legal disclaimer, limitation of liability, and user responsibility terms. I understand that downloading, installing, deploying, integrating, or using SafeChat is my responsibility.</label>
+  </div>
+
+  <div class="install-banner">
+    <h3>Install as App (PWA)</h3>
+    <p><strong>iPhone/iPad:</strong> Open popup.html in Safari &rarr; tap Share &rarr; "Add to Home Screen"</p>
+    <p><strong>Android:</strong> Open in Chrome &rarr; tap menu &rarr; "Install App" or "Add to Home Screen"</p>
+    <p><strong>Desktop:</strong> Open in Chrome/Edge &rarr; click install icon in address bar</p>
+    <a href="./popup.html" class="btn btn-primary legal-gated" style="margin-top:12px;">Open Crisis Popup</a>
+  </div>
+
+  <div class="download-grid">
+    <div class="download-card">
+      <h3>Browser Bundle</h3>
+      <p>Single JS file. Drop into any page. Auto-monitors inputs.</p>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js" class="btn btn-secondary legal-gated" download>Download browser.js</a>
+    </div>
+    <div class="download-card">
+      <h3>Embed Script</h3>
+      <p>One-line script tag. Auto-detects and shows crisis modal.</p>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js" class="btn btn-secondary legal-gated" download>Download embed.js</a>
+    </div>
+    <div class="download-card">
+      <h3>Crisis Popup (PWA)</h3>
+      <p>Offline-capable popup. Installable. Native device links.</p>
+      <a href="./popup.html" class="btn btn-primary legal-gated">Open PWA</a>
+    </div>
+    <div class="download-card">
+      <h3>Helpline Database</h3>
+      <p>34 countries, 100+ helplines. JSON format. CC0 public domain.</p>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json" class="btn btn-secondary legal-gated" download>Download JSON</a>
     </div>
   </div>
 </div>
@@ -699,6 +733,39 @@
       result.textContent = 'Level: HIGH — crisis signal detected: "' + r.matched + '"';
     }
   });
+
+  var acceptance = document.getElementById('legal-acceptance');
+  var gatedLinks = Array.prototype.slice.call(document.querySelectorAll('.legal-gated'));
+  var acceptanceKey = 'safechat_legal_acceptance_v1';
+
+  function setGatedLinksEnabled(enabled) {
+    gatedLinks.forEach(function(link) {
+      link.classList.toggle('btn-disabled', !enabled);
+      link.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+      link.tabIndex = enabled ? 0 : -1;
+    });
+  }
+
+  if (acceptance) {
+    acceptance.checked = localStorage.getItem(acceptanceKey) === 'accepted';
+    setGatedLinksEnabled(acceptance.checked);
+    acceptance.addEventListener('change', function() {
+      if (acceptance.checked) {
+        localStorage.setItem(acceptanceKey, 'accepted');
+      } else {
+        localStorage.removeItem(acceptanceKey);
+      }
+      setGatedLinksEnabled(acceptance.checked);
+    });
+    gatedLinks.forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        if (!acceptance.checked) {
+          event.preventDefault();
+          acceptance.focus();
+        }
+      });
+    });
+  }
 
   // Register service worker for PWA
   if ('serviceWorker' in navigator) {

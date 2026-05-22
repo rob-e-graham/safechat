@@ -20,3 +20,4 @@ If you do not accept these terms, do not download, install, deploy, integrate, o
 - Standardised support links on the canonical `https://www.paypal.com/paypalme/specialrequest` URL.
 - Added the disclaimer to `LICENSE`, `README.md`, and the app download section.
 - Corrected `package.json` license metadata from `MIT` to `SEE LICENSE IN LICENSE` to match the BSL license file.
+- Added an affirmative acceptance checkbox that gates the app download and implementation links on the website.
