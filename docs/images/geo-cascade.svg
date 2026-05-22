@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="480" fill="url(#bg2)" rx="16"/>
+
+  <!-- Title -->
+  <text x="450" y="42" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">How Safechat Finds Your Country</text>
+  <text x="450" y="65" text-anchor="middle" fill="#888" font-size="13">Zero permissions. No GPS. No tracking. 7-layer cascade.</text>
+
+  <!-- Cascade steps -->
+  <!-- Step 1 -->
+  <rect x="50" y="95" width="800" height="44" rx="10" fill="#1a2540" stroke="#3498db" stroke-width="1"/>
+  <circle cx="80" cy="117" r="14" fill="#3498db"/>
+  <text x="80" y="122" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1</text>
+  <text x="110" y="113" fill="#fff" font-size="13" font-weight="600">Browser Locale</text>
+  <text x="110" y="130" fill="#778" font-size="11">navigator.language → "en-AU" → AU</text>
+  <text x="750" y="122" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="107" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="121" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">INSTANT</text>
+
+  <!-- Step 2 -->
+  <rect x="50" y="147" width="800" height="44" rx="10" fill="#1a2540" stroke="#3498db" stroke-width="1"/>
+  <circle cx="80" cy="169" r="14" fill="#3498db"/>
+  <text x="80" y="174" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2</text>
+  <text x="110" y="165" fill="#fff" font-size="13" font-weight="600">Timezone Mapping</text>
+  <text x="110" y="182" fill="#778" font-size="11">Intl.DateTimeFormat → "Australia/Sydney" → AU (50+ timezone mappings)</text>
+  <text x="750" y="174" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="159" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="173" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">INSTANT</text>
+
+  <!-- Step 3 -->
+  <rect x="50" y="199" width="800" height="44" rx="10" fill="#1a2540" stroke="#2980b9" stroke-width="1"/>
+  <circle cx="80" cy="221" r="14" fill="#2980b9"/>
+  <text x="80" y="226" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3</text>
+  <text x="110" y="217" fill="#fff" font-size="13" font-weight="600">CDN Headers (server-side)</text>
+  <text x="110" y="234" fill="#778" font-size="11">CF-IPCountry · X-Vercel-IP-Country · CloudFront-Viewer-Country</text>
+  <text x="750" y="226" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="211" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="225" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">INSTANT</text>
+
+  <!-- Step 4 -->
+  <rect x="50" y="251" width="800" height="44" rx="10" fill="#1a2540" stroke="#2980b9" stroke-width="1"/>
+  <circle cx="80" cy="273" r="14" fill="#2980b9"/>
+  <text x="80" y="278" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4</text>
+  <text x="110" y="269" fill="#fff" font-size="13" font-weight="600">Accept-Language Header (server-side)</text>
+  <text x="110" y="286" fill="#778" font-size="11">"en-GB,en;q=0.9" → GB</text>
+  <text x="750" y="278" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="263" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="277" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">INSTANT</text>
+
+  <!-- Step 5 -->
+  <rect x="50" y="303" width="800" height="44" rx="10" fill="#1a2040" stroke="#9b59b6" stroke-width="1"/>
+  <circle cx="80" cy="325" r="14" fill="#9b59b6"/>
+  <text x="80" y="330" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">5</text>
+  <text x="110" y="321" fill="#fff" font-size="13" font-weight="600">IP Geolocation (opt-in)</text>
+  <text x="110" y="338" fill="#778" font-size="11">ip-api.com — only if app enables it</text>
+  <text x="750" y="330" text-anchor="end" fill="#f5a623" font-size="12" font-weight="600">Opt-in only</text>
+  <rect x="770" y="315" width="60" height="20" rx="4" fill="#2a2515"/>
+  <text x="800" y="329" text-anchor="middle" fill="#f5a623" font-size="10" font-weight="600">ASYNC</text>
+
+  <!-- Step 6 -->
+  <rect x="50" y="355" width="800" height="44" rx="10" fill="#1a2040" stroke="#555" stroke-width="1"/>
+  <circle cx="80" cy="377" r="14" fill="#555"/>
+  <text x="80" y="382" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">6</text>
+  <text x="110" y="373" fill="#fff" font-size="13" font-weight="600">Manual Override</text>
+  <text x="110" y="390" fill="#778" font-size="11">safechat.check(msg, { country: "AU" }) — developer sets country explicitly</text>
+  <text x="750" y="382" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="367" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="381" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">INSTANT</text>
+
+  <!-- Step 7 -->
+  <rect x="50" y="407" width="800" height="44" rx="10" fill="#2a1520" stroke="#e94560" stroke-width="1"/>
+  <circle cx="80" cy="429" r="14" fill="#e94560"/>
+  <text x="80" y="434" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">7</text>
+  <text x="110" y="425" fill="#fff" font-size="13" font-weight="600">Global Fallback</text>
+  <text x="110" y="442" fill="#778" font-size="11">findahelpline.com (175+ countries) + Befrienders Worldwide — always available</text>
+  <text x="750" y="434" text-anchor="end" fill="#2ecc71" font-size="12" font-weight="600">No permissions</text>
+  <rect x="770" y="419" width="60" height="20" rx="4" fill="#1a3a1a"/>
+  <text x="800" y="433" text-anchor="middle" fill="#2ecc71" font-size="10" font-weight="600">ALWAYS</text>
+
+  <!-- Connecting arrows on left side -->
+  <path d="M 80 131 L 80 141" stroke="#3498db" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <path d="M 80 183 L 80 193" stroke="#3498db" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <path d="M 80 235 L 80 245" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <path d="M 80 287 L 80 297" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <path d="M 80 339 L 80 349" stroke="#9b59b6" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <path d="M 80 391 L 80 401" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <defs><marker id="arr2" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5" fill="#555"/></marker></defs>
+
+  <!-- Footer -->
+  <text x="450" y="472" text-anchor="middle" fill="#555" font-size="11">safechat — open source crisis safety — github.com/rob-e-graham/safechat</text>
+</svg>

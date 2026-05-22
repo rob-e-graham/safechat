@@ -15,20 +15,65 @@
 (function (root) {
   "use strict";
 
-  // ── Detection (same as detect.js) ──
+  // ── Input normalisation ──
 
-  const HIGH_SIGNALS = [
+  function normalise(text) {
+    var t = text.toLowerCase();
+    t = t.replace(/[\s ]+/g, " ").trim();
+    t = t.replace(/[‘’‚‛]/g, "'");
+    t = t.replace(/[“”„‟]/g, '"');
+    t = t.replace(/\bsuicde\b/g,"suicide").replace(/\bsuiside\b/g,"suicide");
+    t = t.replace(/\bsuciide?\b/g,"suicide").replace(/\bsuidice?\b/g,"suicide").replace(/\bsuicd\b/g,"suicide");
+    t = t.replace(/\boverdoze\b/g,"overdose").replace(/\boverdoase\b/g,"overdose");
+    t = t.replace(/\bkil\b/g,"kill");
+    t = t.replace(/\bwanna\b/g,"want to").replace(/\bgonna\b/g,"going to");
+    t = t.replace(/\bwant 2\b/g,"want to").replace(/\b2 die\b/g,"to die");
+    t = t.replace(/\bkms\b/g,"kill myself").replace(/\bkys\b/g,"kill yourself");
+    return t;
+  }
+
+  // ── False-positive guards ──
+
+  var FP_CUT = /\bcut(ting)? my (hair|nails?|finger|losses?|cake|lawn|grass|ties|cord|cards?|teeth)\b/i;
+  var FP_HURT = /\bhurt(ing|s)? my (ankle|back|knee|leg|arm|hand|foot|feet|neck|shoulder|wrist|finger|elbow|head|eye|feelings?|pride)\b/i;
+  var FP_BLEED = /\b(economy|market|company|stock|budget|money)\b.*\bbleed|\bbleed.*\b(economy|market|company|stock|budget|money)\b/i;
+  var FP_SUICIDE = /\bsuicide (squeeze|bunt|pass|mission|door|prevention|awareness|hotline|class)\b|\b(that|this) (joke|movie|show|game|song|set) was suicide\b/i;
+  var FP_JUMP = /\bjump(ing)? (off|from) (the topic|that|this topic|there|here|one thing)\b/i;
+  var FP_OD = /\boverdose[ds]? on (coffee|caffeine|sugar|chocolate|candy|pizza|food|information|data)\b/i;
+  var FP_HTML = /class\s*=\s*['"][^'"]*suicid/i;
+
+  function isFP(t, matched) {
+    if (/cut/.test(matched) && FP_CUT.test(t)) return true;
+    if (/hurt/.test(matched) && FP_HURT.test(t)) return true;
+    if (/bleed/.test(matched) && FP_BLEED.test(t)) return true;
+    if (/suicid/.test(matched) && (FP_SUICIDE.test(t) || FP_HTML.test(t))) return true;
+    if (/jump/.test(matched) && FP_JUMP.test(t)) return true;
+    if (/overdose/.test(matched) && FP_OD.test(t)) return true;
+    return false;
+  }
+
+  // ── Detection (synced with detect.js) ──
+
+  var HIGH_SIGNALS = [
     /\bsuicid/i, /\bkill (my|myself|me)\b/i, /\bend(ing)? (my|this) life\b/i,
     /\btake my (own )?life\b/i, /\bwant to die\b/i,
-    /\bwish (i was|i were|i'm) dead\b/i, /\bdon'?t want to (be here|live|exist)\b/i,
+    /\bwish (i was|i were|i'm) dead\b/i, /\bdon'?t want to (be here|live|exist|be alive)\b/i,
     /\bno reason to live\b/i, /\bself[- ]?harm/i, /\bhurt(ing)? (my|myself)\b/i,
     /\bcut(ting)? (my|myself)\b/i, /\boverdose\b/i, /\bhanging (my|myself)\b/i,
     /\bjump(ing)? (off|from)\b/i, /\bpills?\b.*\b(take|swallow|end)\b/i,
     /\b(end|stop) the pain\b/i, /\bslit(ting)? my\b/i, /\bbleed(ing)? out\b/i,
     /\bshoot(ing)? (my|myself)\b/i, /\bdrown(ing)? (my|myself)\b/i,
+    /\boff myself\b/i, /\btop myself\b/i, /\bbetter off dead\b/i,
+    /\b(easiest|best|fastest|quickest|simplest) way to die\b/i,
+    /\bhow (to|do i|can i|would i) (kill|end|off) (myself|my life|it all)\b/i,
+    /\b(writing|wrote|write) (my )?(goodbye|suicide) (letters?|notes?)\b/i,
+    /\bgave away (all |everything|my stuff|my things|my possessions)\b/i,
+    /\bwon'?t be (here|around|alive) (much )?longer\b/i,
+    /\bdon'?t care if i (wake|die|live)\b/i,
+    /\bi have a plan\b.*\b(tonight|today|tomorrow|this week|the night)\b/i,
   ];
 
-  const LOW_SIGNALS = [
+  var LOW_SIGNALS = [
     /\bcan'?t go on\b/i, /\bno point\b/i, /\bnobody (cares|would miss me|would notice)\b/i,
     /\beveryone (would be |is )?better off (without me)?\b/i, /\bworthless\b/i,
     /\b(completely |utterly |totally )?hopeless\b/i, /\bending it (all)?\b/i,
@@ -39,18 +84,20 @@
     /\bwish i (wasn'?t|weren'?t) (here|alive|born)\b/i,
     /\bcan'?t (see|find) (a |any )?(way |reason )?(to go on|forward|out)\b/i,
     /\btrapped\b.*\b(no|can'?t|won'?t)\b/i, /\bnothing (left|matters|to live for)\b/i,
+    /\bdon'?t see a future\b/i,
+    /\b(easier|better) if i (wasn'?t|weren'?t|am not) here\b/i,
   ];
 
   function detect(text) {
     if (!text || typeof text !== "string") return { level: "none", matched: null };
-    var t = text.toLowerCase();
+    var t = normalise(text);
     for (var i = 0; i < HIGH_SIGNALS.length; i++) {
       var m = t.match(HIGH_SIGNALS[i]);
-      if (m) return { level: "high", matched: m[0] };
+      if (m && !isFP(t, m[0])) return { level: "high", matched: m[0] };
     }
     for (var j = 0; j < LOW_SIGNALS.length; j++) {
       var m2 = t.match(LOW_SIGNALS[j]);
-      if (m2) return { level: "low", matched: m2[0] };
+      if (m2 && !isFP(t, m2[0])) return { level: "low", matched: m2[0] };
     }
     return { level: "none", matched: null };
   }

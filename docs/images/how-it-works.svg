@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="high" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e94560"/>
+      <stop offset="100%" stop-color="#c62a42"/>
+    </linearGradient>
+    <linearGradient id="low" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f5a623"/>
+      <stop offset="100%" stop-color="#d4911e"/>
+    </linearGradient>
+    <linearGradient id="safe" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2ecc71"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3498db"/>
+      <stop offset="100%" stop-color="#2980b9"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" fill="url(#bg)" rx="16"/>
+
+  <!-- Title -->
+  <text x="450" y="45" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">How Safechat Works</text>
+  <text x="450" y="68" text-anchor="middle" fill="#888" font-size="13">3 lines of code. Zero location permissions. Works offline.</text>
+
+  <!-- Step 1: User Message -->
+  <rect x="30" y="100" width="180" height="90" rx="12" fill="#1e1e3a" stroke="#333" stroke-width="1"/>
+  <text x="120" y="125" text-anchor="middle" fill="#aaa" font-size="11" font-weight="600">STEP 1</text>
+  <text x="120" y="148" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">User Message</text>
+  <text x="120" y="170" text-anchor="middle" fill="#777" font-size="11">"I can't do this anymore"</text>
+
+  <!-- Arrow 1 -->
+  <path d="M 215 145 L 255 145" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#555"/></marker></defs>
+
+  <!-- Step 2: Detection -->
+  <rect x="260" y="100" width="180" height="90" rx="12" fill="#1e1e3a" stroke="#e94560" stroke-width="1.5"/>
+  <text x="350" y="125" text-anchor="middle" fill="#e94560" font-size="11" font-weight="600">STEP 2</text>
+  <text x="350" y="148" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Crisis Detection</text>
+  <text x="350" y="170" text-anchor="middle" fill="#777" font-size="11">Local regex — no API calls</text>
+
+  <!-- Arrow 2 -->
+  <path d="M 445 145 L 485 145" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: Geo Detection -->
+  <rect x="490" y="100" width="180" height="90" rx="12" fill="#1e1e3a" stroke="#3498db" stroke-width="1.5"/>
+  <text x="580" y="125" text-anchor="middle" fill="#3498db" font-size="11" font-weight="600">STEP 3</text>
+  <text x="580" y="148" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Find Country</text>
+  <text x="580" y="170" text-anchor="middle" fill="#777" font-size="11">Timezone + locale (no GPS)</text>
+
+  <!-- Arrow 3 -->
+  <path d="M 675 145 L 715 145" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 4: Resources -->
+  <rect x="720" y="100" width="150" height="90" rx="12" fill="#1e1e3a" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="795" y="125" text-anchor="middle" fill="#2ecc71" font-size="11" font-weight="600">STEP 4</text>
+  <text x="795" y="148" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">Local Help</text>
+  <text x="795" y="170" text-anchor="middle" fill="#777" font-size="11">Verified helplines</text>
+
+  <!-- Three outcome branches -->
+
+  <!-- HIGH branch -->
+  <rect x="80" y="240" width="220" height="130" rx="12" fill="#2a1520" stroke="#e94560" stroke-width="1.5"/>
+  <rect x="80" y="240" width="220" height="32" rx="12" fill="url(#high)"/>
+  <rect x="80" y="260" width="220" height="12" fill="url(#high)"/>
+  <text x="190" y="261" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">HIGH CRISIS</text>
+  <text x="190" y="295" text-anchor="middle" fill="#e94560" font-size="11" font-weight="600">Suicidal ideation / self-harm</text>
+  <text x="190" y="318" text-anchor="middle" fill="#ccc" font-size="11">AI stops normal response</text>
+  <text x="190" y="336" text-anchor="middle" fill="#ccc" font-size="11">Shows crisis modal with</text>
+  <text x="190" y="354" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">phone / text / chat / email</text>
+
+  <!-- LOW branch -->
+  <rect x="340" y="240" width="220" height="130" rx="12" fill="#2a2515" stroke="#f5a623" stroke-width="1.5"/>
+  <rect x="340" y="240" width="220" height="32" rx="12" fill="url(#low)"/>
+  <rect x="340" y="260" width="220" height="12" fill="url(#low)"/>
+  <text x="450" y="261" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">LOW CRISIS</text>
+  <text x="450" y="295" text-anchor="middle" fill="#f5a623" font-size="11" font-weight="600">Hopelessness / worthlessness</text>
+  <text x="450" y="318" text-anchor="middle" fill="#ccc" font-size="11">AI responds warmly</text>
+  <text x="450" y="336" text-anchor="middle" fill="#ccc" font-size="11">Non-blocking safety banner</text>
+  <text x="450" y="354" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">with helpline link</text>
+
+  <!-- NONE branch -->
+  <rect x="600" y="240" width="220" height="130" rx="12" fill="#152a1a" stroke="#2ecc71" stroke-width="1.5"/>
+  <rect x="600" y="240" width="220" height="32" rx="12" fill="url(#safe)"/>
+  <rect x="600" y="260" width="220" height="12" fill="url(#safe)"/>
+  <text x="710" y="261" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">NO CRISIS</text>
+  <text x="710" y="295" text-anchor="middle" fill="#2ecc71" font-size="11" font-weight="600">Normal conversation</text>
+  <text x="710" y="318" text-anchor="middle" fill="#ccc" font-size="11">AI responds normally</text>
+  <text x="710" y="336" text-anchor="middle" fill="#ccc" font-size="11">No intervention needed</text>
+  <text x="710" y="354" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Zero overhead</text>
+
+  <!-- Connector lines to branches -->
+  <path d="M 350 190 L 350 210 L 190 210 L 190 240" stroke="#e94560" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+  <path d="M 350 190 L 350 210 L 450 210 L 450 240" stroke="#f5a623" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+  <path d="M 580 190 L 580 210 L 710 210 L 710 240" stroke="#2ecc71" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+
+  <!-- Bottom stats bar -->
+  <rect x="30" y="410" width="840" height="80" rx="12" fill="#151528"/>
+
+  <text x="140" y="440" text-anchor="middle" fill="#e94560" font-size="26" font-weight="700">34</text>
+  <text x="140" y="465" text-anchor="middle" fill="#888" font-size="12">countries</text>
+
+  <text x="310" y="440" text-anchor="middle" fill="#3498db" font-size="26" font-weight="700">100+</text>
+  <text x="310" y="465" text-anchor="middle" fill="#888" font-size="12">verified helplines</text>
+
+  <text x="480" y="440" text-anchor="middle" fill="#2ecc71" font-size="26" font-weight="700">0</text>
+  <text x="480" y="465" text-anchor="middle" fill="#888" font-size="12">permissions needed</text>
+
+  <text x="650" y="440" text-anchor="middle" fill="#f5a623" font-size="26" font-weight="700">0</text>
+  <text x="650" y="465" text-anchor="middle" fill="#888" font-size="12">API calls</text>
+
+  <text x="800" y="440" text-anchor="middle" fill="#9b59b6" font-size="26" font-weight="700">3</text>
+  <text x="800" y="465" text-anchor="middle" fill="#888" font-size="12">lines of code</text>
+
+  <!-- Footer -->
+  <text x="450" y="510" text-anchor="middle" fill="#555" font-size="11">safechat — open source crisis safety — github.com/rob-e-graham/safechat</text>
+</svg>
