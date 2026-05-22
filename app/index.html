@@ -593,12 +593,12 @@
     <div class="download-card">
       <h3>Browser Bundle</h3>
       <p>Single JS file. Drop into any page. Auto-monitors inputs.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js" class="btn btn-secondary" download>Download browser.js</a>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js" class="btn btn-secondary dl-btn" data-filename="browser.js">Download browser.js</a>
     </div>
     <div class="download-card">
       <h3>Embed Script</h3>
       <p>One-line script tag. Auto-detects and shows crisis modal.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js" class="btn btn-secondary" download>Download embed.js</a>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js" class="btn btn-secondary dl-btn" data-filename="embed.js">Download embed.js</a>
     </div>
     <div class="download-card">
       <h3>Crisis Popup (PWA)</h3>
@@ -608,7 +608,7 @@
     <div class="download-card">
       <h3>Helpline Database</h3>
       <p>34 countries, 100+ helplines. JSON format. CC0 public domain.</p>
-      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json" class="btn btn-secondary" download>Download JSON</a>
+      <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json" class="btn btn-secondary dl-btn" data-filename="crisis-resources.json">Download JSON</a>
     </div>
   </div>
 </div>
@@ -702,6 +702,34 @@
     } else {
       result.textContent = 'Level: HIGH — crisis signal detected: "' + r.matched + '"';
     }
+  });
+
+  // Cross-origin download handler — fetch as blob then trigger save
+  document.querySelectorAll('.dl-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var url = btn.getAttribute('href');
+      var filename = btn.getAttribute('data-filename') || 'download';
+      var orig = btn.textContent;
+      btn.textContent = 'Downloading...';
+      fetch(url)
+        .then(function(r) { if (!r.ok) throw new Error(r.status); return r.blob(); })
+        .then(function(blob) {
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+          btn.textContent = 'Downloaded!';
+          setTimeout(function() { btn.textContent = orig; }, 2000);
+        })
+        .catch(function() {
+          btn.textContent = orig;
+          window.open(url, '_blank');
+        });
+    });
   });
 
   // Register service worker for PWA
