@@ -1,5 +1,6 @@
 /**
- * Safechat embed loader — drop-in crisis safety for any page.
+ * SafeChat embed loader — drop-in crisis safety for any page.
+ * Created by FAMTEC — fineartmedia.tech
  *
  * Usage:
  *   <script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js"

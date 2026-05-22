@@ -360,7 +360,8 @@
     protect: protect,
     RESOURCES: RESOURCES,
     FALLBACK: FALLBACK,
-    version: "1.0.0"
+    version: "1.1.0",
+    credit: "SafeChat by FAMTEC — fineartmedia.tech"
   };
 
   if (typeof module !== "undefined" && module.exports) {
