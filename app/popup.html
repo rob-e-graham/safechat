@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SafeChat</title>
+<title>SafeChat — Get Help Now</title>
 <meta name="description" content="Find crisis support near you. Free, confidential helplines available 24/7.">
 <meta name="theme-color" content="#0a0b10">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
@@ -18,16 +18,66 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0a0b10;
     color: rgba(255,255,255,0.85);
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
+    /* Calming gradient background — matches homepage */
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(100,80,160,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(60,100,180,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(80,60,140,0.06) 0%, transparent 50%),
+      #0a0b10;
+    background-attachment: fixed;
+  }
+  /* Subtle animated aurora */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(180,160,220,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 70% 60%, rgba(100,140,200,0.03) 0%, transparent 40%),
+      radial-gradient(circle at 50% 20%, rgba(140,120,180,0.03) 0%, transparent 50%);
+    animation: auroraShift 30s ease-in-out infinite alternate;
+  }
+  @keyframes auroraShift {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1) translateY(-20px); }
+    100% { opacity: 1; transform: scale(1) translateY(10px); }
+  }
+  body > * { position: relative; z-index: 1; }
+
+  /* ── Mobile-shaped container ── */
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: 16px;
   }
 
+  .offline-notice {
+    display: none;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: rgba(255,180,100,0.7);
+    background: rgba(255,180,100,0.06);
+    border-bottom: 1px solid rgba(255,180,100,0.1);
+  }
+  .offline-notice.active { display: block; }
+
+  /* ── Header ── */
   .header {
     text-align: center;
-    padding: 40px 20px 20px;
+    padding: 32px 20px 16px;
+  }
+  .header .hero-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 20px rgba(180,160,220,0.25));
   }
   .header h1 {
     font-size: 22px;
@@ -41,6 +91,7 @@
     line-height: 1.5;
   }
 
+  /* ── Location bar ── */
   .location-bar {
     display: flex;
     align-items: center;
@@ -51,24 +102,36 @@
     color: rgba(255,255,255,0.4);
   }
   .location-bar .dot {
-    width: 6px; height: 6px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    background: rgba(100,220,160,0.7);
+    background: rgba(100,220,160,0.8);
     flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(100,220,160,0.4);
   }
-  .location-bar .dot.offline { background: rgba(255,180,100,0.7); }
+  .location-bar .dot.offline { background: rgba(255,180,100,0.7); box-shadow: 0 0 6px rgba(255,180,100,0.3); }
+  .location-bar .dot.detecting {
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
   .location-bar select {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
+    border-radius: 8px;
     color: rgba(255,255,255,0.7);
     font-size: 12px;
-    padding: 4px 8px;
+    padding: 6px 10px;
     cursor: pointer;
     outline: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
+  .location-bar select:focus { border-color: rgba(180,160,220,0.3); }
   .location-bar select option { background: #1a1b24; }
 
+  /* ── Emergency bar ── */
   .emergency-bar {
     text-align: center;
     padding: 14px 20px;
@@ -76,6 +139,8 @@
     background: rgba(255,80,80,0.08);
     border: 1px solid rgba(255,80,80,0.15);
     border-radius: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .emergency-bar a {
     color: rgba(255,120,120,0.9);
@@ -92,12 +157,12 @@
     margin-bottom: 4px;
   }
 
+  /* ── Resource list ── */
   .resources {
     padding: 0 16px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-bottom: 100px;
   }
 
   .resource-card {
@@ -106,6 +171,8 @@
     border-radius: 14px;
     padding: 16px;
     transition: border-color 200ms;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .resource-card:hover { border-color: rgba(255,255,255,0.14); }
 
@@ -134,6 +201,7 @@
     letter-spacing: 0.06em;
   }
 
+  /* ── Action buttons — constrained widths ── */
   .actions {
     display: flex;
     gap: 8px;
@@ -151,8 +219,9 @@
     cursor: pointer;
     border: none;
     transition: all 150ms;
-    flex: 1;
-    min-width: 120px;
+    flex: 1 1 auto;
+    min-width: 100px;
+    max-width: 220px;
     justify-content: center;
   }
 
@@ -191,6 +260,7 @@
   }
   .action-email:hover { background: rgba(255,180,100,0.18); }
 
+  /* ── Fallback section ── */
   .fallback-section {
     text-align: center;
     padding: 24px 20px;
@@ -198,6 +268,8 @@
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .fallback-section p {
     font-size: 13px;
@@ -217,17 +289,6 @@
     margin: 4px;
   }
 
-  .offline-notice {
-    display: none;
-    text-align: center;
-    padding: 8px 16px;
-    font-size: 11px;
-    color: rgba(255,180,100,0.7);
-    background: rgba(255,180,100,0.06);
-    border-bottom: 1px solid rgba(255,180,100,0.1);
-  }
-  .offline-notice.active { display: block; }
-
   .update-info {
     text-align: center;
     padding: 12px 20px;
@@ -235,73 +296,103 @@
     color: rgba(255,255,255,0.2);
   }
 
+  /* ── Disclaimer ── */
+  .disclaimer {
+    margin: 16px 16px 0;
+    padding: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.6;
+  }
+  .disclaimer strong {
+    color: rgba(255,255,255,0.5);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Footer ── */
   .powered-by {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
     text-align: center;
-    padding: 12px;
+    padding: 16px 16px 24px;
     font-size: 10px;
     color: rgba(255,255,255,0.2);
-    background: linear-gradient(to top, #0a0b10 60%, transparent);
-    pointer-events: none;
   }
-  .powered-by a { color: rgba(180,160,220,0.4); text-decoration: none; pointer-events: auto; }
+  .powered-by a { color: rgba(180,160,220,0.4); text-decoration: none; }
+  .powered-by a:hover { color: rgba(180,160,220,0.6); }
+
+  @media (max-width: 360px) {
+    .action-btn { min-width: 80px; padding: 10px 12px; font-size: 12px; }
+    .header h1 { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="offline-notice" id="offlineNotice">
-  You're offline — showing cached resources from your last visit.
-</div>
+<div class="container">
 
-<div class="header">
-  <h1>You don't have to carry this alone.</h1>
-  <p>Someone is available right now. Tap to call, text, or chat.</p>
-</div>
+  <div class="offline-notice" id="offlineNotice">
+    You're offline — showing cached resources from your last visit.
+  </div>
 
-<div class="location-bar">
-  <span class="dot" id="statusDot"></span>
-  <span id="locationLabel">Detecting location...</span>
-  <select id="countrySelect" aria-label="Change country"></select>
-</div>
+  <div class="header">
+    <img src="./images/icon-512.png" alt="SafeChat" class="hero-icon">
+    <h1>You don't have to carry this alone.</h1>
+    <p>Someone is available right now. Tap to call, text, or chat.</p>
+  </div>
 
-<div class="emergency-bar" id="emergencyBar" style="display:none">
-  <div class="label">Emergency services</div>
-  <a href="#" id="emergencyLink">—</a>
-</div>
+  <div class="location-bar">
+    <span class="dot detecting" id="statusDot"></span>
+    <span id="locationLabel">Detecting your location...</span>
+    <select id="countrySelect" aria-label="Change country" style="display:none"></select>
+  </div>
 
-<div class="resources" id="resourcesList"></div>
+  <div class="emergency-bar" id="emergencyBar" style="display:none">
+    <div class="label">Emergency services</div>
+    <a href="#" id="emergencyLink">—</a>
+  </div>
 
-<div class="fallback-section" id="fallbackSection" style="display:none">
-  <p>Can't find your country? These directories cover 175+ countries worldwide.</p>
-  <a href="https://findahelpline.com" target="_blank" rel="noopener">Find a Helpline</a>
-  <a href="https://www.befrienders.org" target="_blank" rel="noopener">Befrienders Worldwide</a>
-</div>
+  <div class="resources" id="resourcesList"></div>
 
-<div class="update-info" id="updateInfo"></div>
+  <div class="fallback-section" id="fallbackSection" style="display:none">
+    <p>Can't find your country? These directories cover 175+ countries worldwide.</p>
+    <a href="https://findahelpline.com" target="_blank" rel="noopener">Find a Helpline</a>
+    <a href="https://www.befrienders.org" target="_blank" rel="noopener">Befrienders Worldwide</a>
+  </div>
 
-<div class="powered-by">
-  <a href="https://github.com/rob-e-graham/safechat">safechat</a> — open source crisis safety — <a href="https://fineartmedia.tech" target="_blank">fineartmedia.tech</a>
+  <div class="update-info" id="updateInfo"></div>
+
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> SafeChat is provided as is. It is not emergency medical care, professional mental health treatment, or a substitute for emergency services. SafeChat, its authors, FAMTEC, contributors, and maintainers accept no responsibility or liability for any harm, damages, losses, personal injury, death, failure to detect crisis content, failure to obtain help, system failure, or any other outcome arising from the use or inability to use this service. Use of SafeChat is at your own risk. If you are in immediate danger, call your local emergency number directly.
+  </div>
+
+  <div class="powered-by">
+    <a href="https://rob-e-graham.github.io/safechat/app/index.html">safechat</a> — open source crisis safety — <a href="https://fineartmedia.tech" target="_blank">fineartmedia.tech</a>
+  </div>
+
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  SAFECHAT POPUP — works online and offline
-// ═══════════════════════════════════════════════════════════
+// ================================================================
+//  SAFECHAT POPUP — mobile-shaped, auto-location, works offline
+// ================================================================
 
-const STORAGE_KEY = 'safechat_resources';
-const COUNTRY_KEY = 'safechat_country';
-const UPDATED_KEY = 'safechat_updated';
+var STORAGE_KEY = 'safechat_resources';
+var COUNTRY_KEY = 'safechat_country';
+var UPDATED_KEY = 'safechat_updated';
 
-// HTML escape helper — prevents XSS from untrusted data
+// HTML escape — prevents XSS from untrusted data
 function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-// CDN URL for latest crisis resources (jsDelivr serves GitHub raw files with CDN caching)
-const RESOURCES_CDN = 'https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json';
-const RESOURCES_FALLBACK = 'https://raw.githubusercontent.com/rob-e-graham/safechat/main/data/crisis-resources.json';
+// CDN URLs for latest crisis resources
+var RESOURCES_CDN = 'https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json';
+var RESOURCES_FALLBACK = 'https://raw.githubusercontent.com/rob-e-graham/safechat/main/data/crisis-resources.json';
 
-// ── Inline fallback data (works even if CDN and cache both fail) ──
-const EMERGENCY_FALLBACK = {
+// ── Inline fallback (works even if CDN + cache both fail) ──
+var EMERGENCY_FALLBACK = {
   AU:"000",AT:"112",BE:"112",BR:"192",CA:"911",CN:"120",DK:"112",FI:"112",
   FR:"15",DE:"112",GH:"999",HK:"999",IN:"112",IE:"112",IL:"101",IT:"118",
   JP:"119",KE:"999",MX:"911",NL:"112",NZ:"111",NG:"199",NO:"113",PK:"115",
@@ -309,141 +400,161 @@ const EMERGENCY_FALLBACK = {
   GB:"999",US:"911"
 };
 
-let crisisData = null;
-let currentCountry = null;
-let isOnline = navigator.onLine;
+var crisisData = null;
+var currentCountry = null;
+var isOnline = navigator.onLine;
 
-// ── Register Service Worker for offline support ──
+// Register Service Worker for offline support
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
 }
 
-// ── Geo-detection (same cascade as SDK) ──
+// ── Geo-detection cascade (no GPS, no permissions) ──
+// Priority: 1) locale  2) timezone  3) cached  4) null
 function detectCountry() {
+  // 1. Browser locale (e.g. en-AU, pt-BR, zh-HK)
   try {
-    const locale = navigator.language || '';
-    const parts = locale.split('-');
-    if (parts.length >= 2) {
-      const code = parts[parts.length - 1].toUpperCase();
-      if (code.length === 2) return code;
+    var langs = navigator.languages || [navigator.language || ''];
+    for (var i = 0; i < langs.length; i++) {
+      var parts = langs[i].split('-');
+      if (parts.length >= 2) {
+        var code = parts[parts.length - 1].toUpperCase();
+        if (code.length === 2 && /^[A-Z]{2}$/.test(code)) return code;
+      }
     }
   } catch (_) {}
 
+  // 2. Timezone mapping
   try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-    const tzMap = {
-      "Australia":"AU","Europe/Vienna":"AT","Europe/Brussels":"BE","America/Sao_Paulo":"BR",
-      "America/Toronto":"CA","America/Vancouver":"CA","Asia/Shanghai":"CN","Europe/Copenhagen":"DK",
-      "Europe/Helsinki":"FI","Europe/Paris":"FR","Europe/Berlin":"DE","Africa/Accra":"GH",
-      "Asia/Hong_Kong":"HK","Asia/Kolkata":"IN","Asia/Calcutta":"IN","Europe/Dublin":"IE",
-      "Asia/Jerusalem":"IL","Europe/Rome":"IT","Asia/Tokyo":"JP","Africa/Nairobi":"KE",
-      "America/Mexico_City":"MX","Europe/Amsterdam":"NL","Pacific/Auckland":"NZ","Africa/Lagos":"NG",
-      "Europe/Oslo":"NO","Asia/Karachi":"PK","Asia/Manila":"PH","Europe/Lisbon":"PT",
-      "Europe/Moscow":"RU","Africa/Johannesburg":"ZA","Asia/Seoul":"KR","Europe/Madrid":"ES",
-      "Europe/Stockholm":"SE","Europe/Zurich":"CH","Europe/London":"GB",
-      "America/New_York":"US","America/Chicago":"US","America/Los_Angeles":"US",
-      "America/Denver":"US","America/Phoenix":"US"
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    var tzMap = {
+      // Oceania
+      "Australia":"AU","Pacific/Auckland":"NZ","Pacific/Fiji":"FJ",
+      // Europe
+      "Europe/London":"GB","Europe/Dublin":"IE","Europe/Paris":"FR",
+      "Europe/Berlin":"DE","Europe/Vienna":"AT","Europe/Brussels":"BE",
+      "Europe/Amsterdam":"NL","Europe/Rome":"IT","Europe/Madrid":"ES",
+      "Europe/Lisbon":"PT","Europe/Stockholm":"SE","Europe/Oslo":"NO",
+      "Europe/Copenhagen":"DK","Europe/Helsinki":"FI","Europe/Zurich":"CH",
+      "Europe/Moscow":"RU","Europe/Warsaw":"PL","Europe/Prague":"CZ",
+      "Europe/Budapest":"HU","Europe/Bucharest":"RO","Europe/Athens":"GR",
+      "Europe/Istanbul":"TR","Europe/Kiev":"UA","Europe/Kyiv":"UA",
+      // Americas
+      "America/New_York":"US","America/Chicago":"US","America/Denver":"US",
+      "America/Los_Angeles":"US","America/Phoenix":"US","America/Anchorage":"US",
+      "Pacific/Honolulu":"US",
+      "America/Toronto":"CA","America/Vancouver":"CA","America/Edmonton":"CA",
+      "America/Winnipeg":"CA","America/Halifax":"CA","America/St_Johns":"CA",
+      "America/Sao_Paulo":"BR","America/Rio_Branco":"BR","America/Manaus":"BR",
+      "America/Mexico_City":"MX","America/Cancun":"MX","America/Tijuana":"MX",
+      "America/Argentina":"AR","America/Bogota":"CO","America/Lima":"PE",
+      "America/Santiago":"CL",
+      // Asia
+      "Asia/Shanghai":"CN","Asia/Hong_Kong":"HK","Asia/Tokyo":"JP",
+      "Asia/Seoul":"KR","Asia/Kolkata":"IN","Asia/Calcutta":"IN",
+      "Asia/Mumbai":"IN","Asia/Chennai":"IN",
+      "Asia/Karachi":"PK","Asia/Manila":"PH","Asia/Singapore":"SG",
+      "Asia/Bangkok":"TH","Asia/Jakarta":"ID","Asia/Kuala_Lumpur":"MY",
+      "Asia/Taipei":"TW","Asia/Jerusalem":"IL","Asia/Dubai":"AE",
+      "Asia/Riyadh":"SA","Asia/Tehran":"IR",
+      // Africa
+      "Africa/Lagos":"NG","Africa/Nairobi":"KE","Africa/Johannesburg":"ZA",
+      "Africa/Accra":"GH","Africa/Cairo":"EG","Africa/Casablanca":"MA"
     };
-    for (const [prefix, code] of Object.entries(tzMap)) {
-      if (tz.startsWith(prefix) || tz.includes(prefix)) return code;
+    for (var prefix in tzMap) {
+      if (tzMap.hasOwnProperty(prefix)) {
+        if (tz === prefix || tz.indexOf(prefix) === 0) return tzMap[prefix];
+      }
     }
+    // Broad continent fallbacks
+    if (tz.indexOf('Australia/') === 0) return 'AU';
+    if (tz.indexOf('Pacific/Auckland') === 0) return 'NZ';
   } catch (_) {}
 
-  // Last known country from storage
-  const cached = localStorage.getItem(COUNTRY_KEY);
-  if (cached) return cached;
+  // 3. Last known country from storage
+  try {
+    var cached = localStorage.getItem(COUNTRY_KEY);
+    if (cached && /^[A-Z]{2}$/.test(cached)) return cached;
+  } catch (_) {}
 
   return null;
 }
 
-// ── Load resources: CDN → cache → inline fallback ──
+// ── Load resources: CDN > GitHub raw > cache > inline fallback ──
 async function loadResources() {
-  // Try CDN first (gets latest from GitHub)
   if (navigator.onLine) {
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
-      const res = await fetch(RESOURCES_CDN, { signal: controller.signal });
+      var controller = new AbortController();
+      var timeout = setTimeout(function() { controller.abort(); }, 5000);
+      var res = await fetch(RESOURCES_CDN, { signal: controller.signal });
       clearTimeout(timeout);
       if (res.ok) {
-        const data = await res.json();
-        // Validate structure before trusting CDN data
+        var data = await res.json();
         if (!data || typeof data !== 'object' || !data.countries || typeof data.countries !== 'object') throw new Error('Invalid data');
         crisisData = data;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        localStorage.setItem(UPDATED_KEY, new Date().toISOString());
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(_){}
+        try { localStorage.setItem(UPDATED_KEY, new Date().toISOString()); } catch(_){}
         return;
       }
     } catch (_) {}
 
-    // Try GitHub raw fallback
     try {
-      const res = await fetch(RESOURCES_FALLBACK);
-      if (res.ok) {
-        const data = await res.json();
-        crisisData = data;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        localStorage.setItem(UPDATED_KEY, new Date().toISOString());
-        return;
+      var res2 = await fetch(RESOURCES_FALLBACK);
+      if (res2.ok) {
+        var data2 = await res2.json();
+        if (data2 && data2.countries) {
+          crisisData = data2;
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data2)); } catch(_){}
+          try { localStorage.setItem(UPDATED_KEY, new Date().toISOString()); } catch(_){}
+          return;
+        }
       }
     } catch (_) {}
   }
 
-  // Use cached version
   try {
-    const cached = localStorage.getItem(STORAGE_KEY);
-    if (cached) {
-      crisisData = JSON.parse(cached);
-      return;
-    }
+    var cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) { crisisData = JSON.parse(cached); return; }
   } catch (_) {}
 
-  // Absolute fallback — null means we use inline emergency numbers only
   crisisData = null;
 }
 
-// ── Format phone number for tel: link ──
-function telHref(phone) {
-  return 'tel:' + phone.replace(/[\s()-]/g, '');
-}
+// ── Helpers ──
+function telHref(phone) { return 'tel:' + phone.replace(/[\s()-]/g, ''); }
+function whatsappHref(phone) { return 'https://wa.me/' + phone.replace(/[\s()\-+]/g, ''); }
 
-// ── Format phone number for WhatsApp ──
-function whatsappHref(phone) {
-  const clean = phone.replace(/[\s()\-+]/g, '');
-  return 'https://wa.me/' + clean;
-}
-
-// ── Build action buttons for a resource ──
+// ── Build action buttons ──
 function buildActions(resource) {
-  const actions = [];
-  const phones = Array.isArray(resource.phone) ? resource.phone : resource.phone ? [resource.phone] : [];
+  var actions = [];
+  var phones = Array.isArray(resource.phone) ? resource.phone : resource.phone ? [resource.phone] : [];
 
   if (phones.length > 0) {
-    actions.push(`<a href="${telHref(phones[0])}" class="action-btn action-call">📞 Call ${esc(phones[0])}</a>`);
-    if (resource.whatsapp || (phones[0].startsWith('+') || phones[0].length > 8)) {
-      actions.push(`<a href="${whatsappHref(phones[0])}" class="action-btn action-whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>`);
+    actions.push('<a href="' + telHref(phones[0]) + '" class="action-btn action-call">&#x1F4DE; Call ' + esc(phones[0]) + '</a>');
+    if (resource.whatsapp || (phones[0].charAt(0) === '+' || phones[0].length > 8)) {
+      actions.push('<a href="' + whatsappHref(phones[0]) + '" class="action-btn action-whatsapp" target="_blank" rel="noopener">&#x1F4AC; WhatsApp</a>');
     }
   }
 
   if (resource.sms) {
-    const smsMatch = resource.sms.match(/(?:text|sms)\s+(\S+)\s+to\s+(\S+)/i);
+    var smsMatch = resource.sms.match(/(?:text|sms)\s+(\S+)\s+to\s+(\S+)/i);
     if (smsMatch) {
-      actions.push(`<a href="sms:${esc(smsMatch[2])}?body=${encodeURIComponent(smsMatch[1])}" class="action-btn action-text">💬 Text ${esc(smsMatch[1])} to ${esc(smsMatch[2])}</a>`);
+      actions.push('<a href="sms:' + esc(smsMatch[2]) + '?body=' + encodeURIComponent(smsMatch[1]) + '" class="action-btn action-text">&#x1F4AC; Text ' + esc(smsMatch[1]) + ' to ' + esc(smsMatch[2]) + '</a>');
     } else {
-      actions.push(`<a href="sms:${resource.sms.replace(/\D/g, '')}" class="action-btn action-text">💬 ${esc(resource.sms)}</a>`);
+      actions.push('<a href="sms:' + resource.sms.replace(/\D/g, '') + '" class="action-btn action-text">&#x1F4AC; ' + esc(resource.sms) + '</a>');
     }
   }
 
   if (resource.chat_url) {
-    actions.push(`<a href="${resource.chat_url}" class="action-btn action-chat" target="_blank" rel="noopener">🔗 Online Chat</a>`);
+    actions.push('<a href="' + esc(resource.chat_url) + '" class="action-btn action-chat" target="_blank" rel="noopener">&#x1F517; Online Chat</a>');
   }
 
   if (resource.email) {
-    actions.push(`<a href="mailto:${resource.email}?subject=${encodeURIComponent('I need someone to talk to')}" class="action-btn action-email">📧 Email</a>`);
+    actions.push('<a href="mailto:' + esc(resource.email) + '?subject=' + encodeURIComponent('I need someone to talk to') + '" class="action-btn action-email">&#x1F4E7; Email</a>');
   }
 
-  if (resource.url) {
-    actions.push(`<a href="${resource.url}" class="action-btn action-chat" target="_blank" rel="noopener">🔗 Visit Website</a>`);
+  if (resource.url && !resource.chat_url) {
+    actions.push('<a href="' + esc(resource.url) + '" class="action-btn action-chat" target="_blank" rel="noopener">&#x1F517; Website</a>');
   }
 
   return actions.join('');
@@ -452,17 +563,21 @@ function buildActions(resource) {
 // ── Render resources for a country ──
 function renderCountry(countryCode) {
   currentCountry = countryCode;
-  if (countryCode) localStorage.setItem(COUNTRY_KEY, countryCode);
+  if (countryCode) { try { localStorage.setItem(COUNTRY_KEY, countryCode); } catch(_){} }
 
-  const list = document.getElementById('resourcesList');
-  const emergencyBar = document.getElementById('emergencyBar');
-  const emergencyLink = document.getElementById('emergencyLink');
-  const fallbackSection = document.getElementById('fallbackSection');
-  const locationLabel = document.getElementById('locationLabel');
+  var list = document.getElementById('resourcesList');
+  var emergencyBar = document.getElementById('emergencyBar');
+  var emergencyLink = document.getElementById('emergencyLink');
+  var fallbackSection = document.getElementById('fallbackSection');
+  var locationLabel = document.getElementById('locationLabel');
+  var statusDot = document.getElementById('statusDot');
 
-  let country = null;
-  let resources = [];
-  let emergency = null;
+  // Stop detecting animation
+  statusDot.classList.remove('detecting');
+
+  var country = null;
+  var resources = [];
+  var emergency = null;
 
   if (crisisData && crisisData.countries && crisisData.countries[countryCode]) {
     country = crisisData.countries[countryCode];
@@ -492,19 +607,19 @@ function renderCountry(countryCode) {
 
   // Resource cards
   if (resources.length > 0) {
-    list.innerHTML = resources.map(r => {
-      const specialties = (r.specialties || [])
-        .filter(s => !['general','crisis','suicide'].includes(s))
-        .map(s => `<span class="specialty">${s}</span>`)
+    list.innerHTML = resources.map(function(r) {
+      var specialties = (r.specialties || [])
+        .filter(function(s) { return ['general','crisis','suicide'].indexOf(s) === -1; })
+        .map(function(s) { return '<span class="specialty">' + esc(s) + '</span>'; })
         .join('');
-      const hours = r.hours ? `<span>${r.hours}</span>` : '';
-      const langs = (r.languages || []).length > 1 ? `<span>${r.languages.join(', ')}</span>` : '';
+      var hours = r.hours ? '<span>' + esc(r.hours) + '</span>' : '';
+      var langs = (r.languages || []).length > 1 ? '<span>' + esc(r.languages.join(', ')) + '</span>' : '';
 
-      return `<div class="resource-card">
-        <div class="resource-name">${esc(r.name)}</div>
-        <div class="resource-meta">${hours}${langs}${specialties}</div>
-        <div class="actions">${buildActions(r)}</div>
-      </div>`;
+      return '<div class="resource-card">' +
+        '<div class="resource-name">' + esc(r.name) + '</div>' +
+        '<div class="resource-meta">' + hours + langs + specialties + '</div>' +
+        '<div class="actions">' + buildActions(r) + '</div>' +
+        '</div>';
     }).join('');
     fallbackSection.style.display = 'none';
   } else {
@@ -512,18 +627,19 @@ function renderCountry(countryCode) {
     fallbackSection.style.display = '';
   }
 
-  // Always show fallback at the bottom if we have resources too
+  // Always show fallback at the bottom when we have resources too
   if (resources.length > 0) {
     fallbackSection.style.display = '';
     fallbackSection.querySelector('p').textContent = 'More countries and helplines available:';
   }
 
   // Update info
-  const lastUpdated = localStorage.getItem(UPDATED_KEY);
-  const updateEl = document.getElementById('updateInfo');
+  var lastUpdated = null;
+  try { lastUpdated = localStorage.getItem(UPDATED_KEY); } catch(_){}
+  var updateEl = document.getElementById('updateInfo');
   if (lastUpdated) {
-    const d = new Date(lastUpdated);
-    updateEl.textContent = `Resources last updated: ${d.toLocaleDateString()} — data auto-refreshes when online`;
+    var d = new Date(lastUpdated);
+    updateEl.textContent = 'Resources updated: ' + d.toLocaleDateString() + ' — auto-refreshes when online';
   } else {
     updateEl.textContent = 'Using built-in fallback data';
   }
@@ -531,39 +647,39 @@ function renderCountry(countryCode) {
 
 // ── Build country selector dropdown ──
 function buildCountrySelect() {
-  const select = document.getElementById('countrySelect');
-  const countries = crisisData?.countries ? Object.entries(crisisData.countries) : [];
+  var select = document.getElementById('countrySelect');
+  var countries = (crisisData && crisisData.countries) ? Object.entries(crisisData.countries) : [];
 
-  // Add all known countries + emergency fallback countries
-  const allCodes = new Set([
-    ...countries.map(([code]) => code),
-    ...Object.keys(EMERGENCY_FALLBACK)
-  ]);
+  var allCodes = {};
+  countries.forEach(function(entry) { allCodes[entry[0]] = true; });
+  Object.keys(EMERGENCY_FALLBACK).forEach(function(k) { allCodes[k] = true; });
 
-  const options = [];
-  for (const code of allCodes) {
-    const name = crisisData?.countries?.[code]?.name || code;
-    options.push({ code, name });
+  var options = [];
+  for (var code in allCodes) {
+    var name = (crisisData && crisisData.countries && crisisData.countries[code]) ? crisisData.countries[code].name : code;
+    options.push({ code: code, name: name || code });
   }
-  options.sort((a, b) => a.name.localeCompare(b.name));
+  options.sort(function(a, b) { return a.name.localeCompare(b.name); });
 
-  select.innerHTML = options.map(o =>
-    `<option value="${o.code}" ${o.code === currentCountry ? 'selected' : ''}>${o.name}</option>`
-  ).join('');
+  select.innerHTML = options.map(function(o) {
+    return '<option value="' + o.code + '"' + (o.code === currentCountry ? ' selected' : '') + '>' + esc(o.name) + '</option>';
+  }).join('');
 
-  select.addEventListener('change', () => renderCountry(select.value));
+  // Show select now that it's populated
+  select.style.display = '';
+  select.addEventListener('change', function() { renderCountry(select.value); });
 }
 
 // ── Online/offline handling ──
 function updateOnlineStatus() {
   isOnline = navigator.onLine;
-  const notice = document.getElementById('offlineNotice');
-  const dot = document.getElementById('statusDot');
+  var notice = document.getElementById('offlineNotice');
+  var dot = document.getElementById('statusDot');
   notice.classList.toggle('active', !isOnline);
   dot.classList.toggle('offline', !isOnline);
 
   if (isOnline && !crisisData) {
-    loadResources().then(() => {
+    loadResources().then(function() {
       buildCountrySelect();
       renderCountry(currentCountry);
     });
@@ -573,9 +689,9 @@ function updateOnlineStatus() {
 window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 
-// ── Initialize ──
+// ── Initialize — auto-detect location immediately ──
 async function init() {
-  const country = detectCountry();
+  var country = detectCountry();
   currentCountry = country;
 
   await loadResources();
