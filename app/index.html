@@ -6,6 +6,11 @@
 <title>SafeChat — International Chat Safety Protocol</title>
 <meta name="description" content="Free, open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. 34 countries, 100+ verified helplines, zero tracking.">
 <meta name="theme-color" content="#0a0b10">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: cdn.jsdelivr.net; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" sizes="32x32" href="./images/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./images/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./images/icon-180.png">
 <link rel="manifest" href="./manifest.json">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +20,42 @@
     color: rgba(255,255,255,0.85);
     min-height: 100vh;
     line-height: 1.6;
+    /* Calming gradient background */
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(100,80,160,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(60,100,180,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(80,60,140,0.06) 0%, transparent 50%),
+      #0a0b10;
+    background-attachment: fixed;
   }
+  /* Subtle animated aurora pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(180,160,220,0.04) 0%, transparent 40%),
+      radial-gradient(circle at 70% 60%, rgba(100,140,200,0.03) 0%, transparent 40%),
+      radial-gradient(circle at 50% 20%, rgba(140,120,180,0.03) 0%, transparent 50%);
+    animation: auroraShift 30s ease-in-out infinite alternate;
+  }
+  @keyframes auroraShift {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1) translateY(-20px); }
+    100% { opacity: 1; transform: scale(1) translateY(10px); }
+  }
+  /* Ensure all content above the bg */
+  body > * { position: relative; z-index: 1; }
+
+  /* Mobile-first container */
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
   a { color: #b4a0dc; text-decoration: none; }
   a:hover { text-decoration: underline; }
 
@@ -24,262 +64,307 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 24px;
+    padding: 14px 20px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
-    max-width: 1200px;
+    max-width: 520px;
     margin: 0 auto;
     width: 100%;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
-  nav .logo { font-size: 18px; font-weight: 600; letter-spacing: 0.04em; }
-  nav .logo span { color: #e94560; }
-  nav .links { display: flex; gap: 20px; font-size: 14px; }
-  nav .links a { color: rgba(255,255,255,0.5); }
+  nav .logo {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-size: 0;
+  }
+  nav .logo img { height: 24px; width: auto; }
+  nav .links { display: flex; gap: 14px; font-size: 12px; }
+  nav .links a { color: rgba(255,255,255,0.45); }
   nav .links a:hover { color: #fff; text-decoration: none; }
 
   /* Hero */
   .hero {
     text-align: center;
-    padding: 80px 24px 50px;
-    max-width: 780px;
+    padding: 48px 20px 40px;
+    max-width: 520px;
     margin: 0 auto;
   }
-  .hero h1 {
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 300;
-    letter-spacing: 0.03em;
-    margin-bottom: 16px;
-    line-height: 1.15;
+  .hero .hero-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 0 30px rgba(180,160,220,0.3));
   }
-  .hero h1 .accent { color: #e94560; }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .hero h1 .accent { color: #b4a0dc; }
   .hero .sub {
-    font-size: 18px;
-    color: rgba(255,255,255,0.5);
-    max-width: 560px;
-    margin: 0 auto 32px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    margin: 0 auto 28px;
   }
   .hero .stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-bottom: 36px;
-  }
-  .hero .stat-num { font-size: 32px; font-weight: 700; }
-  .hero .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; }
-  .stat-num.red { color: #e94560; }
-  .stat-num.blue { color: #3498db; }
-  .stat-num.green { color: #2ecc71; }
-  .stat-num.gold { color: #f5a623; }
-
-  .hero .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    display: inline-flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
-    padding: 14px 28px;
-    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  .hero .stat-num { font-size: 24px; font-weight: 700; }
+  .hero .stat-label { font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-num.red { color: #e94560; }
+  .stat-num.blue { color: #6ca0dc; }
+  .stat-num.green { color: #5cb88a; }
+  .stat-num.gold { color: #d4a04a; }
+
+  .hero .actions { display: flex; flex-direction: column; gap: 10px; }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 12px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     border: none;
     transition: all 200ms;
+    width: 100%;
   }
-  .btn-primary { background: #e94560; color: #fff; }
-  .btn-primary:hover { background: #d13a54; text-decoration: none; }
-  .btn-secondary { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.1); }
-  .btn-secondary:hover { background: rgba(255,255,255,0.12); text-decoration: none; }
-  .btn-donate { background: #f5a623; color: #000; font-weight: 600; }
-  .btn-donate:hover { background: #e09510; text-decoration: none; }
+  .btn-primary { background: rgba(180,160,220,0.2); color: #d4c4f0; border: 1px solid rgba(180,160,220,0.25); }
+  .btn-primary:hover { background: rgba(180,160,220,0.3); text-decoration: none; }
+  .btn-secondary { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.08); }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); text-decoration: none; }
+  .btn-donate { background: rgba(100,180,140,0.15); color: #7cc9a0; border: 1px solid rgba(100,180,140,0.2); font-weight: 500; }
+  .btn-donate:hover { background: rgba(100,180,140,0.25); text-decoration: none; }
+  .btn-paypal { background: rgba(0,112,186,0.15); color: #5ba8d4; border: 1px solid rgba(0,112,186,0.2); }
+  .btn-paypal:hover { background: rgba(0,112,186,0.25); text-decoration: none; }
 
   /* Sections */
   .section {
-    max-width: 1000px;
+    max-width: 520px;
     margin: 0 auto;
-    padding: 60px 24px;
+    padding: 48px 20px;
   }
   .section h2 {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 400;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .section .section-sub {
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 32px;
-    max-width: 600px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 24px;
   }
 
   /* Feature grid */
   .features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   .feature {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 24px;
+    padding: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  .feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-  .feature p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .feature h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .feature p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
   .feature .tag {
     display: inline-block;
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    padding: 3px 8px;
+    padding: 2px 7px;
     border-radius: 4px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
-  .tag-free { background: rgba(46,204,113,0.15); color: #2ecc71; }
-  .tag-research { background: rgba(52,152,219,0.15); color: #3498db; }
-  .tag-standard { background: rgba(233,69,96,0.15); color: #e94560; }
-  .tag-tool { background: rgba(245,166,35,0.15); color: #f5a623; }
+  .tag-free { background: rgba(92,184,138,0.15); color: #5cb88a; }
+  .tag-research { background: rgba(108,160,220,0.15); color: #6ca0dc; }
+  .tag-standard { background: rgba(180,160,220,0.15); color: #b4a0dc; }
+  .tag-tool { background: rgba(212,160,74,0.15); color: #d4a04a; }
 
-  /* Registry table */
+  /* Registry table — card style on mobile */
+  .registry-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .registry {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 12px;
+    min-width: 480px;
   }
   .registry th {
     text-align: left;
-    padding: 12px 16px;
-    font-size: 11px;
+    padding: 10px 12px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.3);
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    white-space: nowrap;
   }
   .registry td {
-    padding: 14px 16px;
+    padding: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.65);
   }
   .registry tr:hover td { background: rgba(255,255,255,0.02); }
   .registry .type-badge {
-    font-size: 10px;
-    padding: 2px 8px;
+    font-size: 9px;
+    padding: 2px 6px;
     border-radius: 4px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
   }
 
   /* Download pack */
   .download-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   .download-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 24px;
+    padding: 20px;
     text-align: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  .download-card h3 { font-size: 16px; margin-bottom: 8px; }
-  .download-card p { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
-  .download-card .btn { width: 100%; justify-content: center; }
+  .download-card h3 { font-size: 15px; margin-bottom: 6px; }
+  .download-card p { font-size: 12px; color: rgba(255,255,255,0.38); margin-bottom: 14px; }
 
   /* Community */
   .community-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   .community-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 14px;
-    padding: 24px;
+    padding: 20px;
     display: block;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  .community-card:hover { border-color: rgba(255,255,255,0.15); text-decoration: none; }
-  .community-card h3 { font-size: 16px; margin-bottom: 6px; }
-  .community-card p { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .community-card:hover { border-color: rgba(180,160,220,0.2); text-decoration: none; }
+  .community-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .community-card p { font-size: 12px; color: rgba(255,255,255,0.38); }
 
   /* Live demo */
   .demo-box {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
-    padding: 28px;
-    max-width: 600px;
+    padding: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .demo-box input {
     width: 100%;
-    padding: 14px 18px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     color: #fff;
-    font-size: 15px;
+    font-size: 14px;
     outline: none;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
-  .demo-box input:focus { border-color: rgba(180,160,220,0.4); }
+  .demo-box input:focus { border-color: rgba(180,160,220,0.3); }
   .demo-result {
-    padding: 12px 16px;
+    padding: 12px 14px;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 12px;
     font-family: monospace;
-    min-height: 44px;
+    min-height: 40px;
   }
-  .level-none { background: rgba(46,204,113,0.1); color: #2ecc71; }
-  .level-low { background: rgba(245,166,35,0.1); color: #f5a623; }
-  .level-high { background: rgba(233,69,96,0.1); color: #e94560; }
+  .level-none { background: rgba(92,184,138,0.1); color: #5cb88a; }
+  .level-low { background: rgba(212,160,74,0.1); color: #d4a04a; }
+  .level-high { background: rgba(180,100,120,0.12); color: #c87888; }
 
   /* Footer */
   footer {
     border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 40px 24px;
+    padding: 36px 20px;
     text-align: center;
-    font-size: 13px;
-    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    max-width: 520px;
+    margin: 0 auto;
   }
-  footer a { color: rgba(255,255,255,0.5); }
-  footer .footer-brand { font-size: 15px; margin-bottom: 8px; color: rgba(255,255,255,0.5); }
+  footer a { color: rgba(255,255,255,0.4); }
+  footer .footer-brand { font-size: 14px; margin-bottom: 6px; color: rgba(255,255,255,0.4); }
 
   /* Divider */
-  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0; }
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.04); margin: 0; max-width: 520px; margin-left: auto; margin-right: auto; }
 
-  @media (max-width: 600px) {
-    .hero .stats { gap: 24px; }
-    nav .links { gap: 12px; }
+  /* Install PWA banner */
+  .install-banner {
+    background: rgba(180,160,220,0.08);
+    border: 1px solid rgba(180,160,220,0.12);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .install-banner h3 { font-size: 15px; margin-bottom: 6px; }
+  .install-banner p { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 4px; line-height: 1.5; }
+
+  @media (max-width: 400px) {
+    .hero .stats { gap: 4px; }
+    nav .links { gap: 10px; font-size: 11px; }
+    .hero h1 { font-size: 24px; }
+  }
+  @media (min-width: 768px) {
+    .features { display: grid; grid-template-columns: 1fr 1fr; }
+    .download-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .community-links { display: grid; grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">safe<span>chat</span></div>
+  <div class="logo"><img src="./images/logo-nav.png" alt="SafeChat"></div>
   <div class="links">
     <a href="#registry">Registry</a>
     <a href="#download">Download</a>
     <a href="#community">Community</a>
-    <a href="./popup.html">Get Help Now</a>
-    <a href="https://fineartmedia.tech" target="_blank">FAMTEC</a>
+    <a href="https://fineartmedia.tech" target="_blank" rel="noopener">FAMTEC</a>
   </div>
 </nav>
 
 <!-- Hero -->
 <div class="hero">
+  <img src="./images/icon-512.png" alt="SafeChat" class="hero-logo">
   <h1>International <span class="accent">Chat Safety</span> Protocol</h1>
   <p class="sub">Free, open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. Zero tracking. Works offline.</p>
 
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
-    <div><div class="stat-num blue">100+</div><div class="stat-label">Verified helplines</div></div>
-    <div><div class="stat-num green">205</div><div class="stat-label">Safety tests</div></div>
+    <div><div class="stat-num blue">100+</div><div class="stat-label">Helplines</div></div>
+    <div><div class="stat-num green">205</div><div class="stat-label">Tests</div></div>
     <div><div class="stat-num gold">0</div><div class="stat-label">Permissions</div></div>
   </div>
 
   <div class="actions">
     <a href="./popup.html" class="btn btn-primary">Get Help Now</a>
-    <a href="https://github.com/rob-e-graham/safechat" class="btn btn-secondary" target="_blank">View on GitHub</a>
-    <a href="https://buymeacoffee.com/famtec" class="btn btn-donate" target="_blank">Donate</a>
+    <a href="https://github.com/rob-e-graham/safechat" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
+    <a href="https://paypal.me/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Support via PayPal</a>
+    <a href="https://buymeacoffee.com/famtec" class="btn btn-donate" target="_blank" rel="noopener">Buy Me a Coffee</a>
   </div>
 </div>
 
@@ -331,6 +416,7 @@
   <h2>International Chat Safety Registry</h2>
   <p class="section-sub">Verified frameworks, standards, and tools for AI chat safety. Open for submissions from developers and health professionals.</p>
 
+  <div class="registry-scroll">
   <table class="registry">
     <thead>
       <tr>
@@ -400,8 +486,9 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
-  <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:20px;">
+  <p style="font-size:12px;color:rgba(255,255,255,0.25);margin-top:16px;">
     Know a framework, standard, or tool that should be listed? <a href="https://github.com/rob-e-graham/safechat/discussions" target="_blank">Submit via GitHub Discussions</a> or email <a href="mailto:rob@fineartmedia.tech">rob@fineartmedia.tech</a>.
   </p>
 </div>
@@ -424,6 +511,14 @@
 <div class="section" id="download">
   <h2>Download Pack</h2>
   <p class="section-sub">Everything you need to add crisis safety to your app. Free. No account required.</p>
+
+  <div class="install-banner">
+    <h3>Install as App (PWA)</h3>
+    <p><strong>iPhone/iPad:</strong> Open popup.html in Safari &rarr; tap Share &rarr; "Add to Home Screen"</p>
+    <p><strong>Android:</strong> Open in Chrome &rarr; tap menu &rarr; "Install App" or "Add to Home Screen"</p>
+    <p><strong>Desktop:</strong> Open in Chrome/Edge &rarr; click install icon in address bar</p>
+    <a href="./popup.html" class="btn btn-primary" style="margin-top:12px;">Open Crisis Popup</a>
+  </div>
 
   <div class="download-grid">
     <div class="download-card">
@@ -514,7 +609,7 @@
     <a href="https://github.com/rob-e-graham/safechat" target="_blank">GitHub</a> &middot;
     <a href="https://github.com/rob-e-graham/safechat/discussions" target="_blank">Discussions</a> &middot;
     <a href="./popup.html">Get Help</a> &middot;
-    <a href="https://buymeacoffee.com/famtec" target="_blank">Donate</a> &middot;
+    <a href="https://paypal.me/specialrequest" target="_blank" rel="noopener">Donate</a> &middot;
     <a href="https://fineartmedia.tech" target="_blank">fineartmedia.tech</a>
   </p>
   <p style="margin-top:16px; font-size:12px;">

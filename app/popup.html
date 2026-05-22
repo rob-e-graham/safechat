@@ -6,6 +6,10 @@
 <title>Safechat — Get Help Now</title>
 <meta name="description" content="Find crisis support near you. Free, confidential helplines available 24/7.">
 <meta name="theme-color" content="#0a0b10">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" sizes="32x32" href="./images/icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./images/icon-180.png">
 <link rel="manifest" href="manifest.json">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -286,6 +290,9 @@ const STORAGE_KEY = 'safechat_resources';
 const COUNTRY_KEY = 'safechat_country';
 const UPDATED_KEY = 'safechat_updated';
 
+// HTML escape helper — prevents XSS from untrusted data
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
 // CDN URL for latest crisis resources (jsDelivr serves GitHub raw files with CDN caching)
 const RESOURCES_CDN = 'https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json';
 const RESOURCES_FALLBACK = 'https://raw.githubusercontent.com/rob-e-graham/safechat/main/data/crisis-resources.json';
@@ -357,6 +364,8 @@ async function loadResources() {
       clearTimeout(timeout);
       if (res.ok) {
         const data = await res.json();
+        // Validate structure before trusting CDN data
+        if (!data || typeof data !== 'object' || !data.countries || typeof data.countries !== 'object') throw new Error('Invalid data');
         crisisData = data;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         localStorage.setItem(UPDATED_KEY, new Date().toISOString());
@@ -407,20 +416,18 @@ function buildActions(resource) {
   const phones = Array.isArray(resource.phone) ? resource.phone : resource.phone ? [resource.phone] : [];
 
   if (phones.length > 0) {
-    actions.push(`<a href="${telHref(phones[0])}" class="action-btn action-call">📞 Call ${phones[0]}</a>`);
-    // WhatsApp link for phone resources (many helplines now support WhatsApp)
+    actions.push(`<a href="${telHref(phones[0])}" class="action-btn action-call">📞 Call ${esc(phones[0])}</a>`);
     if (resource.whatsapp || (phones[0].startsWith('+') || phones[0].length > 8)) {
       actions.push(`<a href="${whatsappHref(phones[0])}" class="action-btn action-whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>`);
     }
   }
 
   if (resource.sms) {
-    // Parse SMS instructions like "Text HOME to 741741" → sms:741741?body=HOME
     const smsMatch = resource.sms.match(/(?:text|sms)\s+(\S+)\s+to\s+(\S+)/i);
     if (smsMatch) {
-      actions.push(`<a href="sms:${smsMatch[2]}?body=${encodeURIComponent(smsMatch[1])}" class="action-btn action-text">💬 Text ${smsMatch[1]} to ${smsMatch[2]}</a>`);
+      actions.push(`<a href="sms:${esc(smsMatch[2])}?body=${encodeURIComponent(smsMatch[1])}" class="action-btn action-text">💬 Text ${esc(smsMatch[1])} to ${esc(smsMatch[2])}</a>`);
     } else {
-      actions.push(`<a href="sms:${resource.sms.replace(/\D/g, '')}" class="action-btn action-text">💬 ${resource.sms}</a>`);
+      actions.push(`<a href="sms:${resource.sms.replace(/\D/g, '')}" class="action-btn action-text">💬 ${esc(resource.sms)}</a>`);
     }
   }
 
@@ -491,7 +498,7 @@ function renderCountry(countryCode) {
       const langs = (r.languages || []).length > 1 ? `<span>${r.languages.join(', ')}</span>` : '';
 
       return `<div class="resource-card">
-        <div class="resource-name">${r.name}</div>
+        <div class="resource-name">${esc(r.name)}</div>
         <div class="resource-meta">${hours}${langs}${specialties}</div>
         <div class="actions">${buildActions(r)}</div>
       </div>`;

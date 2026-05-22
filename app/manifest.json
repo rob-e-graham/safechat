@@ -1,16 +1,22 @@
 {
-  "name": "Safechat Crisis Help",
-  "short_name": "Safechat",
-  "description": "Find local crisis helplines. Works offline.",
+  "name": "SafeChat — Crisis Help",
+  "short_name": "SafeChat",
+  "description": "International chat safety protocol. Find local crisis helplines. Works offline.",
   "start_url": "./popup.html",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#e94560",
+  "background_color": "#0a0b10",
+  "theme_color": "#b4a0dc",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🆘</text></svg>",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "./images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

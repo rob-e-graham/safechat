@@ -1,61 +1,80 @@
-# safechat
+<p align="center">
+  <img src="app/images/icon-512.png" alt="SafeChat" width="120">
+</p>
 
-**Open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. Zero location permissions.**
+<h1 align="center">SafeChat</h1>
+<h3 align="center">International Chat Safety Protocol</h3>
 
-Created by Rob Graham / FAMTEC.
+<p align="center">
+  Open-source crisis safety infrastructure for AI apps.<br>
+  Detects distress, finds local help. Zero tracking. Works offline.
+</p>
 
-Safechat is a community-focused crisis safety toolkit that adds mental health crisis detection and localized helpline routing to AI chatbots, apps, websites, and digital experiences.
+<p align="center">
+  <strong>34 countries &middot; 100+ verified helplines &middot; 205 safety tests &middot; 0 permissions</strong>
+</p>
 
-**34 countries. 100+ verified helplines. 205 tests. No GPS. No tracking. No API keys.**
-
-![How Safechat Works](docs/images/how-it-works.svg)
-
----
-
-## Licensing
-
-SafeChat uses a Business Source License (BSL 1.1).
-
-Free for:
-- personal use
-- educational use
-- research use
-- nonprofit/community use
-- commercial entities generating under $100,000 USD annually from products or services substantially incorporating SafeChat
-
-Commercial entities generating more than $100,000 USD annually from products or services substantially incorporating SafeChat must obtain a commercial license.
-
-Commercial licensing:
-rob@fineartmedia.tech
+<p align="center">
+  <a href="https://rob-e-graham.github.io/safechat/app/index.html">Live Site</a> &middot;
+  <a href="https://rob-e-graham.github.io/safechat/app/popup.html">Get Help Now</a> &middot;
+  <a href="https://github.com/rob-e-graham/safechat/discussions">Community</a> &middot;
+  <a href="https://fineartmedia.tech">FAMTEC</a>
+</p>
 
 ---
 
-## Why this exists
-
-AI apps with personal conversations will inevitably encounter users in crisis. Safechat exists to make ethical safety infrastructure accessible, lightweight, private, and easy to integrate.
-
-The project is focused on:
-- privacy-first safety systems
-- local-first detection
-- ethical AI integration
-- open community infrastructure
-- accessible crisis resources
-- sovereign and transparent tooling
+<p align="center">
+  <img src="docs/screenshots/homepage-mobile.png" alt="SafeChat Homepage" width="280">
+  &nbsp;&nbsp;&nbsp;
+  <img src="docs/screenshots/popup-mobile.png" alt="Crisis Popup" width="280">
+</p>
 
 ---
 
-## What Safechat does
+## What is SafeChat?
 
-1. Detects crisis signals in user messages locally
-2. Finds the user's country without GPS tracking
-3. Returns verified local helplines and support resources
-4. Generates AI prompt overrides for safer responses
-5. Provides ready-made UI components
-6. Works offline with layered fallbacks
+SafeChat is an **international register and toolkit for chat safety protocol**. Free for everyone. Built for developers, health professionals, and communities.
+
+- **Crisis Detection** — Regex-based detection runs locally. No API calls. No data leaves the device. Catches misspellings, text-speak, indirect warning signs, and passive suicidality.
+- **Geo-Location (No GPS)** — Finds the user's country from timezone and locale. No permissions needed. 7-layer cascade.
+- **Verified Helpline Database** — 100+ helplines across 34 countries. Phone, text, chat, email, WhatsApp. CC0 public domain.
+- **AI Prompt Override** — System prompt injections that tell your LLM to show crisis resources. Works with any AI provider.
+- **Drop-in UI** — Modal, banner, and full-page popup. One script tag. PWA-capable. Works offline.
+- **Compliance-Ready** — Aligned with NY AI Companion Law, FTC chatbot safety requirements, VERA-MH framework, and Samaritans guidelines.
 
 ---
 
-## Quick start
+## Install as App (PWA)
+
+SafeChat works as a standalone app on any device:
+
+- **iPhone/iPad:** Open the popup in Safari → tap Share → "Add to Home Screen"
+- **Android:** Open in Chrome → menu → "Install App"
+- **Desktop:** Open in Chrome/Edge → click install icon in address bar
+
+**Open the popup:** [rob-e-graham.github.io/safechat/app/popup.html](https://rob-e-graham.github.io/safechat/app/popup.html)
+
+---
+
+## Quick Start
+
+### Browser (no build step)
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js"></script>
+<script>
+  Safechat.protect(); // auto-monitor all text inputs
+</script>
+```
+
+### One-line embed
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js"
+        data-safechat-monitor="true"></script>
+```
+
+### Node.js / npm
 
 ```bash
 npm install safechat
@@ -70,27 +89,6 @@ if (safety.level === 'high') {
   systemPrompt = safechat.promptOverride('high', safety.country)
                  + '\n\n' + systemPrompt;
 }
-
-if (safety.level === 'low') {
-  systemPrompt = safechat.promptOverride('low', safety.country)
-                 + '\n\n' + systemPrompt;
-}
-```
-
-### Browser (no build step)
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/browser.js"></script>
-<script>
-  Safechat.protect(); // auto-monitor all text inputs
-</script>
-```
-
-### One-line embed (auto-monitors everything)
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/src/embed.js"
-        data-safechat-monitor="true"></script>
 ```
 
 ### Express middleware
@@ -107,72 +105,78 @@ app.post('/api/chat', (req, res) => {
 });
 ```
 
-### Hosted popup
-
-The crisis help popup is hosted and works offline after first visit:
-
-```
-https://rob-e-graham.github.io/safechat/app/popup.html
-```
-
-Embed it anywhere:
+### Embed the popup
 
 ```html
-<iframe src="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/app/popup.html"
+<iframe src="https://rob-e-graham.github.io/safechat/app/popup.html"
         style="width:100%;max-width:480px;height:700px;border:none;border-radius:16px;">
 </iframe>
 ```
 
 ---
 
-## How geo-detection works
+## How Detection Works
 
-![Geo-Detection Cascade](docs/images/geo-cascade.svg)
+![How Safechat Works](docs/images/how-it-works.svg)
 
-Safechat finds the user's country **without location permissions** using a cascade:
+Detection uses regex pattern matching with three layers:
 
-| Priority | Method | How it works | Permissions |
-|----------|--------|-------------|-------------|
-| 1 | **Browser locale** | `navigator.language` → `en-AU` → `AU` | None |
-| 2 | **Timezone** | `Intl.DateTimeFormat` → `Australia/Sydney` → `AU` | None |
-| 3 | **CDN headers** | `CF-IPCountry`, `X-Vercel-IP-Country` (server-side) | None |
-| 4 | **Accept-Language** | Request header → `en-GB,en;q=0.9` → `GB` | None |
-| 5 | **IP geolocation** | Optional API call to ip-api.com | None (opt-in) |
-| 6 | **Manual override** | `safechat.check(msg, { country: 'AU' })` | None |
-| 7 | **Global fallback** | findahelpline.com (175+ countries) | None |
+1. **Input normalisation** — Smart quotes → ASCII, whitespace collapse, misspelling correction, text-speak expansion
+2. **Pattern matching** — HIGH signals (explicit suicidal language, methods) and LOW signals (hopelessness, worthlessness)
+3. **False-positive guards** — Context-aware filtering skips figurative language ("cut my hair", "suicide squeeze play", "overdosed on coffee")
+
+| Level | Triggers | Action |
+|-------|----------|--------|
+| **high** | Suicidal ideation, self-harm, explicit intent | Show crisis resources immediately |
+| **low** | Hopelessness, worthlessness, feeling trapped | Soft safety response with helpline link |
+| **none** | No crisis signals | Normal operation |
 
 ---
 
-## Auto-updating crisis data
+## Geo-Detection
+
+![Geo-Detection Cascade](docs/images/geo-cascade.svg)
+
+SafeChat finds the user's country **without location permissions**:
+
+| Priority | Method | Permissions |
+|----------|--------|-------------|
+| 1 | Browser locale (`navigator.language`) | None |
+| 2 | Timezone (`Intl.DateTimeFormat`) | None |
+| 3 | CDN headers (`CF-IPCountry`, `X-Vercel-IP-Country`) | None |
+| 4 | Accept-Language header | None |
+| 5 | Manual override | None |
+| 6 | Global fallback (findahelpline.com) | None |
+
+---
+
+## Auto-Updating Crisis Data
 
 ![Fallback Chain](docs/images/fallback-chain.svg)
 
-Crisis helpline numbers change. Safechat handles this at multiple layers:
-
-### CDN delivery (automatic)
-
-The browser bundle and popup load crisis data from jsDelivr CDN, which mirrors the GitHub repo. When the JSON is updated on GitHub, the CDN updates automatically.
-
-### Automated verification (GitHub Actions)
-
-A GitHub Actions workflow runs twice monthly:
-
-1. Validates all phone number formats
-2. Checks chat/website URLs are reachable
-3. Flags missing required fields (name, type, hours)
-4. Opens a GitHub Issue for any failures
-5. Updates the `last_verified` timestamp
-
-### Offline fallback chain
-
 ```
-1. jsDelivr CDN (latest data) ← primary
-2. GitHub raw (same data, different CDN) ← if jsDelivr is down
-3. localStorage cache (last successful load) ← if offline
-4. Inline emergency numbers (built into the JS) ← if never loaded
+1. jsDelivr CDN (latest data)           ← primary
+2. GitHub raw (same data, different CDN) ← if jsDelivr down
+3. localStorage cache                    ← if offline
+4. Inline emergency numbers              ← if never loaded
 ```
 
-The user always gets something, even on first visit with no internet.
+Verification workflow runs twice monthly to check all phone numbers and URLs.
+
+---
+
+## Security
+
+SafeChat is designed for trust:
+
+- **Zero data collection** — all detection runs locally, nothing is transmitted
+- **Content Security Policy** — CSP headers on all pages
+- **HTML escaping** — all dynamic content is escaped to prevent XSS
+- **Input validation** — type checking, ReDoS protection, JSON structure validation
+- **Scoped service worker** — only intercepts same-origin requests
+- **No cookies, no analytics, no tracking**
+- **205 automated tests** including security/adversarial inputs
+- **Referrer policy** — `no-referrer` on all pages
 
 ---
 
@@ -180,16 +184,12 @@ The user always gets something, even on first visit with no internet.
 
 ### `safechat.check(text, options?)`
 
-One-call safety check — detects crisis level and returns localized resources.
-
 ```javascript
-const result = safechat.check("I can't go on anymore", { country: "AU" });
+safechat.check("I can't go on anymore", { country: "AU" });
 // { level: "low", matched: "can't go on", country: "AU", action: "soft_warning", resources: {...} }
 ```
 
 ### `safechat.detect(text)`
-
-Just the crisis detector, no geo-lookup.
 
 ```javascript
 safechat.detect("I want to kill myself")  // { level: "high", matched: "kill myself" }
@@ -198,63 +198,60 @@ safechat.detect("great day today")        // { level: "none", matched: null }
 ```
 
 ### `safechat.promptOverride(level, countryCode)`
-
-Generates a system prompt override for your AI.
-
 ### `safechat.getResources(countryCode, options?)`
-
-Get crisis resources for a country. Options: `{ specialties, types, limit }`.
-
 ### `safechat.middleware()`
 
-Express/Connect middleware that auto-detects country from request headers.
-
 ---
 
-## Crisis levels
-
-| Level | Triggers | Recommended action |
-|-------|----------|--------------------|
-| **high** | Suicidal ideation, self-harm, explicit intent | Stop AI response. Show crisis resources immediately. |
-| **low** | Hopelessness, worthlessness, feeling trapped | AI responds warmly. Append safety footer with helpline link. |
-| **none** | No crisis signals | Normal operation. |
-
----
-
-## Countries covered
+## Countries Covered
 
 Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Finland, France, Germany, Ghana, Hong Kong, India, Ireland, Israel, Italy, Japan, Kenya, Mexico, Netherlands, New Zealand, Nigeria, Norway, Pakistan, Philippines, Portugal, Russia, South Africa, South Korea, Spain, Sweden, Switzerland, United Kingdom, United States.
 
-**Plus global fallback** via [findahelpline.com](https://findahelpline.com) (175+ countries) and [Befrienders Worldwide](https://www.befrienders.org).
+**Plus global fallback** via [findahelpline.com](https://findahelpline.com) (175+ countries).
+
+---
+
+## Licensing
+
+SafeChat uses **Business Source License (BSL 1.1)**.
+
+**Free for:**
+- Personal, educational, research, nonprofit/community use
+- Commercial entities under $100,000 USD annual revenue
+
+**Commercial entities over $100K** must obtain a commercial license: rob@fineartmedia.tech
+
+Changes to MPL 2.0 on 2029-01-01.
+
+---
+
+## Support the Project
+
+- [PayPal](https://paypal.me/specialrequest)
+- [Buy Me a Coffee](https://buymeacoffee.com/famtec)
 
 ---
 
 ## Contributing
 
-We need help keeping crisis resources accurate and expanding to more countries. See [CONTRIBUTING.md](CONTRIBUTING.md) for the verification checklist and entry format.
+Help keep crisis resources accurate and expand to more countries. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+This project follows [Samaritans safe messaging guidelines](https://www.samaritans.org/about-samaritans/media-guidelines/).
 
 ---
 
-## Safe messaging guidelines
+## Community
 
-This project follows [Samaritans media guidelines](https://www.samaritans.org/about-samaritans/media-guidelines/):
-
-- Never describe methods of self-harm
-- Use "died by suicide" not "committed suicide"
-- Always pair mention of struggle with a resource
-- Don't sensationalize or dramatize
+- [GitHub Discussions](https://github.com/rob-e-graham/safechat/discussions) — questions, research, standards
+- [Issues](https://github.com/rob-e-graham/safechat/issues) — bugs, wrong numbers, detection gaps
+- [FAMTEC](https://fineartmedia.tech) — the team behind SafeChat
 
 ---
 
-## Community Support
+<p align="center">
+  Created by <a href="https://fineartmedia.tech">Rob Graham / FAMTEC</a>
+</p>
 
-If SafeChat helps your community or organisation, consider supporting development.
-
-Created by Rob Graham / FAMTEC
-https://fineartmedia.tech
-
----
-
-## Crisis Support
-
-If you or someone you know is in crisis: **[findahelpline.com](https://findahelpline.com)**
+<p align="center">
+  If you or someone you know is in crisis: <strong><a href="https://findahelpline.com">findahelpline.com</a></strong>
+</p>

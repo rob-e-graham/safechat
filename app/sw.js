@@ -1,8 +1,11 @@
-const CACHE_NAME = 'safechat-v1';
+const CACHE_NAME = 'safechat-v2';
 const CACHE_URLS = [
   './',
   './index.html',
   './popup.html',
+  './images/icon-192.png',
+  './images/icon-512.png',
+  './images/logo-nav.png',
   '../src/browser.js',
 ];
 
@@ -23,6 +26,10 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only handle same-origin requests — don't intercept CDN or external
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetchPromise = fetch(event.request)

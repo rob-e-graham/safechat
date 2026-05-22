@@ -52,6 +52,13 @@
     return false;
   }
 
+  // ── HTML escaping (prevents XSS in dynamic content) ──
+
+  function escHTML(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   // ── Detection (synced with detect.js) ──
 
   var HIGH_SIGNALS = [
@@ -261,11 +268,11 @@
     var all = result.resources.length > 0 ? result.resources : result.globalResources || [];
     return all.map(function(r) {
       var parts = [];
-      if (r.phone) parts.push('<a href="tel:' + r.phone.replace(/\s/g,"") + '">' + r.phone + '</a>');
-      if (r.sms) parts.push('<span>' + r.sms + '</span>');
-      if (r.url) parts.push('<a href="' + r.url + '" target="_blank" rel="noopener">Online</a>');
-      if (r.hours) parts.push('<span>' + r.hours + '</span>');
-      return '<div class="safechat-resource"><strong>' + r.name + '</strong><div>' + parts.join(" &middot; ") + '</div></div>';
+      if (r.phone) parts.push('<a href="tel:' + escHTML(r.phone.replace(/\s/g,"")) + '">' + escHTML(r.phone) + '</a>');
+      if (r.sms) parts.push('<span>' + escHTML(r.sms) + '</span>');
+      if (r.url) parts.push('<a href="' + escHTML(r.url) + '" target="_blank" rel="noopener">Online</a>');
+      if (r.hours) parts.push('<span>' + escHTML(r.hours) + '</span>');
+      return '<div class="safechat-resource"><strong>' + escHTML(r.name) + '</strong><div>' + parts.join(" &middot; ") + '</div></div>';
     }).join("");
   }
 
@@ -312,8 +319,9 @@
     var banner = document.createElement("div");
     banner.className = "safechat-banner";
     banner.id = "safechat-banner";
-    banner.innerHTML = (options.message || 'If things feel heavy right now, support is available.') +
-      ' <button onclick="Safechat.showModal(\'' + (options.country || locateCountry()) + '\')">View crisis resources</button>' +
+    var safeCountry = escHTML((options.country || locateCountry() || '').replace(/[^A-Z]/gi,'').substring(0,2));
+    banner.innerHTML = escHTML(options.message || 'If things feel heavy right now, support is available.') +
+      ' <button onclick="Safechat.showModal(\'' + safeCountry + '\')">View crisis resources</button>' +
       '<button class="safechat-banner-close" onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>';
     document.body.appendChild(banner);
 
