@@ -225,10 +225,20 @@ Changes to MPL 2.0 on 2029-01-01.
 
 ---
 
+## Legal Disclaimer
+
+SafeChat is provided **as is**. It is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services, clinicians, safeguarding teams, or local crisis procedures.
+
+By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, failure to obtain help, failure to detect crisis content, unlawful use, or other harm arising from installation or use.
+
+If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat. See [LICENSE](LICENSE) for the full disclaimer and limitation of liability.
+
+---
+
 ## Support the Project
 
-- [PayPal](https://paypal.me/specialrequest)
-- [Buy Me a Coffee](https://buymeacoffee.com/famtec)
+- [PayPal](https://www.paypal.com/paypalme/specialrequest)
+- Buy Me a Coffee is currently unavailable. For support or donation options, contact [rob@fineartmedia.tech](mailto:rob@fineartmedia.tech).
 
 ---
 

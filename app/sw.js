@@ -5,6 +5,7 @@ const CACHE_URLS = [
   './popup.html',
   './images/icon-192.png',
   './images/icon-512.png',
+  './favicon.ico',
   './images/logo-nav.png',
   '../src/browser.js',
 ];

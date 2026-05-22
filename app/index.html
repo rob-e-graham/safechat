@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SafeChat — International Chat Safety Protocol</title>
+<title>SafeChat</title>
 <meta name="description" content="Free, open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. 34 countries, 100+ verified helplines, zero tracking.">
 <meta name="theme-color" content="#0a0b10">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: cdn.jsdelivr.net; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
 <meta name="referrer" content="no-referrer">
+<link rel="icon" href="./favicon.ico" sizes="any">
+<link rel="shortcut icon" href="./favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="./images/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./images/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./images/icon-180.png">
@@ -145,6 +147,21 @@
   .btn-donate:hover { background: rgba(100,180,140,0.25); text-decoration: none; }
   .btn-paypal { background: rgba(0,112,186,0.15); color: #5ba8d4; border: 1px solid rgba(0,112,186,0.2); }
   .btn-paypal:hover { background: rgba(0,112,186,0.25); text-decoration: none; }
+  .support-note,
+  .legal-disclaimer {
+    font-size: 12px;
+    color: rgba(255,255,255,0.42);
+    line-height: 1.6;
+  }
+  .support-note { margin-top: 12px; }
+  .legal-disclaimer {
+    margin-top: 14px;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+  }
+  .legal-disclaimer strong { color: rgba(255,255,255,0.72); }
 
   /* Sections */
   .section {
@@ -363,9 +380,10 @@
   <div class="actions">
     <a href="./popup.html" class="btn btn-primary">Get Help Now</a>
     <a href="https://github.com/rob-e-graham/safechat" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
-    <a href="https://paypal.me/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Support via PayPal</a>
-    <a href="https://buymeacoffee.com/famtec" class="btn btn-donate" target="_blank" rel="noopener">Buy Me a Coffee</a>
+    <a href="https://www.paypal.com/paypalme/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Support via PayPal</a>
+    <a href="mailto:rob@fineartmedia.tech?subject=SafeChat%20support" class="btn btn-donate">Donation Options</a>
   </div>
+  <p class="support-note">Buy Me a Coffee is currently unavailable. Use PayPal or email for donation options.</p>
 </div>
 
 <hr class="divider">
@@ -542,6 +560,10 @@
       <a href="https://cdn.jsdelivr.net/gh/rob-e-graham/safechat@main/data/crisis-resources.json" class="btn btn-secondary" download>Download JSON</a>
     </div>
   </div>
+
+  <div class="legal-disclaimer">
+    <strong>Legal disclaimer:</strong> SafeChat is provided as is and is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services. By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, unlawful use, failure to obtain help, failure to detect crisis content, or other harm arising from installation or use. If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat.
+  </div>
 </div>
 
 <hr class="divider">
@@ -609,7 +631,7 @@
     <a href="https://github.com/rob-e-graham/safechat" target="_blank">GitHub</a> &middot;
     <a href="https://github.com/rob-e-graham/safechat/discussions" target="_blank">Discussions</a> &middot;
     <a href="./popup.html">Get Help</a> &middot;
-    <a href="https://paypal.me/specialrequest" target="_blank" rel="noopener">Donate</a> &middot;
+    <a href="https://www.paypal.com/paypalme/specialrequest" target="_blank" rel="noopener">Donate</a> &middot;
     <a href="https://fineartmedia.tech" target="_blank">fineartmedia.tech</a>
   </p>
   <p style="margin-top:16px; font-size:12px;">
