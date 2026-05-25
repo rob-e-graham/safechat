@@ -62,7 +62,7 @@ Normalised input is matched against two tiers of regex patterns:
 
 **LOW signals** indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness ("can't go on", "no point"), worthlessness ("I'm a burden", "nobody cares"), and passive ideation ("done with life", "no hope left"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response.
 
-The current engine includes 45 HIGH patterns, 22 LOW patterns, and 218 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, and security edge cases.
+The current engine includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 308 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, session accumulation, and security edge cases.
 
 ### 3.3 False-Positive Guards
 
@@ -75,6 +75,27 @@ Context-aware guards prevent triggering on figurative or idiomatic language:
 - "the economy is bleeding" (financial metaphor)
 
 Guards are checked before crisis classification. If a matched pattern falls within a known false-positive context, that match is skipped and detection continues.
+
+### 3.4 Subtle Signal Accumulation
+
+Many people in crisis do not use explicit language. Instead, they exhibit clusters of individually unremarkable behaviours that together indicate accumulating distress: social withdrawal, sleep disruption, loss of interest, farewell-like language, self-worth erosion, loss of future orientation, reckless behaviour, and persistent expressions of pain.
+
+SafeChat addresses this through a `ConversationTracker` that monitors signals across a conversation session. Forty-two SUBTLE patterns are organised into eight categories, each weighted by clinical significance (1-3 points). When accumulated weight crosses a threshold (4 points for LOW escalation, 8 points for HIGH), the system escalates its response as if an explicit signal had been detected.
+
+Critically, the tracker stores no message content. Only signal categories and numerical weights are retained in memory, and all data is garbage-collected when the session ends. This preserves the zero-data-collection principle while enabling multi-message risk assessment.
+
+| Category | Example Signals | Weight |
+|----------|----------------|--------|
+| Withdrawal | "pushing everyone away", "haven't left my room in days" | 1-2 |
+| Sleep | "can't sleep again", "awake all night" | 1 |
+| Anhedonia | "nothing is fun anymore", "stopped caring" | 1-2 |
+| Farewell | "giving away my things", "writing letters to everyone" | 2-3 |
+| Self-worth | "I'm just a waste", "hate who I've become" | 1-2 |
+| Future loss | "can't imagine a future", "none of this will matter" | 1-2 |
+| Reckless | "don't care about my safety", "driving drunk" | 2 |
+| Pain | "the pain never stops", "every day gets worse" | 1-2 |
+
+This approach reflects clinical literature on suicide risk assessment, where the accumulation of warning signs across multiple domains is a stronger predictor than any single statement.
 
 ---
 
@@ -95,7 +116,7 @@ The timezone mapping covers 50+ timezone-to-country entries including regional v
 
 ---
 
-## 5. Relationship to ARCHAI and Sovereign AI Research
+## 5. Relationship to ARCHAI, Sovereign AI, and the CARE Principles
 
 SafeChat emerged from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage institutions. Both projects share a foundational position: that critical AI infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud dependencies.
 
@@ -103,9 +124,26 @@ ARCHAI addresses the problem of making museum collections accessible through loc
 
 The shared architectural pattern is what the author terms "sovereign AI infrastructure": systems that provide full functionality from local resources while optionally enhancing from network sources when available. In ARCHAI, this manifests as a layered architecture separating permanent heritage assets from regenerable AI processing. In SafeChat, it manifests as a four-tier resource fallback (CDN, GitHub raw, localStorage cache, inline emergency numbers) that degrades gracefully from rich helpline data to basic emergency numbers without ever failing to provide some form of help.
 
-Both projects also share a commitment to reducing barriers to adoption. ARCHAI targets a deployment cost of $3,500-5,000 USD in one-time hardware investment. SafeChat targets zero cost, zero permissions, and a single line of code to integrate.
+### 5.1 The CARE Principles and Indigenous Data Sovereignty
 
-This work contributes to the author's PhD research question: "How can sovereign AI infrastructure create more accessible, interpretive, and ethically grounded systems of cultural memory that enhance rather than replace curatorial expertise?" SafeChat extends the ethical dimension of this question from cultural heritage to human safety, arguing that the same principles of sovereignty, privacy, and local-first operation that protect cultural data also protect vulnerable users.
+The sovereign architecture shared by ARCHAI and SafeChat is not merely a technical preference but an ethical obligation, particularly when collections hold indigenous cultural material. The CARE Principles for Indigenous Data Governance (Carroll et al., 2020), developed by the Global Indigenous Data Alliance, establish that data ecosystems involving indigenous peoples must uphold four commitments:
+
+- **Collective Benefit.** Data ecosystems should enable indigenous peoples to derive benefit and facilitate indigenous-led development and self-determination.
+- **Authority to Control.** Indigenous peoples have rights to govern data about them, their territories, cultures, and resources, including control over collection, access, and use.
+- **Responsibility.** Those working with indigenous data must nurture respectful relationships and share how data is used, supporting indigenous self-determination and governance.
+- **Ethics.** Indigenous peoples' rights and wellbeing should be the primary concern at all stages of the data lifecycle, minimising harm and maximising benefit as defined by the communities themselves.
+
+Cloud-based AI services violate CARE by design. Sending indigenous collection data to commercial APIs means communities lose authority over how their cultural knowledge is processed, stored, and potentially used for model training. ARCHAI's on-premises architecture directly addresses this: cultural data never leaves the institution, the community retains authority, and processing remains under institutional and community governance.
+
+CARE also informs ARCHAI's approach to content moderation. When visitors comment on objects with indigenous cultural significance, moderation decisions should reflect community-defined boundaries. ARCHAI's constraint system supports culturally sensitive restrictions, and its comment moderation pipeline can route flagged content to community-designated reviewers rather than relying on external moderation APIs whose cultural competency cannot be verified.
+
+CARE complements the FAIR principles (Findable, Accessible, Interoperable, Reusable) that dominate technical data governance. Together, CARE + FAIR represents current best practice in the GLAM (Galleries, Libraries, Archives, Museums) and digital humanities sector. SafeChat's architecture contributes to this synthesis by demonstrating that safety-critical systems can be both technically open (FAIR) and ethically sovereign (CARE).
+
+### 5.2 Shared Commitments
+
+Both projects share a commitment to reducing barriers to adoption. ARCHAI targets a deployment cost of $3,500-5,000 USD in one-time hardware investment. SafeChat targets zero cost, zero permissions, and a single line of code to integrate.
+
+This work contributes to the author's PhD research question: "How can sovereign AI infrastructure create more accessible, interpretive, and ethically grounded systems of cultural memory that enhance rather than replace curatorial expertise?" SafeChat extends the ethical dimension of this question from cultural heritage to human safety, arguing that the same principles of sovereignty, privacy, and local-first operation that protect cultural data also protect vulnerable users. The CARE Principles provide the ethical framework that unifies both projects: sovereign infrastructure is not just better engineering, it is a precondition for respectful engagement with communities and their data.
 
 ---
 
@@ -117,7 +155,7 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 
 **FTC Chatbot Safety Inquiry (2026):** Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies.
 
-**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 218-test suite addresses the categories of failure identified by VERA-MH.
+**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 308-test suite addresses the categories of failure identified by VERA-MH.
 
 **Samaritans Safe Messaging Guidelines:** SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language.
 
@@ -128,7 +166,7 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 SafeChat's regex-based approach has inherent limitations:
 
 - **Language coverage.** Detection patterns currently target English-language input only. Multilingual expansion is planned but non-trivial due to the cultural and linguistic variation in crisis expression.
-- **Indirect signals.** Highly indirect or metaphorical expressions of distress may not trigger detection. The system is calibrated for explicit and semi-explicit signals rather than subtle contextual cues.
+- **Indirect signals.** While the subtle signal accumulation system (Section 3.4) addresses multi-message distress patterns, highly metaphorical or culturally specific expressions of distress may still evade detection. Future work includes optional integration with small language models for nuanced contextual analysis.
 - **Not a clinical tool.** SafeChat is a routing layer, not a diagnostic tool. It identifies signals and connects users to professional resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services.
 - **Helpline data currency.** Despite twice-monthly verification, helpline numbers, URLs, and operating hours can change between verification cycles.
 
@@ -152,3 +190,5 @@ SafeChat is released under the Business Source License 1.1, free for personal, e
 4. Samaritans. (2020). Media Guidelines for Reporting Suicide.
 5. Graham, R. (2026). Cultivating a Living Archive: Sovereign AI for Cultural Heritage. ISEA2026 Dubai.
 6. International Association for Suicide Prevention. (2023). IASP Guidelines for Crisis Centre and Helpline Operations.
+7. Carroll, S.R., Garba, I., Figueroa-Rodriguez, O.L., Holbrook, J., Lovett, R., Materechera, S., Parsons, M., Raseroka, K., Rodriguez-Lonebear, D., Rowe, R., Sara, R., Walker, J.D., Anderson, J. & Hudson, M. (2020). The CARE Principles for Indigenous Data Governance. *Data Science Journal*, 19(1), 43.
+8. Wilkinson, M.D. et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data*, 3, 160018.
