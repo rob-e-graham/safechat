@@ -3,7 +3,7 @@
  * Run: node test/run.js
  */
 
-const { detect, isHighCrisis, isAnyCrisis } = require("../src/detect");
+const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("../src/detect");
 const { fromLocale, fromTimezone, fromRequest } = require("../src/locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat } = require("../src/resources");
 const safechat = require("../src/index");
@@ -456,6 +456,190 @@ assert("none matched is null", detect("hello").matched === null);
 assert("high matched is string", typeof detect("I want to kill myself").matched === "string");
 assert("return is plain object", detect("test").constructor === Object);
 
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EXPANDED DETECTION TESTS — new patterns added in v1.1
+// ══════════════════════════════════════════════════════════════════════════════
+
+section("Expanded HIGH — New explicit signals");
+assert("want to disappear", detect("I want to disappear").level === "high");
+assert("ready to die", detect("I'm ready to die").level === "high");
+assert("ready to end it", detect("I'm ready to end it").level === "high");
+assert("saying goodbye to everyone", detect("I'm saying goodbye to everyone").level === "high");
+assert("this is my last night", detect("this is my last night").level === "high");
+assert("this is my last message", detect("this is my last message goodbye").level === "high");
+assert("no one can save me", detect("no one can save me now").level === "high");
+assert("nothing can help me", detect("nothing can help me").level === "high");
+assert("there's no coming back", detect("there's no coming back from this").level === "high");
+assert("i need everything to stop", detect("i just need everything to stop").level === "high");
+assert("i need it to end", detect("i need it to end").level === "high");
+assert("putting affairs in order", detect("I'm putting my affairs in order").level === "high");
+assert("making my final will", detect("I'm making my final will").level === "high");
+assert("life isn't worth the pain", detect("life isn't worth the pain").level === "high");
+
+section("Expanded LOW — New distress signals");
+assert("can't keep going like this", detect("I can't keep going like this").level === "low");
+assert("can't carry on anymore", detect("I can't carry on anymore").level === "low");
+assert("world better without me", detect("the world would be better without me").level === "low");
+assert("feeling numb", detect("I'm feeling so numb").level === "low");
+assert("don't feel anything", detect("I don't feel anything anymore").level === "low");
+assert("completely alone", detect("I'm completely alone").level === "low");
+assert("never getting better", detect("things are never getting better").level === "low");
+assert("don't want to wake up", detect("I don't want to wake up tomorrow").level === "low");
+assert("can't face tomorrow", detect("I can't face another day").level === "low");
+assert("tired of living", detect("I'm so tired of living").level === "low");
+assert("tired of fighting", detect("I'm just tired of fighting").level === "low");
+assert("nobody will understand", detect("nobody will ever understand me").level === "low");
+assert("don't belong anywhere", detect("I don't belong anywhere").level === "low");
+assert("broken beyond repair", detect("I'm broken beyond repair").level === "low");
+assert("given up on everything", detect("I've given up on everything").level === "low");
+assert("always be alone", detect("I'll always be alone").level === "low");
+assert("can't escape the pain", detect("I can't escape the pain").level === "low");
+assert("don't deserve to live", detect("I don't deserve to live").level === "low");
+assert("don't deserve to be happy", detect("I don't deserve to be happy").level === "low");
+assert("exhausted of everything", detect("I'm so exhausted of everything").level === "low");
+assert("what's the point of living", detect("what's the point of living").level === "low");
+
+section("Expanded FALSE POSITIVES — New guards");
+assert("FP: magic trick disappear", detect("The magician made the coin disappear").level === "none");
+assert("FP: numb fingers cold", detect("My fingers are numb from the cold").level === "none");
+assert("FP: numb hand", detect("My hand went numb after sleeping on it").level === "none");
+assert("FP: tired of cooking", detect("I'm tired of cooking every night").level === "none");
+assert("FP: tired of commuting", detect("I'm exhausted of commuting").level === "none");
+assert("FP: giving away free stuff", detect("I'm giving away free samples for a promotion").level === "none");
+assert("FP: can't sleep coffee", detect("I can't sleep because of the coffee I had").level === "none");
+assert("FP: deleting old files", detect("I'm deleting old files from my computer").level === "none");
+assert("FP: deleting apps", detect("I'm deleting apps to free up space").level === "none");
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SUBTLE SIGNAL TESTS — individually harmless, accumulate across session
+// ══════════════════════════════════════════════════════════════════════════════
+
+section("Subtle signals — single message detection");
+const subtle1 = detectSubtle("I've been staying in bed all day again");
+assert("subtle: staying in bed", subtle1.length > 0);
+assert("subtle: withdrawal category", subtle1.some(s => s.category === "withdrawal"));
+
+const subtle2 = detectSubtle("I can't sleep again, been awake all night");
+assert("subtle: can't sleep", subtle2.length > 0);
+assert("subtle: sleep category", subtle2.some(s => s.category === "sleep"));
+
+const subtle3 = detectSubtle("Nothing is fun anymore, I stopped caring");
+assert("subtle: anhedonia", subtle3.length > 0);
+assert("subtle: anhedonia category", subtle3.some(s => s.category === "anhedonia"));
+
+const subtle4 = detectSubtle("I want to thank everyone for everything");
+assert("subtle: farewell", subtle4.length > 0);
+assert("subtle: farewell category", subtle4.some(s => s.category === "farewell"));
+
+const subtle5 = detectSubtle("I'm just a waste, everything I do fails");
+assert("subtle: self-worth", subtle5.length > 0);
+assert("subtle: self_worth category", subtle5.some(s => s.category === "self_worth"));
+
+const subtle6 = detectSubtle("I can't imagine a future for myself");
+assert("subtle: future loss", subtle6.length > 0);
+assert("subtle: future_loss category", subtle6.some(s => s.category === "future_loss"));
+
+const subtle7 = detectSubtle("Hello, I had a great day at work");
+assert("subtle: normal message = no signals", subtle7.length === 0);
+
+const subtle8 = detectSubtle("The weather is nice today");
+assert("subtle: neutral = no signals", subtle8.length === 0);
+
+const subtle9 = detectSubtle("I don't care about my safety anymore");
+assert("subtle: reckless", subtle9.length > 0);
+assert("subtle: reckless category", subtle9.some(s => s.category === "reckless"));
+
+const subtle10 = detectSubtle("Every day gets harder and harder");
+assert("subtle: pain", subtle10.length > 0);
+assert("subtle: pain category", subtle10.some(s => s.category === "pain"));
+
+section("Subtle signals — should NOT detect (false positive prevention)");
+assert("subtle FP: normal thank you", detectSubtle("Thank you for helping me with this").length === 0);
+assert("subtle FP: normal sleep", detectSubtle("I slept really well last night").length === 0);
+assert("subtle FP: normal tired", detectSubtle("I'm tired after the gym").length === 0);
+assert("subtle FP: normal alone", detectSubtle("I like being alone sometimes").length === 0);
+assert("subtle FP: normal future", detectSubtle("I can't wait for the future").length === 0);
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CONVERSATION TRACKER TESTS — accumulation across messages
+// ══════════════════════════════════════════════════════════════════════════════
+
+section("ConversationTracker — basic operation");
+const tracker1 = new ConversationTracker();
+assert("tracker starts empty", tracker1.getWeight() === 0);
+assert("tracker starts with 0 signals", tracker1.getSignalCount() === 0);
+
+const r1 = tracker1.process("Hello, how are you?");
+assert("tracker: normal message = none", r1.level === "none");
+assert("tracker: not accumulated", r1.accumulated === false);
+assert("tracker: weight still 0", r1.sessionWeight === 0);
+
+section("ConversationTracker — HIGH/LOW pass-through");
+const tracker2 = new ConversationTracker();
+const r2 = tracker2.process("I want to kill myself");
+assert("tracker: high passes through", r2.level === "high");
+assert("tracker: high not marked accumulated", r2.accumulated === false);
+
+const tracker3 = new ConversationTracker();
+const r3 = tracker3.process("I feel completely worthless");
+assert("tracker: low passes through", r3.level === "low");
+
+section("ConversationTracker — accumulation to LOW");
+const tracker4 = new ConversationTracker();
+tracker4.process("I've been staying in bed all day again");           // withdrawal: 1
+tracker4.process("I can't sleep again, been awake all night");        // sleep: 1
+tracker4.process("I hate myself so much");                            // self_worth: 2
+const r4 = tracker4.process("Nothing is fun anymore, I stopped caring");  // anhedonia: 2
+assert("tracker: accumulates to low", r4.level === "low");
+assert("tracker: marked as accumulated", r4.accumulated === true);
+assert("tracker: weight >= threshold", r4.sessionWeight >= 4);
+assert("tracker: has multiple categories", r4.sessionCategories.length >= 3);
+
+section("ConversationTracker — accumulation to HIGH");
+const tracker5 = new ConversationTracker();
+tracker5.process("I'm pushing everyone away");                         // withdrawal: 2
+tracker5.process("I haven't eaten in days");                           // anhedonia: 2
+tracker5.process("I hate who I've become");                            // self_worth: 2
+tracker5.process("I'm giving away my things");                         // farewell: 3
+const r5 = tracker5.process("Every day is worse");                     // pain: 1
+assert("tracker: accumulates to high", r5.level === "high" || r5.sessionWeight >= 8);
+
+section("ConversationTracker — reset");
+const tracker6 = new ConversationTracker();
+tracker6.process("I'm pushing everyone away");
+tracker6.process("I can't sleep again");
+assert("tracker: has signals before reset", tracker6.getSignalCount() > 0);
+tracker6.reset();
+assert("tracker: empty after reset", tracker6.getSignalCount() === 0);
+assert("tracker: weight 0 after reset", tracker6.getWeight() === 0);
+
+section("ConversationTracker — summary");
+const tracker7 = new ConversationTracker();
+tracker7.process("I haven't slept in days");
+tracker7.process("I hate myself");
+const summary = tracker7.summary();
+assert("summary has totalWeight", typeof summary.totalWeight === "number");
+assert("summary has signalCount", typeof summary.signalCount === "number");
+assert("summary has categories", Array.isArray(summary.categories));
+assert("summary has thresholds", typeof summary.thresholdLow === "number");
+
+section("ConversationTracker — custom thresholds");
+const tracker8 = new ConversationTracker({ thresholdLow: 2, thresholdHigh: 4 });
+tracker8.process("I'm pushing everyone away");                         // weight: 2
+const r8 = tracker8.process("I can't sleep again, been awake all night"); // weight: +1 = 3
+assert("custom threshold: lower threshold triggers sooner", r8.level === "low" || r8.sessionWeight >= 2);
+
+section("ConversationTracker — doesn't accumulate normal messages");
+const tracker9 = new ConversationTracker();
+tracker9.process("I had a great day");
+tracker9.process("The weather is beautiful");
+tracker9.process("I went for a run this morning");
+tracker9.process("Making dinner tonight");
+tracker9.process("Watching a movie with friends");
+const r9 = tracker9.process("Life is good");
+assert("tracker: normal conversation stays none", r9.level === "none");
+assert("tracker: no signals from normal chat", r9.sessionWeight === 0);
 
 // ── Results ──
 

@@ -16,7 +16,7 @@
  * @license MIT
  */
 
-const { detect, isHighCrisis, isAnyCrisis } = require("./detect");
+const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");
 const { locate, locateSync, fromRequest, fromLocale, fromTimezone } = require("./locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat, formatForHTML, loadData } = require("./resources");
 
@@ -139,8 +139,12 @@ module.exports = {
 
   // Detection
   detect,
+  detectSubtle,
   isHighCrisis,
   isAnyCrisis,
+
+  // Session tracking
+  ConversationTracker,
 
   // Geo-detection
   locate,
