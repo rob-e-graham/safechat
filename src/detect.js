@@ -55,6 +55,22 @@ function normalise(text) {
   t = t.replace(/\bswalowing\b/g, "swallowing");
   t = t.replace(/\bbleding\b/g, "bleeding");
 
+  // Expanded negations → contractions (so patterns only need one form)
+  t = t.replace(/\bdo not\b/g, "don't");
+  t = t.replace(/\bcannot\b/g, "can't");
+  t = t.replace(/\bcan not\b/g, "can't");
+  t = t.replace(/\bwill not\b/g, "won't");
+  t = t.replace(/\bshould not\b/g, "shouldn't");
+  t = t.replace(/\bwould not\b/g, "wouldn't");
+  t = t.replace(/\bdoes not\b/g, "doesn't");
+  t = t.replace(/\bdid not\b/g, "didn't");
+  t = t.replace(/\bhave not\b/g, "haven't");
+  t = t.replace(/\bhas not\b/g, "hasn't");
+  t = t.replace(/\bis not\b/g, "isn't");
+  t = t.replace(/\bare not\b/g, "aren't");
+  t = t.replace(/\bwere not\b/g, "weren't");
+  t = t.replace(/\bwas not\b/g, "wasn't");
+
   // Text-speak and abbreviations
   t = t.replace(/\bwanna\b/g, "want to");
   t = t.replace(/\bgonna\b/g, "going to");
@@ -198,7 +214,7 @@ const HIGH_SIGNALS = [
   /\b(life|living) is(n'?t| not) worth (it|the (pain|effort|struggle))\b/i,
   /\bi'?ve (made|reached) (my|a) decision\b.*\b(end|die|gone|tonight|tomorrow)\b/i,
   /\bthis (is |will be )?(my )?last (day|night|time|message|goodbye)\b/i,
-  /\bthere'?s no (coming back|turning back|going back)\b/i,
+  /\bthere('?s| is) no (coming back|turning back|going back)\b/i,
   /\bi (just )?need (it|everything|this) to (stop|end|be over)\b/i,
 ];
 
@@ -242,7 +258,7 @@ const LOW_SIGNALS = [
   /\bnever get(ting|s)? better\b/i,
   /\bdon'?t (want to|wanna) wake up\b/i,
   /\bcan'?t (face|handle) (another|tomorrow|the morning)\b/i,
-  /\bi'?m (so |just )?(tired|sick) of (living|life|everything|fighting|trying)\b/i,
+  /\b(i'?m|i am) (so |just )?(tired|sick) of (living|life|everything|fighting|trying)\b/i,
   /\bno(body| one) (would|will) (ever )?(understand|help|miss|notice)\b/i,
   /\bdon'?t (belong|fit in) (here|anywhere)\b/i,
   /\b(broken|damaged) beyond (repair|fixing|help)\b/i,

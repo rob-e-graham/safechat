@@ -13,7 +13,7 @@
  *   const override = safechat.promptOverride("high", "AU");
  *   // → system prompt text telling the AI to stop and show crisis resources
  *
- * @license MIT
+ * @license BSL-1.1 — see LICENSE file
  */
 
 const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");

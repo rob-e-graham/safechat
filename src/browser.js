@@ -26,9 +26,27 @@
     t = t.replace(/\bsuciide?\b/g,"suicide").replace(/\bsuidice?\b/g,"suicide").replace(/\bsuicd\b/g,"suicide");
     t = t.replace(/\boverdoze\b/g,"overdose").replace(/\boverdoase\b/g,"overdose");
     t = t.replace(/\bkil\b/g,"kill");
-    t = t.replace(/\bwanna\b/g,"want to").replace(/\bgonna\b/g,"going to");
+    // Misspellings — self-harm / methods
+    t = t.replace(/\bselfharm\b/g,"self-harm").replace(/\bselh[- ]?arm\b/g,"self-harm");
+    t = t.replace(/\bhaning\b/g,"hanging").replace(/\bjumpin\b/g,"jumping");
+    t = t.replace(/\bswalowing\b/g,"swallowing").replace(/\bbleding\b/g,"bleeding");
+    // Expanded negations → contractions
+    t = t.replace(/\bdo not\b/g,"don't").replace(/\bcannot\b/g,"can't").replace(/\bcan not\b/g,"can't");
+    t = t.replace(/\bwill not\b/g,"won't").replace(/\bshould not\b/g,"shouldn't").replace(/\bwould not\b/g,"wouldn't");
+    t = t.replace(/\bdoes not\b/g,"doesn't").replace(/\bdid not\b/g,"didn't");
+    t = t.replace(/\bhave not\b/g,"haven't").replace(/\bhas not\b/g,"hasn't");
+    t = t.replace(/\bis not\b/g,"isn't").replace(/\bare not\b/g,"aren't");
+    t = t.replace(/\bwere not\b/g,"weren't").replace(/\bwas not\b/g,"wasn't");
+    // Text-speak
+    t = t.replace(/\bwanna\b/g,"want to").replace(/\bgonna\b/g,"going to").replace(/\bgotta\b/g,"got to");
     t = t.replace(/\bwant 2\b/g,"want to").replace(/\b2 die\b/g,"to die");
     t = t.replace(/\bkms\b/g,"kill myself").replace(/\bkys\b/g,"kill yourself");
+    t = t.replace(/\bidk\b/g,"i don't know").replace(/\birl\b/g,"in real life");
+    t = t.replace(/\btbh\b/g,"to be honest").replace(/\bngl\b/g,"not going to lie");
+    t = t.replace(/\bsm\b/g,"so much").replace(/\brn\b/g,"right now");
+    t = t.replace(/\bcan'?t be arsed\b/g,"can't be bothered");
+    t = t.replace(/\bcba\b/g,"can't be bothered").replace(/\bcbb\b/g,"can't be bothered");
+    t = t.replace(/\bdon'?t wanna\b/g,"don't want to").replace(/\bi'?m done\b/g,"i am done");
     return t;
   }
 
@@ -42,6 +60,12 @@
   var FP_OD = /\boverdose[ds]? on (coffee|caffeine|sugar|chocolate|candy|pizza|food|information|data)\b/i;
   var FP_HTML = /class\s*=\s*['"][^'"]*suicid/i;
   var FP_OVER = /\b(game|match|race|show|round|season|movie|film|series|tournament|semester|chapter)\b.*\bover for me\b/i;
+  var FP_DISAPPEAR = /\b(magic trick|magician|card|coin|rabbit)\b.*\bdisappear\b/i;
+  var FP_NUMB = /\b(finger|hand|foot|toe|arm|leg|face|lip|tongue)s?\b.*\bnumb\b|\bnumb\b.*\b(finger|hand|foot|toe|arm|leg|face|lip|tongue)s?\b/i;
+  var FP_TIRED = /\b(tired|sick|exhausted) of (waiting|cooking|cleaning|working|commuting|traffic|my job|the weather|this meeting|homework|studying)\b/i;
+  var FP_GIVING = /\b(giv(e|ing) away|gave away)\b.*\b(free|promotion|contest|charity|raffle|giveaway)\b/i;
+  var FP_SLEEP = /\bcan'?t sleep\b.*\b(coffee|caffeine|noisy|loud|snoring|neighbou?r|heat|cold|jet lag|excited)\b/i;
+  var FP_DELETE = /\b(delet(e|ing|ed))\b.*\b(files?|folders?|apps?|cache|duplicates?|old (photos?|emails?|files?))\b/i;
 
   function isFP(t, matched) {
     if (/cut/.test(matched) && FP_CUT.test(t)) return true;
@@ -51,6 +75,12 @@
     if (/jump/.test(matched) && FP_JUMP.test(t)) return true;
     if (/overdose/.test(matched) && FP_OD.test(t)) return true;
     if (/over for me/.test(matched) && FP_OVER.test(t)) return true;
+    if (/disappear/.test(matched) && FP_DISAPPEAR.test(t)) return true;
+    if (/numb/.test(matched) && FP_NUMB.test(t)) return true;
+    if (/tired|exhausted|sick/.test(matched) && FP_TIRED.test(t)) return true;
+    if (/giv/.test(matched) && FP_GIVING.test(t)) return true;
+    if (/sleep/.test(matched) && FP_SLEEP.test(t)) return true;
+    if (/delet/.test(matched) && FP_DELETE.test(t)) return true;
     return false;
   }
 
@@ -64,6 +94,7 @@
   // ── Detection (synced with detect.js) ──
 
   var HIGH_SIGNALS = [
+    // Explicit suicidal language
     /\bsuicid/i, /\bkill (my|myself|me)\b/i, /\bend(ing)? (my|this) life\b/i,
     /\btake my (own )?life\b/i, /\bwant to die\b/i,
     /\bwish (i was|i were|i'm) dead\b/i, /\bdon'?t want to (be here|live|exist|be alive)\b/i,
@@ -72,20 +103,37 @@
     /\bjump(ing)? (off|from)\b/i, /\bpills?\b.*\b(take|swallow|end)\b/i,
     /\b(end|stop) the pain\b/i, /\bslit(ting)? my\b/i, /\bbleed(ing)? out\b/i,
     /\bshoot(ing)? (my|myself)\b/i, /\bdrown(ing)? (my|myself)\b/i,
+    // Slang
     /\boff myself\b/i, /\btop myself\b/i, /\bbetter off dead\b/i,
+    // Methods
     /\b(easiest|best|fastest|quickest|simplest) way to die\b/i,
     /\bhow (to|do i|can i|would i) (kill|end|off) (myself|my life|it all)\b/i,
+    // Finality
     /\b(this is )?the end (for|of) me\b/i,
     /\bwant (it all|everything|this) to (end|be over|stop)\b/i,
     /\bwant the pain to (stop|end|go away)\b/i,
     /\b(it|this) will (all )?be over soon\b/i,
-    /\b(writing|wrote|write) (my )?(goodbye|suicide) (letters?|notes?)\b/i,
+    // Behavioural warning signs
+    /\b(writing|wrote|write) (my )?(goodbye|suicide|farewell) (letters?|notes?|message)\b/i,
     /\bgave away (all |everything|my stuff|my things|my possessions)\b/i,
     /\bwon'?t be (here|around|alive) (much )?longer\b/i,
     /\bwon'?t (be a problem|have to worry about me|bother anyone)\b/i,
     /\bdon'?t care if i (wake|die|live)\b/i,
     /\bi have a plan\b.*\b(tonight|today|tomorrow|this week|the night)\b/i,
     /\b(do|doing) something (stupid|drastic|rash|permanent)\b/i,
+    // v1.1 expanded signals
+    /\bwant(ing)? to disappear\b/i,
+    /\b(nobody|no one) (will|would) (even )?(notice|care|miss me) (if|when) i('?m| am) gone\b/i,
+    /\bready to (die|go|end it|leave this world)\b/i,
+    /\b(put|putting) (my|the) affairs in order\b/i,
+    /\bmaking (my |a )?(last|final) (wish|will|arrangement)\b/i,
+    /\bsay(ing)? goodbye to everyone\b/i,
+    /\bno(thing| one)? (can|will) (save|help|stop) me\b/i,
+    /\b(life|living) is(n'?t| not) worth (it|the (pain|effort|struggle))\b/i,
+    /\bi'?ve (made|reached) (my|a) decision\b.*\b(end|die|gone|tonight|tomorrow)\b/i,
+    /\bthis (is |will be )?(my )?last (day|night|time|message|goodbye)\b/i,
+    /\bthere('?s| is) no (coming back|turning back|going back)\b/i,
+    /\bi (just )?need (it|everything|this) to (stop|end|be over)\b/i,
   ];
 
   var LOW_SIGNALS = [
@@ -104,6 +152,25 @@
     /\b(it'?s |it is )?over for me\b/i,
     /\bdone with (life|everything|all of this|living)\b/i,
     /\bno hope (for me|left|anymore)\b/i,
+    // v1.1 expanded signals
+    /\bwhat'?s (even )?the point of (living|being alive|going on|trying)\b/i,
+    /\bcan'?t (keep|carry on|continue|keep going) (like this|anymore)\b/i,
+    /\bworld (would be|is) better (off )?without me\b/i,
+    /\b(i |i'?m )?(so |really |just )?(exhausted|drained|empty) (inside|of (life|everything|living))\b/i,
+    /\bfeel(ing|s)? (like |so )?numb\b/i,
+    /\bdon'?t (feel|have) (anything|any emotions?|any feelings?)\b/i,
+    /\b(i |i'?m )?(completely|totally|utterly) (alone|isolated|empty)\b/i,
+    /\bnever get(ting|s)? better\b/i,
+    /\bdon'?t (want to|wanna) wake up\b/i,
+    /\bcan'?t (face|handle) (another|tomorrow|the morning)\b/i,
+    /\b(i'?m|i am) (so |just )?(tired|sick) of (living|life|everything|fighting|trying)\b/i,
+    /\bno(body| one) (would|will) (ever )?(understand|help|miss|notice)\b/i,
+    /\bdon'?t (belong|fit in) (here|anywhere)\b/i,
+    /\b(broken|damaged) beyond (repair|fixing|help)\b/i,
+    /\bgiven up (on|trying|hope|myself|everything)\b/i,
+    /\b(always|forever) (be |feel )?(alone|lonely|miserable|unhappy)\b/i,
+    /\bcan'?t (escape|get away from) (this|it|the pain|my thoughts?)\b/i,
+    /\bdon'?t (deserve|have the right) to (live|be happy|be alive|be here)\b/i,
   ];
 
   function detect(text) {

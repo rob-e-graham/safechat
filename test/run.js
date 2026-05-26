@@ -512,6 +512,27 @@ assert("FP: can't sleep coffee", detect("I can't sleep because of the coffee I h
 assert("FP: deleting old files", detect("I'm deleting old files from my computer").level === "none");
 assert("FP: deleting apps", detect("I'm deleting apps to free up space").level === "none");
 
+section("Expanded — contraction/expansion consistency");
+assert("there's no coming back", detect("there's no coming back from this").level === "high");
+assert("there is no coming back", detect("there is no coming back").level === "high");
+assert("i'm tired of living", detect("I'm so tired of living").level === "low");
+assert("i am tired of living", detect("I am so tired of living").level === "low");
+assert("i'm tired of fighting", detect("I'm just tired of fighting").level === "low");
+assert("i am tired of fighting", detect("I am tired of fighting").level === "low");
+
+section("Expanded — negation normalisation (do not / cannot / will not)");
+assert("don't want to live", detect("I don't want to live anymore").level === "high");
+assert("do not want to live", detect("I do not want to live anymore").level === "high");
+assert("can't go on", detect("I can't go on like this").level === "low");
+assert("cannot go on", detect("I cannot go on like this").level === "low");
+assert("can not go on", detect("I can not go on").level === "low");
+assert("won't be here longer", detect("I won't be here much longer").level === "high");
+assert("will not be here longer", detect("I will not be here much longer").level === "high");
+assert("doesn't matter", detect("nothing matters anymore").level === "low");
+assert("does not see a future", detect("I do not see a future").level === "low");
+assert("FP: do not cut cake", detect("I do not cut the cake").level === "none");
+assert("FP: will not jump topic", detect("I will not jump off the topic").level === "none");
+
 // ══════════════════════════════════════════════════════════════════════════════
 // SUBTLE SIGNAL TESTS — individually harmless, accumulate across session
 // ══════════════════════════════════════════════════════════════════════════════
