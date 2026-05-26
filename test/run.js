@@ -7,6 +7,7 @@ const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } =
 const { fromLocale, fromTimezone, fromRequest } = require("../src/locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat } = require("../src/resources");
 const safechat = require("../src/index");
+const { Shield, createShield, PRESETS } = require("../src/shield");
 
 let passed = 0;
 let failed = 0;
@@ -640,6 +641,253 @@ tracker9.process("Watching a movie with friends");
 const r9 = tracker9.process("Life is good");
 assert("tracker: normal conversation stays none", r9.level === "none");
 assert("tracker: no signals from normal chat", r9.sessionWeight === 0);
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SHIELD TESTS — configurable safety layer
+// ══════════════════════════════════════════════════════════════════════════════
+
+section("Shield — construction & defaults");
+const s1 = createShield();
+assert("createShield returns Shield", s1 instanceof Shield);
+assert("default high mode is interrupt", s1.config.responses.high === "interrupt");
+assert("default low mode is inject", s1.config.responses.low === "inject");
+assert("default subtle mode is flag", s1.config.responses.subtle === "flag");
+assert("default subtle disabled", s1.config.subtle === false);
+assert("default crisis enabled", s1.config.crisis === true);
+assert("no tracker when subtle off", s1.tracker === null);
+
+section("Shield — custom config");
+const s2 = createShield({
+  subtle: true,
+  responses: { high: "flag", low: "log", subtle: "none" },
+});
+assert("custom high mode", s2.config.responses.high === "flag");
+assert("custom low mode", s2.config.responses.low === "log");
+assert("custom subtle mode", s2.config.responses.subtle === "none");
+assert("tracker created when subtle on", s2.tracker !== null);
+
+section("Shield — invalid mode throws");
+let threwInvalid = false;
+try {
+  createShield({ responses: { high: "explode" } });
+} catch (e) {
+  threwInvalid = e.message.includes("invalid response mode");
+}
+assert("invalid mode throws error", threwInvalid);
+
+section("Shield — process() HIGH detection");
+const s3 = createShield({ responses: { high: "interrupt" } });
+const r_high = s3.process("I want to kill myself", { country: "AU" });
+assert("process HIGH level", r_high.level === "high");
+assert("process HIGH action = interrupt", r_high.action === "interrupt");
+assert("process HIGH has resources", r_high.resources !== null);
+assert("process HIGH has promptOverride", r_high.promptOverride.length > 0);
+assert("process HIGH promptOverride has CRISIS", r_high.promptOverride.includes("CRISIS"));
+assert("process HIGH country = AU", r_high.country === "AU");
+assert("process HIGH not accumulated", r_high.accumulated === false);
+assert("process HIGH has timestamp", typeof r_high.timestamp === "number");
+assert("process HIGH has version", r_high.shieldVersion === "1.1");
+
+section("Shield — process() LOW detection");
+const s4 = createShield({ responses: { low: "inject" } });
+const r_low = s4.process("I feel completely worthless", { country: "GB" });
+assert("process LOW level", r_low.level === "low");
+assert("process LOW action = inject", r_low.action === "inject");
+assert("process LOW has resources", r_low.resources !== null);
+assert("process LOW has promptOverride", r_low.promptOverride.length > 0);
+assert("process LOW promptOverride has SAFETY_NOTE", r_low.promptOverride.includes("SAFETY_NOTE"));
+
+section("Shield — process() NONE detection");
+const s5 = createShield();
+const r_none = s5.process("The weather is lovely today", { country: "US" });
+assert("process NONE level", r_none.level === "none");
+assert("process NONE action = none", r_none.action === "none");
+assert("process NONE no resources", r_none.resources === null);
+assert("process NONE empty promptOverride", r_none.promptOverride === "");
+
+section("Shield — response modes");
+// flag mode — no resources, no prompt override
+const s_flag = createShield({ responses: { high: "flag" } });
+const r_flag = s_flag.process("I want to kill myself", { country: "AU" });
+assert("flag mode: level is high", r_flag.level === "high");
+assert("flag mode: action = flag", r_flag.action === "flag");
+assert("flag mode: no resources", r_flag.resources === null);
+assert("flag mode: no promptOverride", r_flag.promptOverride === "");
+
+// log mode
+const s_log = createShield({ responses: { high: "log", low: "log" } });
+const r_log = s_log.process("I want to kill myself", { country: "AU" });
+assert("log mode: action = log", r_log.action === "log");
+assert("log mode: no resources", r_log.resources === null);
+
+// none mode
+const s_nonemode = createShield({ responses: { high: "none" } });
+const r_nonemode = s_nonemode.process("I want to kill myself", { country: "AU" });
+assert("none mode: still detects high", r_nonemode.level === "high");
+assert("none mode: action = none", r_nonemode.action === "none");
+
+section("Shield — inject mode for HIGH");
+const s_inject_high = createShield({ responses: { high: "inject" } });
+const r_inject_high = s_inject_high.process("I want to kill myself", { country: "AU" });
+assert("inject HIGH: has resources", r_inject_high.resources !== null);
+assert("inject HIGH: has promptOverride", r_inject_high.promptOverride.length > 0);
+assert("inject HIGH: SAFETY_PRIORITY in override", r_inject_high.promptOverride.includes("SAFETY_PRIORITY"));
+
+section("Shield — callbacks");
+let crisisFired = false;
+let flagFired = false;
+let logFired = false;
+let callbackFired = false;
+let callbackResult = null;
+
+const s_cb = createShield({
+  responses: { high: "flag", low: "log" },
+  onCrisis: () => { crisisFired = true; },
+  onFlag: () => { flagFired = true; },
+  onLog: () => { logFired = true; },
+  onCallback: () => { callbackFired = true; },
+});
+
+s_cb.process("I want to kill myself", { country: "AU" });
+assert("onCrisis fires on HIGH", crisisFired === true);
+assert("onFlag fires on flag mode", flagFired === true);
+
+crisisFired = false;
+flagFired = false;
+s_cb.process("I feel completely worthless", { country: "AU" });
+assert("onCrisis fires on LOW", crisisFired === true);
+assert("onLog fires on log mode", logFired === true);
+assert("onFlag NOT fired on log mode", flagFired === false);
+
+const s_cb2 = createShield({
+  responses: { high: "callback" },
+  onCallback: (r) => { callbackFired = true; callbackResult = r; },
+});
+s_cb2.process("I want to kill myself", { country: "AU" });
+assert("onCallback fires", callbackFired === true);
+assert("onCallback receives result", callbackResult !== null && callbackResult.level === "high");
+
+section("Shield — callback error doesn't break pipeline");
+const s_cb_err = createShield({
+  responses: { high: "flag" },
+  onFlag: () => { throw new Error("broken callback"); },
+});
+let errorResult = null;
+try {
+  errorResult = s_cb_err.process("I want to kill myself", { country: "AU" });
+} catch (_) {}
+assert("broken callback doesn't crash", errorResult !== null);
+assert("broken callback still returns result", errorResult.level === "high");
+
+section("Shield — subtle signal accumulation");
+const s_subtle = createShield({
+  subtle: true,
+  subtleThresholdLow: 4,
+  subtleThresholdHigh: 8,
+  responses: { high: "interrupt", low: "inject", subtle: "flag" },
+});
+
+const rs1 = s_subtle.process("I've been staying in bed all day", { country: "AU" });
+assert("subtle: first message none", rs1.level === "none");
+assert("subtle: session data present", rs1.session !== null);
+assert("subtle: session has weight", typeof rs1.session.weight === "number");
+
+s_subtle.process("I can't sleep again", { country: "AU" });
+s_subtle.process("I hate myself so much", { country: "AU" });
+const rs4 = s_subtle.process("Nothing is fun anymore", { country: "AU" });
+assert("subtle: accumulates to non-none", rs4.level !== "none" || rs4.session.weight >= 4);
+if (rs4.accumulated) {
+  assert("subtle: accumulated flag", rs4.action === "flag");
+}
+
+section("Shield — resetSession");
+s_subtle.resetSession();
+const rs_reset = s_subtle.process("Hello there", { country: "AU" });
+assert("reset: level is none", rs_reset.level === "none");
+assert("reset: weight is 0", rs_reset.session.weight === 0);
+
+section("Shield — sessionSummary");
+const s_summ = createShield({ subtle: true });
+s_summ.process("I can't sleep again");
+const summ = s_summ.sessionSummary();
+assert("summary not null", summ !== null);
+assert("summary has totalWeight", typeof summ.totalWeight === "number");
+assert("summary has signalCount", typeof summ.signalCount === "number");
+assert("summary: no tracker = null", createShield().sessionSummary() === null);
+
+section("Shield — configure() runtime updates");
+const s_conf = createShield({ responses: { high: "interrupt" } });
+assert("initial high mode", s_conf.config.responses.high === "interrupt");
+s_conf.configure({ responses: { high: "flag" } });
+assert("updated high mode", s_conf.config.responses.high === "flag");
+assert("low mode unchanged", s_conf.config.responses.low === "inject");
+
+// Invalid mode in configure throws
+let threwConfig = false;
+try { s_conf.configure({ responses: { high: "explode" } }); } catch (_) { threwConfig = true; }
+assert("configure invalid mode throws", threwConfig);
+
+// Toggle subtle on
+s_conf.configure({ subtle: true });
+assert("configure enables tracker", s_conf.tracker !== null);
+s_conf.configure({ subtle: false });
+assert("configure disables tracker", s_conf.tracker === null);
+
+// Update callbacks
+let newCbFired = false;
+s_conf.configure({ onCrisis: () => { newCbFired = true; } });
+s_conf.configure({ responses: { high: "interrupt" } });
+s_conf.process("I want to kill myself", { country: "AU" });
+assert("configure updates callback", newCbFired === true);
+
+section("Shield — middleware");
+const s_mw = createShield({ responses: { high: "flag" } });
+const mwFn = s_mw.middleware();
+assert("middleware returns function", typeof mwFn === "function");
+
+const fakeReq2 = { headers: { "cf-ipcountry": "NZ" } };
+let mwNextCalled = false;
+mwFn(fakeReq2, {}, () => { mwNextCalled = true; });
+assert("shield middleware calls next", mwNextCalled === true);
+assert("shield middleware attaches safechat", typeof fakeReq2.safechat === "object");
+assert("shield middleware has country", fakeReq2.safechat.country === "NZ");
+assert("shield middleware has process", typeof fakeReq2.safechat.process === "function");
+const mwResult = fakeReq2.safechat.process("I want to kill myself");
+assert("shield middleware process works", mwResult.level === "high");
+assert("shield middleware process uses shield config", mwResult.action === "flag");
+
+section("Shield — PRESETS");
+assert("presets: companion exists", PRESETS.companion !== undefined);
+assert("presets: chatbot exists", PRESETS.chatbot !== undefined);
+assert("presets: moderation exists", PRESETS.moderation !== undefined);
+assert("presets: strict exists", PRESETS.strict !== undefined);
+assert("presets: shadow exists", PRESETS.shadow !== undefined);
+assert("presets: museum exists", PRESETS.museum !== undefined);
+
+const companion = createShield(PRESETS.companion);
+assert("preset companion: subtle on", companion.config.subtle === true);
+assert("preset companion: high = interrupt", companion.config.responses.high === "interrupt");
+assert("preset companion: low = inject", companion.config.responses.low === "inject");
+
+const strict = createShield(PRESETS.strict);
+assert("preset strict: high = interrupt", strict.config.responses.high === "interrupt");
+assert("preset strict: low = interrupt", strict.config.responses.low === "interrupt");
+assert("preset strict: lower thresholds", strict.config.subtleThresholdLow === 3);
+
+const shadow = createShield(PRESETS.shadow);
+const shadowResult = shadow.process("I want to kill myself", { country: "AU" });
+assert("preset shadow: detects high", shadowResult.level === "high");
+assert("preset shadow: action = log", shadowResult.action === "log");
+assert("preset shadow: no resources", shadowResult.resources === null);
+
+const museum = createShield(PRESETS.museum);
+assert("preset museum: subtle off", museum.config.subtle === false);
+assert("preset museum: high = flag", museum.config.responses.high === "flag");
+
+section("Shield — exports from index.js");
+assert("index exports Shield", safechat.Shield === Shield);
+assert("index exports createShield", safechat.createShield === createShield);
+assert("index exports PRESETS", safechat.PRESETS === PRESETS);
 
 // ── Results ──
 

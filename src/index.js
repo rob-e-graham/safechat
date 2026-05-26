@@ -19,6 +19,7 @@
 const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");
 const { locate, locateSync, fromRequest, fromLocale, fromTimezone } = require("./locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat, formatForHTML, loadData } = require("./resources");
+const { Shield, createShield, PRESETS } = require("./shield");
 
 /**
  * One-call safety check: detect crisis level + get localized resources.
@@ -161,4 +162,9 @@ module.exports = {
   formatForChat,
   formatForHTML,
   loadData,
+
+  // Shield — configurable safety layer
+  Shield,
+  createShield,
+  PRESETS,
 };
