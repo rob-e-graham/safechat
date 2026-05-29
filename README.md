@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 100+ verified helplines &middot; 205 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 100+ verified helplines &middot; 420 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -175,7 +175,7 @@ SafeChat is designed for trust:
 - **Input validation** — type checking, ReDoS protection, JSON structure validation
 - **Scoped service worker** — only intercepts same-origin requests
 - **No cookies, no analytics, no tracking**
-- **205 automated tests** including security/adversarial inputs
+- **420 automated tests** including security/adversarial inputs
 - **Referrer policy** — `no-referrer` on all pages
 
 ---
@@ -211,6 +211,17 @@ Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Finland, France, Ge
 
 ---
 
+## Ongoing Development
+
+SafeChat is under continuous, active development. See [CHANGELOG.md](CHANGELOG.md) for a full record of detection improvements, new patterns, and accuracy gains. Every change is tested, timestamped, and publicly documented.
+
+- **False negatives** are treated as critical defects
+- **Crisis resource data** is verified twice monthly
+- **Test suite** must pass before every release (currently 420 tests)
+- **Detection patterns** are reviewed against published clinical literature
+
+---
+
 ## Licensing
 
 SafeChat uses **Business Source License (BSL 1.1)**.
@@ -231,7 +242,9 @@ SafeChat is provided **as is**. It is not emergency medical care, legal advice, 
 
 By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, failure to obtain help, failure to detect crisis content, unlawful use, or other harm arising from installation or use.
 
-If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat. See [LICENSE](LICENSE) for the full disclaimer and limitation of liability.
+SafeChat is a routing layer, not a diagnostic tool. It identifies textual signals and connects users to professional resources. It does not assess clinical risk or replace professional mental health services.
+
+If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat. See [LICENSE](LICENSE) and [docs/legal-disclaimer.md](docs/legal-disclaimer.md) for the full disclaimer, integrator responsibilities, and limitation of liability.
 
 ---
 
