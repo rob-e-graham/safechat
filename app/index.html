@@ -394,7 +394,7 @@
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
     <div><div class="stat-num blue">100+</div><div class="stat-label">Helplines</div></div>
-    <div><div class="stat-num green">218</div><div class="stat-label">Tests</div></div>
+    <div><div class="stat-num green">420</div><div class="stat-label">Tests</div></div>
     <div><div class="stat-num gold">0</div><div class="stat-label">Permissions</div></div>
   </div>
 
@@ -417,7 +417,7 @@
     <div class="feature">
       <div class="tag tag-free">Free Forever</div>
       <h3>Crisis Detection</h3>
-      <p>Regex-based detection runs locally on the device. No API calls. No data leaves the user. Catches misspellings, text-speak, indirect warning signs, and passive suicidality.</p>
+      <p>Regex-based detection runs locally on the device. No API calls. No data leaves the user. Catches misspellings, text-speak, negation variants, indirect warning signs, and passive suicidality. False-positive guards filter figurative language.</p>
     </div>
     <div class="feature">
       <div class="tag tag-free">Free Forever</div>
@@ -428,6 +428,16 @@
       <div class="tag tag-free">Free Forever</div>
       <h3>Verified Helpline Database</h3>
       <p>100+ helplines across 34 countries. Phone, text, chat, email, WhatsApp. Community-verified. Auto-checked twice monthly. CC0 public domain data.</p>
+    </div>
+    <div class="feature">
+      <div class="tag tag-research">v1.1</div>
+      <h3>Subtle Signal Accumulation</h3>
+      <p>Tracks 42 patterns across 8 categories (withdrawal, sleep, anhedonia, farewell, self-worth, future loss, reckless, pain) across a conversation session. Escalates when distress accumulates over time.</p>
+    </div>
+    <div class="feature">
+      <div class="tag tag-tool">Developer Tool</div>
+      <h3>Configurable Shield</h3>
+      <p>Drop-in safety layer with 6 response modes (interrupt, inject, flag, log, callback, none) and 6 presets (companion, chatbot, moderation, strict, shadow, museum). One line of code.</p>
     </div>
     <div class="feature">
       <div class="tag tag-tool">Developer Tool</div>
@@ -551,7 +561,7 @@
   <p class="section-sub">Everything you need to add crisis safety to your app. Free. No account required.</p>
 
   <div class="legal-disclaimer">
-    <strong>Legal disclaimer:</strong> SafeChat is provided as is and is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services. By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, unlawful use, failure to obtain help, failure to detect crisis content, or other harm arising from installation or use. If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat.
+    <strong>Legal disclaimer:</strong> SafeChat is a routing layer, not a diagnostic tool. It identifies textual signals that may indicate distress and connects users to verified professional crisis resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services, emergency services, or local crisis procedures. SafeChat is provided as is, without warranty of any kind. By downloading, installing, deploying, integrating, or using SafeChat, you accept responsibility for your own installation, configuration, compliance, testing, supervision, and use. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for damages, losses, legal claims, regulatory penalties, system damage, data loss, personal injury, death, unlawful use, failure to obtain help, failure to detect crisis content, or other harm arising from installation or use. See <a href="https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md" target="_blank" rel="noopener">full legal disclaimer</a> for details. If you do not accept these terms, do not download, install, deploy, integrate, or use SafeChat.
   </div>
 
   <div class="legal-framework">
@@ -577,7 +587,7 @@
     </div>
     <div class="legal-item">
       <strong>Crisis-Care Limitation</strong>
-      <span>SafeChat is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services.</span>
+      <span>SafeChat is a routing layer, not a diagnostic tool. It is not emergency medical care, legal advice, professional mental health treatment, or a substitute for emergency services, clinicians, or local crisis procedures.</span>
     </div>
   </div>
 
@@ -668,6 +678,21 @@
 
 <hr class="divider">
 
+<!-- Ongoing Development -->
+<div class="section">
+  <h2>Ongoing Development</h2>
+  <p class="section-sub">SafeChat is under continuous, active development. Every change is tested, timestamped, and publicly documented.</p>
+  <div class="features" style="grid-template-columns: 1fr;">
+    <div class="feature">
+      <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;">
+        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 420 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+      </p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
 <!-- Footer -->
 <footer>
   <div class="footer-brand">
@@ -685,6 +710,7 @@
   <p style="margin-top:16px; font-size:12px;">
     If you or someone you know is in crisis: <a href="https://findahelpline.com" target="_blank" style="color:#e94560;">findahelpline.com</a>
   </p>
+  <p style="margin-top:10px;font-size:10px;color:rgba(255,255,255,0.15);">v1.1.0 &middot; BSL-1.1 &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Legal</a> &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Changelog</a></p>
 </footer>
 
 <!-- Detection engine (inline for demo) -->
