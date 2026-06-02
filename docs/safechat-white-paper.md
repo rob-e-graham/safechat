@@ -5,13 +5,13 @@ FAMTEC (Fine Art Media Technology)
 PhD Candidate, School of Design, RMIT University
 Supervisor: Chris Barker
 
-May 2026
+June 2026 (v1.1.0)
 
 ---
 
 ## Abstract
 
-As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is an open-source international chat safety protocol that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities.
+As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is an open-source international chat safety protocol -- a routing layer that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. SafeChat does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, configurable deployment modes, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities.
 
 ---
 
@@ -49,10 +49,12 @@ User input undergoes preprocessing before pattern matching:
 
 - Unicode normalisation (smart quotes to ASCII)
 - Whitespace collapse
-- Common misspelling correction (e.g., "suicde", "suiside", "overdoze")
-- Text-speak expansion (e.g., "kms" to "kill myself", "wanna" to "want to", "2 die" to "to die")
+- Common misspelling correction (e.g., "suicde", "suiside", "overdoze", "selfharm", "haning")
+- Text-speak expansion (e.g., "kms" to "kill myself", "wanna" to "want to", "2 die" to "to die", "idk", "tbh", "ngl", "cba")
+- Negation normalisation: expanded negations are contracted before pattern matching (e.g., "do not" to "don't", "cannot" to "can't", "will not" to "won't", "should not" to "shouldn't"). This ensures that formal or expanded phrasing -- common in careful, distressed writing -- is detected by the same patterns that catch contracted forms. Fourteen negation rules are applied.
+- Contraction consistency: patterns accept both contracted and expanded forms (e.g., "there's no coming back" and "there is no coming back" both match; "I'm tired of living" and "I am tired of living" both match).
 
-This layer ensures that crisis signals are not missed due to spelling errors, text-speak conventions, or unicode variation, which are common in the informal register typical of chat interactions.
+This layer ensures that crisis signals are not missed due to spelling errors, text-speak conventions, formal phrasing, or unicode variation, which are common in the varied registers of chat interactions.
 
 ### 3.2 Signal Classification
 
@@ -62,7 +64,7 @@ Normalised input is matched against two tiers of regex patterns:
 
 **LOW signals** indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness ("can't go on", "no point"), worthlessness ("I'm a burden", "nobody cares"), and passive ideation ("done with life", "no hope left"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response.
 
-The current engine includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 308 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, session accumulation, and security edge cases.
+The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 420 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
 
 ### 3.3 False-Positive Guards
 
@@ -73,6 +75,8 @@ Context-aware guards prevent triggering on figurative or idiomatic language:
 - "overdosed on coffee" (non-drug context)
 - "the game is over for me" (entertainment context)
 - "the economy is bleeding" (financial metaphor)
+- "magic trick disappear" / "numb fingers" / "tired of cooking" (non-crisis context)
+- "giving away promotions" / "deleting old files" (non-farewell context)
 
 Guards are checked before crisis classification. If a matched pattern falls within a known false-positive context, that match is skipped and detection continues.
 
@@ -116,7 +120,43 @@ The timezone mapping covers 50+ timezone-to-country entries including regional v
 
 ---
 
-## 5. Relationship to ARCHAI, Sovereign AI, and the CARE Principles
+## 5. Configurable Shield Class
+
+Different AI deployment contexts require different safety responses. A companion chatbot should interrupt conversation and show crisis resources immediately. A research platform might flag and log signals for later review. A museum exhibit might use a softer approach. SafeChat addresses this through the Shield class, a configurable safety layer that wraps the detection engine.
+
+### 5.1 Response Modes
+
+The Shield supports six response modes, configurable independently for HIGH and LOW signal levels:
+
+| Mode | Behaviour |
+|------|-----------|
+| **interrupt** | Stop normal flow, return crisis resources immediately |
+| **inject** | Prepend crisis context to the AI system prompt |
+| **flag** | Mark the message with signal metadata for downstream handling |
+| **log** | Record the detection event without altering the response |
+| **callback** | Execute a developer-defined function (e.g., alert a human moderator) |
+| **none** | No action for this signal level |
+
+### 5.2 Deployment Presets
+
+Six presets provide sensible defaults for common deployment contexts:
+
+| Preset | HIGH Mode | LOW Mode | Use Case |
+|--------|-----------|----------|----------|
+| **companion** | interrupt | inject | AI companion apps (Character.AI, Replika-style) |
+| **chatbot** | inject | flag | General chatbots (customer service, assistants) |
+| **moderation** | flag | log | Content moderation pipelines |
+| **strict** | interrupt | interrupt | High-risk contexts (youth, clinical adjacency) |
+| **shadow** | log | log | Research and monitoring |
+| **museum** | inject | none | Cultural heritage exhibits (ARCHAI integration) |
+
+The Shield also provides `resetSession()` for clearing accumulated subtle signals, `sessionSummary()` for reviewing session-level risk data, `configure()` for runtime updates, and Express middleware for server-side integration.
+
+Callbacks support error resilience: if a callback throws, the Shield continues processing rather than failing silently or crashing the host application.
+
+---
+
+## 6. Relationship to ARCHAI, Sovereign AI, and the CARE Principles
 
 SafeChat emerged from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage institutions. Both projects share a foundational position: that critical AI infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud dependencies.
 
@@ -124,7 +164,7 @@ ARCHAI addresses the problem of making museum collections accessible through loc
 
 The shared architectural pattern is what the author terms "sovereign AI infrastructure": systems that provide full functionality from local resources while optionally enhancing from network sources when available. In ARCHAI, this manifests as a layered architecture separating permanent heritage assets from regenerable AI processing. In SafeChat, it manifests as a four-tier resource fallback (CDN, GitHub raw, localStorage cache, inline emergency numbers) that degrades gracefully from rich helpline data to basic emergency numbers without ever failing to provide some form of help.
 
-### 5.1 The CARE Principles and Indigenous Data Sovereignty
+### 6.1 The CARE Principles and Indigenous Data Sovereignty
 
 The sovereign architecture shared by ARCHAI and SafeChat is not merely a technical preference but an ethical obligation, particularly when collections hold indigenous cultural material. The CARE Principles for Indigenous Data Governance (Carroll et al., 2020), developed by the Global Indigenous Data Alliance, establish that data ecosystems involving indigenous peoples must uphold four commitments:
 
@@ -139,7 +179,7 @@ CARE also informs ARCHAI's approach to content moderation. When visitors comment
 
 CARE complements the FAIR principles (Findable, Accessible, Interoperable, Reusable) that dominate technical data governance. Together, CARE + FAIR represents current best practice in the GLAM (Galleries, Libraries, Archives, Museums) and digital humanities sector. SafeChat's architecture contributes to this synthesis by demonstrating that safety-critical systems can be both technically open (FAIR) and ethically sovereign (CARE).
 
-### 5.2 Shared Commitments
+### 6.2 Shared Commitments
 
 Both projects share a commitment to reducing barriers to adoption. ARCHAI targets a deployment cost of $3,500-5,000 USD in one-time hardware investment. SafeChat targets zero cost, zero permissions, and a single line of code to integrate.
 
@@ -147,7 +187,7 @@ This work contributes to the author's PhD research question: "How can sovereign 
 
 ---
 
-## 6. Regulatory Alignment
+## 7. Regulatory Alignment
 
 SafeChat's design anticipates and addresses requirements from multiple regulatory frameworks:
 
@@ -155,13 +195,15 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 
 **FTC Chatbot Safety Inquiry (2026):** Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies.
 
-**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 308-test suite addresses the categories of failure identified by VERA-MH.
+**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 420-test suite addresses the categories of failure identified by VERA-MH.
+
+**EU AI Act (2024-2026):** Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, open-source safety infrastructure that supports compliance without creating cloud dependencies.
 
 **Samaritans Safe Messaging Guidelines:** SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language.
 
 ---
 
-## 7. Limitations
+## 8. Limitations
 
 SafeChat's regex-based approach has inherent limitations:
 
@@ -172,13 +214,38 @@ SafeChat's regex-based approach has inherent limitations:
 
 ---
 
-## 8. Availability
+## 9. Ongoing Development
+
+SafeChat is under continuous, active development. The project maintains:
+
+- A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains.
+- A test suite (currently 420 automated tests) that must pass before any release.
+- A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours).
+- A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects.
+- A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.
+
+This ongoing process reflects the project's commitment to continuous safety improvement. It does not constitute a warranty, guarantee of fitness, or assumption of liability.
+
+---
+
+## 10. Availability
 
 SafeChat is released under the Business Source License 1.1, free for personal, educational, research, nonprofit, community, and small commercial use. The helpline database is released under CC0 public domain dedication. The change license (MPL 2.0) takes effect on 2029-01-01.
 
 - **Live site:** https://rob-e-graham.github.io/safechat
+- **Get help now (PWA):** https://rob-e-graham.github.io/safechat/app/popup.html
 - **Source code:** https://github.com/rob-e-graham/safechat
 - **Contact:** rob@fineartmedia.tech
+
+---
+
+## 11. Disclaimer
+
+SafeChat is a routing layer, not a diagnostic tool. It identifies textual signals that may indicate distress and connects users to verified professional crisis resources. It does not assess clinical risk, provide therapeutic intervention, make diagnoses, or replace professional mental health services, emergency services, qualified clinicians, safeguarding teams, or local crisis response procedures.
+
+SafeChat is provided as is, without warranty of any kind, express or implied. To the maximum extent permitted by law, Rob Graham, FAMTEC, contributors, maintainers, copyright holders, and licensors are not liable for any damages, losses, or harm arising from the use or inability to use SafeChat. See the full legal disclaimer at https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md for details.
+
+If you or someone you know is in crisis, contact your local emergency services or visit https://findahelpline.com.
 
 ---
 
