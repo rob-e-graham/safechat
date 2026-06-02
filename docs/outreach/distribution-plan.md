@@ -31,7 +31,7 @@ Every public-facing surface includes:
 
 ### LinkedIn Post
 - Post the long version from `safechat-linkedin-post.md`
-- Tag: RMIT University, Chris Barker, FAMTEC
+- Tag: RMIT University, FAMTEC
 - Hashtags: #AIEthics #OpenSource #MentalHealth #AISafety #SuicidePrevention
 - Best time: Tuesday-Thursday, morning AEST
 

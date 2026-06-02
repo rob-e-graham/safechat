@@ -160,9 +160,8 @@ const doc = new Document({
         }),
         para([new TextRun({ text: "FAMTEC (Fine Art Media Technology)", font: "Cambria", size: 22, color: "555555" })], { center: true }),
         para([new TextRun({ text: "PhD Candidate, School of Design, RMIT University", font: "Cambria", size: 22, color: "555555" })], { center: true }),
-        para([new TextRun({ text: "Supervisor: Chris Barker", font: "Cambria", size: 22, color: "555555" })], { center: true }),
         new Paragraph({ spacing: { before: 400 }, alignment: AlignmentType.CENTER, children: [
-          new TextRun({ text: "May 2026", font: "Cambria", size: 24, color: "777777" }),
+          new TextRun({ text: "June 2026 (v1.1.0)", font: "Cambria", size: 24, color: "777777" }),
         ]}),
       ],
     },

@@ -3,7 +3,6 @@
 **Rob Graham**
 FAMTEC (Fine Art Media Technology)
 PhD Candidate, School of Design, RMIT University
-Supervisor: Chris Barker
 
 June 2026 (v1.1.0)
 

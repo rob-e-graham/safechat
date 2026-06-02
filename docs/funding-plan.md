@@ -87,7 +87,7 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 - **Amount:** $50,000–$300,000/year for 2–5 years
 - **URL:** https://www.arc.gov.au/funding-research/funding-schemes/linkage-program/linkage-projects
 - **Fit:** Excellent for PhD-adjacent work. FAMTEC as Partner Organisation, RMIT as administering university, SafeChat as the research output.
-- **Action:** Begin assembling now. Needs RMIT support (supervisor Chris Barker) and FAMTEC cash/in-kind contribution documented.
+- **Action:** Begin assembling now. Needs RMIT support and FAMTEC cash/in-kind contribution documented.
 
 ### Australian AI Safety Institute (AISI)
 - **Deadline:** TBC — institute launching 2026 with $29.9M

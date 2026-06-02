@@ -63,7 +63,7 @@ I am a PhD candidate at RMIT University (Melbourne, Australia) in the School of 
 
 Through FAMTEC (Fine Art Media Technology), I develop ethical AI tools and creative technology. SafeChat is FAMTEC's first open-source public infrastructure project.
 
-I have presented work on AI ethics and sovereign technology at international conferences, and I am presenting at ISEA2026 in Dubai on related themes. My supervisor is Chris Barker at RMIT.
+I have presented work on AI ethics and sovereign technology at international conferences, and I am presenting at ISEA2026 in Dubai on related themes.
 
 SafeChat is already live and functional — it is not a concept. The current release (v1.1.0) includes 420 automated tests, a public changelog documenting every detection improvement, and a twice-monthly verification process for crisis resource data. The project follows Samaritans safe messaging guidelines for responsible communication about crisis topics.
 
