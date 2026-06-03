@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 100+ verified helplines &middot; 420 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 100+ verified helplines &middot; 424 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -175,7 +175,7 @@ SafeChat is designed for trust:
 - **Input validation** — type checking, ReDoS protection, JSON structure validation
 - **Scoped service worker** — only intercepts same-origin requests
 - **No cookies, no analytics, no tracking**
-- **420 automated tests** including security/adversarial inputs
+- **424 automated tests** including security/adversarial inputs
 - **Referrer policy** — `no-referrer` on all pages
 
 ---
@@ -217,7 +217,7 @@ SafeChat is under continuous, active development. See [CHANGELOG.md](CHANGELOG.m
 
 - **False negatives** are treated as critical defects
 - **Crisis resource data** is verified twice monthly
-- **Test suite** must pass before every release (currently 420 tests)
+- **Test suite** must pass before every release (currently 424 tests)
 - **Detection patterns** are reviewed against published clinical literature
 
 ---

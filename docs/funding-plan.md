@@ -96,10 +96,10 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 - **Action:** Monitor for grant program announcements. Register interest when programs open.
 
 ### Suicide Prevention Australia — Research Grants
-- **Deadline:** Watch for 2026/2027 reopening
+- **Deadline:** June 23, 2026
 - **URL:** https://www.suicidepreventionaust.org/research-grants/
-- **Fit:** Direct alignment. Innovation Research Grants stream is the best match.
-- **Action:** Monitor for next call.
+- **Fit:** Direct alignment. Innovation Research Grants and Implementation Science Grants are both strong matches.
+- **Action:** Apply immediately. Confirm whether RMIT must administer, request partner letters, and use `docs/funding-sprint-2026-06.md` as the working brief.
 
 ### VicHealth Grants
 - **Deadline:** Check VicHealth website
@@ -155,7 +155,7 @@ This is a strategic decision with commercial implications. Consider before apply
 
 | Month | Action |
 |-------|--------|
-| **June 2026** | Submit NLnet application (June 1 deadline). Submit Sovereign Tech Fund. Submit OTF concept note. Register with DPGA. |
+| **June 2026** | Submit Suicide Prevention Australia application by June 23. Follow up NLnet June 1 submission. Submit Sovereign Tech Fund. Submit OTF concept note. Register with DPGA if licensing is acceptable. |
 | **July 2026** | Submit Coefficient Giving proposal. Begin Shuttleworth preparation. |
 | **August 2026** | Monitor MRFF, SPA, VicHealth rounds. Present at conferences. |
 | **September 2026** | Watch for Echoing Green 2027 opening. Continue Shuttleworth prep. |
@@ -190,7 +190,7 @@ Scale up or down depending on grant size. NLnet applications should target the E
 
 2. **Solution:** SafeChat is a routing layer — it detects textual distress signals and connects users to verified professional crisis resources. It does not diagnose, treat, or replace professional services.
 
-3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 420 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
+3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 424 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
 
 4. **Traction:** Live at rob-e-graham.github.io/safechat. 100+ verified helplines. Configurable Shield class with 6 presets for different deployment contexts. Active CHANGELOG with public git history documenting every improvement.
 

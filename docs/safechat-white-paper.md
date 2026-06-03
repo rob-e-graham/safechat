@@ -63,7 +63,7 @@ Normalised input is matched against two tiers of regex patterns:
 
 **LOW signals** indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness ("can't go on", "no point"), worthlessness ("I'm a burden", "nobody cares"), and passive ideation ("done with life", "no hope left"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response.
 
-The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 420 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
+The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 424 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
 
 ### 3.3 False-Positive Guards
 
@@ -194,7 +194,7 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 
 **FTC Chatbot Safety Inquiry (2026):** Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies.
 
-**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 420-test suite addresses the categories of failure identified by VERA-MH.
+**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 424-test suite addresses the categories of failure identified by VERA-MH.
 
 **EU AI Act (2024-2026):** Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, open-source safety infrastructure that supports compliance without creating cloud dependencies.
 
@@ -218,7 +218,7 @@ SafeChat's regex-based approach has inherent limitations:
 SafeChat is under continuous, active development. The project maintains:
 
 - A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains.
-- A test suite (currently 420 automated tests) that must pass before any release.
+- A test suite (currently 424 automated tests) that must pass before any release.
 - A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours).
 - A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects.
 - A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.

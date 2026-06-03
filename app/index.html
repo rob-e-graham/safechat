@@ -394,7 +394,7 @@
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
     <div><div class="stat-num blue">100+</div><div class="stat-label">Helplines</div></div>
-    <div><div class="stat-num green">420</div><div class="stat-label">Tests</div></div>
+    <div><div class="stat-num green">424</div><div class="stat-label">Tests</div></div>
     <div><div class="stat-num gold">0</div><div class="stat-label">Permissions</div></div>
   </div>
 
@@ -685,7 +685,7 @@
   <div class="features" style="grid-template-columns: 1fr;">
     <div class="feature">
       <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;">
-        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 420 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 424 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
       </p>
     </div>
   </div>
@@ -718,6 +718,34 @@
 <script>
   var input = document.getElementById('demo-input');
   var result = document.getElementById('demo-result');
+  var lastAlertLevel = 'none';
+  var alertTimer = null;
+
+  function scheduleSafetyUI(level) {
+    if (level === 'none') {
+      clearTimeout(alertTimer);
+      lastAlertLevel = 'none';
+      return;
+    }
+
+    if (level === lastAlertLevel) return;
+    lastAlertLevel = level;
+    clearTimeout(alertTimer);
+
+    alertTimer = setTimeout(function() {
+      if (level === 'high') {
+        var existingBanner = document.getElementById('safechat-banner');
+        if (existingBanner) existingBanner.remove();
+        Safechat.showModal(Safechat.locateCountry() || 'US');
+      } else if (level === 'low') {
+        Safechat.showBanner({
+          country: Safechat.locateCountry() || 'US',
+          message: 'SafeChat found a distress signal in this demo.'
+        });
+      }
+    }, 350);
+  }
+
   input.addEventListener('input', function() {
     var r = Safechat.detect(input.value);
     result.className = 'demo-result level-' + r.level;
@@ -728,6 +756,7 @@
     } else {
       result.textContent = 'Level: HIGH — crisis signal detected: "' + r.matched + '"';
     }
+    scheduleSafetyUI(r.level);
   });
 
   // Cross-origin download handler — fetch as blob then trigger save

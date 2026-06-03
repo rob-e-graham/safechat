@@ -910,14 +910,32 @@ assert("index exports Shield", safechat.Shield === Shield);
 assert("index exports createShield", safechat.createShield === createShield);
 assert("index exports PRESETS", safechat.PRESETS === PRESETS);
 
-// ── Results ──
+// ── ESM entry point ──
 
-console.log(`\n=============================`);
-console.log(`  ${passed} passed, ${failed} failed`);
-console.log(`=============================\n`);
-
-if (failed > 0) {
-  console.log("FAILURES DETECTED — review output above.\n");
+async function runAsyncTests() {
+  section("ESM exports");
+  const esm = await import("../src/index.mjs");
+  assert("ESM default exports check", typeof esm.default.check === "function");
+  assert("ESM named export check", typeof esm.check === "function");
+  assert("ESM named detect works", esm.detect("I feel hopeless").level === "low");
+  assert("ESM Shield export", esm.Shield === Shield);
 }
 
-if (failed > 0) process.exit(1);
+function printResults() {
+  console.log(`\n=============================`);
+  console.log(`  ${passed} passed, ${failed} failed`);
+  console.log(`=============================\n`);
+
+  if (failed > 0) {
+    console.log("FAILURES DETECTED — review output above.\n");
+  }
+
+  if (failed > 0) process.exit(1);
+}
+
+runAsyncTests()
+  .catch((error) => {
+    failed++;
+    console.error(`  FAIL: ESM import threw: ${error.message}`);
+  })
+  .finally(printResults);

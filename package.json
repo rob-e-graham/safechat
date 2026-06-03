@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "node test/run.js",
-    "demo": "npx serve app -l 3333",
+    "demo": "npx http-server . -p 3333 -c-1",
     "build:whitepaper": "node docs/build-whitepaper.js"
   },
   "keywords": [

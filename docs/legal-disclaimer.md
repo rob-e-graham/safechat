@@ -62,7 +62,7 @@ If you integrate SafeChat into a product or service, you are responsible for:
 SafeChat is under active, continuous development. The project maintains:
 
 - A public **CHANGELOG** documenting all detection improvements, new patterns, and accuracy gains.
-- A public **test suite** (currently 420 automated tests) that must pass before any release.
+- A public **test suite** (currently 424 automated tests) that must pass before any release.
 - A **twice-monthly verification** process for crisis resource data (phone numbers, URLs, operating hours).
 - A **false-negative-first** triage policy: reports of missed crisis signals are treated as critical defects.
 - A public **git history** providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.

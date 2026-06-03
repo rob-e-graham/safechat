@@ -17,7 +17,7 @@ How it works:
 - Finds the user's country without location permissions
 - Shows verified helplines -- phone, text, chat, email, WhatsApp
 - Configurable Shield class with 6 presets for different deployment contexts
-- 420 automated tests including adversarial inputs and false-positive guards
+- 424 automated tests including adversarial inputs and false-positive guards
 - Works offline as an installable PWA
 
 Why now? New York passed the first US law mandating crisis protocols for AI companions. The FTC is investigating chatbot safety at OpenAI, Meta, Alphabet, Snap, xAI, and Character.AI. The VERA-MH framework (2026) found significant gaps in how major AI systems respond to suicidal ideation. The infrastructure to comply didn't exist as open source. Now it does.
@@ -44,7 +44,7 @@ If you or someone you know is in crisis: findahelpline.com
 
 People tell AI chatbots things they don't tell anyone else. Most of those systems have no plan for when someone says they want to end their life.
 
-I built SafeChat -- a free, open-source crisis safety protocol. It detects distress signals locally (zero data collection), finds the user's country without GPS, and shows verified helplines across 34 countries. 420 automated tests. Works offline. One script tag to integrate.
+I built SafeChat -- a free, open-source crisis safety protocol. It detects distress signals locally (zero data collection), finds the user's country without GPS, and shows verified helplines across 34 countries. 424 automated tests. Works offline. One script tag to integrate.
 
 The FTC is investigating AI chatbot safety. New York is mandating crisis protocols. The open-source infrastructure to comply now exists.
 

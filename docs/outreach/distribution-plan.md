@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-01
 **Version:** 1.1.0
-**Status:** Share-ready. All disclaimers in place. 420 tests passing.
+**Status:** Share-ready. All disclaimers in place. 424 tests passing.
 
 ---
 
@@ -43,7 +43,7 @@ Send personalised emails to all Priority 1 contacts in `safechat-outreach-contac
 
 [Personalised line from CSV]
 
-SafeChat is a free, open-source crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 420 automated tests.
+SafeChat is a free, open-source crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 424 automated tests.
 
 It's a routing layer, not a diagnostic tool. It does not assess clinical risk or replace professional services.
 
@@ -107,7 +107,7 @@ Send to all Priority 2 contacts in the CSV: EU AI Office, UK DSIT, IASP, Befrien
 Post to subreddits (one per day, different angles):
 - r/opensource -- "SafeChat: open-source crisis safety protocol for AI chat systems"
 - r/webdev -- "Drop-in crisis detection for any web app -- one script tag"
-- r/javascript -- "Built a regex-based crisis detection engine with 420 tests"
+- r/javascript -- "Built a regex-based crisis detection engine with 424 tests"
 - r/artificial -- "Open-source crisis safety infrastructure for AI chatbots"
 - r/ChatGPT -- "Why AI chatbots need crisis detection (and an open-source solution)"
 - r/privacy -- "Crisis detection that runs locally with zero data collection"
@@ -193,7 +193,7 @@ Pitch to RMIT media office for university press release: "RMIT PhD candidate bui
 - [ ] MRFF Million Minds Mental Health -- check GrantConnect
 - [ ] ARC Linkage Projects 2027 -- expected Jan 2027
 - [ ] Australian AI Safety Institute -- monitor for programs
-- [ ] Suicide Prevention Australia Research Grants -- monitor
+- [ ] Suicide Prevention Australia Research Grants -- apply by June 23, 2026
 - [ ] VicHealth Grants -- check current rounds
 - [ ] National Industry PhD Program Round 8 -- expected late 2026
 
