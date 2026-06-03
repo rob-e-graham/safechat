@@ -33,7 +33,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rob-e-graham/safechat"
+    "url": "git+https://github.com/rob-e-graham/safechat.git"
   },
   "homepage": "https://github.com/rob-e-graham/safechat#readme",
   "bugs": {
