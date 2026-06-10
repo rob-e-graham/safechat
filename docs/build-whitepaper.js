@@ -161,7 +161,7 @@ const doc = new Document({
         para([new TextRun({ text: "FAMTEC (Fine Art Media Technology)", font: "Cambria", size: 22, color: "555555" })], { center: true }),
         para([new TextRun({ text: "PhD Researcher, School of Design, RMIT University", font: "Cambria", size: 22, color: "555555" })], { center: true }),
         new Paragraph({ spacing: { before: 400 }, alignment: AlignmentType.CENTER, children: [
-          new TextRun({ text: "June 2026 (v1.1.0)", font: "Cambria", size: 24, color: "777777" }),
+          new TextRun({ text: "June 2026 (v1.2.0)", font: "Cambria", size: 24, color: "777777" }),
         ]}),
       ],
     },
@@ -231,7 +231,7 @@ const doc = new Document({
         para("Normalised input is matched against two tiers of regex patterns:"),
         boldPara("HIGH signals ", "indicate explicit suicidal language, self-harm, or crisis-level distress. These include direct statements of intent (\"kill myself\", \"end my life\"), method references (\"overdose\", \"jumping off\"), finality language (\"the end for me\", \"this will all be over soon\"), and behavioural indicators (\"writing goodbye letters\", \"gave away everything\"). HIGH signals trigger immediate crisis intervention with full helpline resources."),
         boldPara("LOW signals ", "indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness (\"can't go on\", \"no point\"), worthlessness (\"I'm a burden\", \"nobody cares\"), and passive ideation (\"done with life\", \"no hope left\"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response."),
-        para("The current engine includes 45 HIGH patterns, 22 LOW patterns, and 446 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, and security edge cases."),
+        para("The current engine includes 45 HIGH patterns, 22 LOW patterns, and 517 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, and security edge cases."),
 
         heading(2, "3.3 False-Positive Guards"),
         para("Context-aware guards prevent triggering on figurative or idiomatic language:"),
@@ -278,19 +278,29 @@ const doc = new Document({
         para("SafeChat’s design anticipates and addresses requirements from multiple regulatory frameworks:"),
         boldPara("New York AI Companion Law (2026): ", "Mandates detection of suicidal ideation, referral to crisis services, and disclosure of AI’s non-human nature. SafeChat provides the detection and referral components as drop-in infrastructure."),
         boldPara("FTC Chatbot Safety Inquiry (2026): ", "Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies."),
-        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat’s 446-test suite addresses the categories of failure identified by VERA-MH."),
+        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat’s 517-test suite addresses the categories of failure identified by VERA-MH."),
         boldPara("Samaritans Safe Messaging Guidelines: ", "SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language."),
 
-        // ── 7. LIMITATIONS ──
-        heading(1, "7. Limitations"),
+        // ── 7. CROSS-CLASSIFIER MODULE ──
+        heading(1, "7. Cross-Classifier Module"),
+        para("SafeChat v1.2 introduces an optional cross-classifier layer that runs local machine learning models alongside the deterministic regex engine. This approach was suggested by Professor Stevie Chancellor (University of Minnesota), building on published work in mental health NLP."),
+        boldPara("Architecture. ", "The regex layer remains the fast, deterministic, always-on first pass. The cross-classifier provides a second opinion using clinically trained models:"),
+        bulletItem("MindGuard (Sword Health): Lightweight safety classifiers (4B/8B parameters) trained on clinically annotated conversations. Three categories: safe, self-harm risk, harm-to-others risk. AUROC up to 0.982."),
+        bulletItem("MentalLLaMA: Open-source instruction-following LLMs (7B/13B parameters) for interpretable mental health analysis across eight tasks including depression, stress, and suicidal ideation detection."),
+        bulletItem("MentalChat16K: Benchmark dataset combining synthetic counselling conversations and real-world clinical transcripts for model evaluation."),
+        boldPara("Merge rules. ", "The cross-classifier never downgrades a regex detection. If the regex engine flags HIGH and the classifier says safe, the result stays HIGH. This preserves the false-negative-first calibration philosophy. The classifier can escalate: if regex detects nothing but the model identifies risk, the result escalates to LOW."),
+        boldPara("Privacy. ", "All inference runs locally on the user’s device or a developer-controlled endpoint. No message content is transmitted to external services. The module supports Ollama, Transformers.js, LM Studio, or custom classification functions."),
+
+        // ── 8. LIMITATIONS ──
+        heading(1, "8. Limitations"),
         para("SafeChat’s regex-based approach has inherent limitations:"),
         bulletItem("Language coverage: Detection patterns currently target English-language input only. Multilingual expansion is planned but non-trivial due to the cultural and linguistic variation in crisis expression."),
-        bulletItem("Indirect signals: Highly indirect or metaphorical expressions of distress may not trigger detection. The system is calibrated for explicit and semi-explicit signals rather than subtle contextual cues."),
+        bulletItem("Indirect signals: While the subtle signal accumulation system addresses multi-message distress patterns, highly metaphorical or culturally specific expressions of distress may still evade detection. The cross-classifier module (Section 7) addresses this by running local ML models alongside the regex engine."),
         bulletItem("Not a clinical tool: SafeChat is a routing layer, not a diagnostic tool. It identifies signals and connects users to professional resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services."),
         bulletItem("Helpline data currency: Despite twice-monthly verification, helpline numbers, URLs, and operating hours can change between verification cycles."),
 
-        // ── 8. AVAILABILITY ──
-        heading(1, "8. Availability"),
+        // ── 9. AVAILABILITY ──
+        heading(1, "9. Availability"),
         para("SafeChat is released under the Business Source License 1.1, free for personal, educational, research, nonprofit, community, and small commercial use. The helpline database is released under CC0 public domain dedication. The change license (MPL 2.0) takes effect on 2029-01-01."),
         new Paragraph({
           spacing: { after: 80, line: 276 },
@@ -322,6 +332,11 @@ const doc = new Document({
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Samaritans. (2020). Media Guidelines for Reporting Suicide.", font: "Cambria", size: 22 })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Graham, R. (2026). Cultivating a Living Archive: Sovereign AI for Cultural Heritage. ISEA2026 Dubai.", font: "Cambria", size: 22, italics: true })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "International Association for Suicide Prevention. (2023). IASP Guidelines for Crisis Centre and Helpline Operations.", font: "Cambria", size: 22 })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Carroll, S.R. et al. (2020). The CARE Principles for Indigenous Data Governance. Data Science Journal, 19(1), 43.", font: "Cambria", size: 22, italics: true })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Wilkinson, M.D. et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3, 160018.", font: "Cambria", size: 22, italics: true })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Sword Health. (2026). MindGuard: Guardrail Classifiers for Multi-Turn Mental Health Support. arXiv:2602.00950.", font: "Cambria", size: 22, italics: true })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Yang, K. et al. (2024). MentalLLaMA: Interpretable Mental Health Analysis on Social Media with Large Language Models. arXiv:2309.13567.", font: "Cambria", size: 22, italics: true })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Xu, J. et al. (2025). MentalChat16K: A Benchmark Dataset for Conversational Mental Health Assistance. Proceedings of the 31st ACM SIGKDD Conference.", font: "Cambria", size: 22, italics: true })] }),
       ],
     },
   ],
