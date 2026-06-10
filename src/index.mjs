@@ -15,6 +15,7 @@ export const promptOverride = safechat.promptOverride;
 export const middleware = safechat.middleware;
 
 export const detect = safechat.detect;
+export const detectModeration = safechat.detectModeration;
 export const detectSubtle = safechat.detectSubtle;
 export const isHighCrisis = safechat.isHighCrisis;
 export const isAnyCrisis = safechat.isAnyCrisis;
@@ -38,5 +39,9 @@ export const loadData = safechat.loadData;
 export const Shield = safechat.Shield;
 export const createShield = safechat.createShield;
 export const PRESETS = safechat.PRESETS;
+
+export const CrossClassifier = safechat.CrossClassifier;
+export const createCrossClassifier = safechat.createCrossClassifier;
+export const CC_PRESETS = safechat.CC_PRESETS;
 
 export default safechat;

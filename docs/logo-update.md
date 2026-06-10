@@ -33,7 +33,7 @@ The app image assets now use the plus-cross identity:
 
 ## Verification
 
-- `npm test` passed: 424 passed, 0 failed.
+- `npm test` passed: 446 passed, 0 failed.
 
 ## Separate Review Items
 

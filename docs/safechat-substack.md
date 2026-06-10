@@ -1,5 +1,7 @@
 # I Built a Crisis Safety Layer for AI Chatbots. Here's Why.
 
+**Subtitle:** SafeChat is a new international protocol for chatbot safety. You can test the live demo on my website now.
+
 ---
 
 People tell AI things they won't tell anyone else.
@@ -14,7 +16,7 @@ Character.AI, Replika, ChatGPT -- these apps are hosting some of the most vulner
 
 There have been real consequences. Documented cases linking AI companion chats to self-harm and suicide attempts. It took that for regulators to move. New York passed the first US law mandating crisis protocols for AI companions. The FTC opened investigations into OpenAI, Meta, Alphabet, Snap, xAI, and Character.AI. The VERA-MH research team showed that major AI chatbots are genuinely bad at handling suicidal ideation.
 
-But here's what got me: everybody was talking about the problem. Nobody had built the infrastructure to fix it. Not as open source, anyway. Not as something any developer could just drop in.
+But here's what got me: everybody was talking about the problem. Nobody had built the infrastructure to fix it. Not as public-code infrastructure, anyway. Not as something any developer could just drop in.
 
 So I built it.
 
@@ -40,7 +42,7 @@ People don't always say it directly. They talk about giving things away, writing
 
 And then there's the other side: you have to NOT trigger on "cut my hair" or "suicide squeeze in baseball" or "overdosed on coffee" or "magic trick disappear." Because if you cry wolf too often, people turn it off. And then it catches nothing.
 
-I've got 424 automated tests covering all of this. True positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, adversarial inputs, security edge cases. Every release has to pass all of them.
+I've got 446 automated tests covering all of this. True positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, adversarial inputs, security edge cases, and separate threat and hate-speech moderation signals. Every release has to pass all of them.
 
 The calibration philosophy is simple: a false positive shows someone a help modal they close. A false negative could cost a life. I know which side I'd rather err on.
 
@@ -75,9 +77,9 @@ The helpline database is CC0 public domain. 100+ helplines across 34 countries. 
 
 ## Where This Comes From
 
-I'm a PhD candidate at RMIT University in Melbourne. My research is about sovereign AI -- systems that run locally, respect privacy, and don't depend on commercial cloud services to function. I build tools for cultural heritage institutions that need AI but can't send their collection data to OpenAI's servers. Same principles apply here: your most vulnerable moment should stay on your device.
+I'm a PhD researcher at RMIT University in Melbourne. My research is about sovereign AI -- systems that run locally, respect privacy, and don't depend on commercial cloud services to function. I build tools for cultural heritage institutions that need AI but can't send their collection data to OpenAI's servers. Same principles apply here: your most vulnerable moment should stay on your device.
 
-SafeChat is the crisis safety piece. It's live. It works. It's open source. And honestly, even just sharing the PWA -- the installable app that shows helplines for your country -- could help somebody right now.
+SafeChat is the crisis safety piece. It's live. It works. It's source-available. And honestly, even just sharing the PWA -- the installable app that shows helplines for your country -- could help somebody right now.
 
 That's the whole point.
 
@@ -85,22 +87,25 @@ That's the whole point.
 
 The regulatory pressure is only going one direction. The FTC wants duty-of-care. New York is mandating crisis protocols. The EU AI Act is creating compliance requirements. Everyone building AI chat tools is going to need something like this.
 
-I'd rather it was open source and free than locked behind some enterprise SaaS paywall. Safety infrastructure shouldn't have a price tag for the people who need it most.
+I'd rather the code was public and free than locked behind some enterprise SaaS paywall. Safety infrastructure shouldn't have a price tag for the people who need it most.
 
 If you're building AI tools with a chat interface, have a look. If you work in mental health or crisis services, I'd genuinely welcome your feedback on the detection patterns. If you just want to share the PWA with someone who might need it, that link works right now on any phone.
+
+You can test SafeChat directly on the live website. Type a sample message into the demo and see how LOW signals trigger a soft banner while HIGH signals open the crisis resource modal.
 
 False negatives are treated as critical defects. If you find one, tell me. Lives depend on accuracy.
 
 ---
 
-**SafeChat is free and open source.**
-- Live site: [rob-e-graham.github.io/safechat](https://rob-e-graham.github.io/safechat)
+**SafeChat is free and source-available.**
+- Test the live demo: [rob-e-graham.github.io/safechat/app/index.html](https://rob-e-graham.github.io/safechat/app/index.html)
 - Get help now (PWA): [rob-e-graham.github.io/safechat/app/popup.html](https://rob-e-graham.github.io/safechat/app/popup.html)
 - Source: [github.com/rob-e-graham/safechat](https://github.com/rob-e-graham/safechat)
+- npm: [npmjs.com/package/safechat](https://www.npmjs.com/package/safechat)
 - Support: [buymeacoffee.com/famtec](https://buymeacoffee.com/famtec)
 
 **Disclaimer:** SafeChat is a routing layer, not a diagnostic tool. It identifies textual signals that may indicate distress and connects users to verified professional crisis resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services, emergency services, or local crisis procedures. SafeChat is provided as is, without warranty of any kind. See [full legal disclaimer](https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md) for details.
 
 If you or someone you know is in crisis: [findahelpline.com](https://findahelpline.com)
 
-*Rob Graham is a PhD candidate at RMIT University researching sovereign AI infrastructure, and founder of FAMTEC (Fine Art Media Technology).*
+*Rob Graham is a PhD researcher at RMIT University researching sovereign AI infrastructure, and founder of FAMTEC (Fine Art Media Technology).*

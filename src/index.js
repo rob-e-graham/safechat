@@ -16,10 +16,11 @@
  * @license BSL-1.1 — see LICENSE file
  */
 
-const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");
+const { detect, detectModeration, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");
 const { locate, locateSync, fromRequest, fromLocale, fromTimezone } = require("./locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat, formatForHTML, loadData } = require("./resources");
 const { Shield, createShield, PRESETS } = require("./shield");
+const { CrossClassifier, createCrossClassifier, CC_PRESETS } = require("./crosscheck");
 
 /**
  * One-call safety check: detect crisis level + get localized resources.
@@ -140,6 +141,7 @@ module.exports = {
 
   // Detection
   detect,
+  detectModeration,
   detectSubtle,
   isHighCrisis,
   isAnyCrisis,
@@ -167,4 +169,9 @@ module.exports = {
   Shield,
   createShield,
   PRESETS,
+
+  // Cross-classifier — optional ML second-opinion layer
+  CrossClassifier,
+  createCrossClassifier,
+  CC_PRESETS,
 };

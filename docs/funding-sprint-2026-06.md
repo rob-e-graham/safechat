@@ -95,7 +95,7 @@ SafeChat supports internet freedom by letting developers add crisis safety to ch
 **Status:** June 1 deadline has passed; next calls are expected on the recurring NGI cadence.  
 **Action:** Use the existing NLnet draft, but update:
 
-- current test count: 424
+- current test count: 446
 - live auto-popup demo
 - new service-worker update strategy
 - clearer licensing answer

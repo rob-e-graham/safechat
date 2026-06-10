@@ -26,6 +26,7 @@
     t = t.replace(/\bsuciide?\b/g,"suicide").replace(/\bsuidice?\b/g,"suicide").replace(/\bsuicd\b/g,"suicide");
     t = t.replace(/\boverdoze\b/g,"overdose").replace(/\boverdoase\b/g,"overdose");
     t = t.replace(/\bkil\b/g,"kill");
+    t = t.replace(/\bimma\b/g,"i am going to");
     // Misspellings — self-harm / methods
     t = t.replace(/\bselfharm\b/g,"self-harm").replace(/\bselh[- ]?arm\b/g,"self-harm");
     t = t.replace(/\bhaning\b/g,"hanging").replace(/\bjumpin\b/g,"jumping");
@@ -66,6 +67,12 @@
   var FP_GIVING = /\b(giv(e|ing) away|gave away)\b.*\b(free|promotion|contest|charity|raffle|giveaway)\b/i;
   var FP_SLEEP = /\bcan'?t sleep\b.*\b(coffee|caffeine|noisy|loud|snoring|neighbou?r|heat|cold|jet lag|excited)\b/i;
   var FP_DELETE = /\b(delet(e|ing|ed))\b.*\b(files?|folders?|apps?|cache|duplicates?|old (photos?|emails?|files?))\b/i;
+  var FP_KILL_MOD = /\b(kill|killed|killing) (time|the lights|a process|the server|a task|a habit|the mood|the performance|it|this)\b/i;
+  var FP_SHOOT_MOD = /\bshoot(ing)? (hoops|a video|photos?|an email|a message|the breeze)\b/i;
+  var FP_BOMB_MOD = /\b(bombed|bombing|bomb) (the exam|an exam|a test|on stage|at karaoke|a performance|a joke)\b/i;
+  var FP_ATTACK_MOD = /\b(attack|attacking) (the problem|a bug|this task|the issue|the project)\b/i;
+  var FP_THREAT_MOD = /\b(threat model|threat detection|security threat|threat assessment|threat level)\b/i;
+  var FP_HATE_MOD = /\bi hate (monday|mondays|traffic|homework|this app|this bug|my job|the weather|cooking|waiting)\b/i;
 
   function isFP(t, matched) {
     if (/cut/.test(matched) && FP_CUT.test(t)) return true;
@@ -81,6 +88,16 @@
     if (/giv/.test(matched) && FP_GIVING.test(t)) return true;
     if (/sleep/.test(matched) && FP_SLEEP.test(t)) return true;
     if (/delet/.test(matched) && FP_DELETE.test(t)) return true;
+    return false;
+  }
+
+  function isModerationFP(t, matched) {
+    if (/kill|killed|killing/.test(matched) && FP_KILL_MOD.test(t)) return true;
+    if (/shoot/.test(matched) && FP_SHOOT_MOD.test(t)) return true;
+    if (/bomb/.test(matched) && FP_BOMB_MOD.test(t)) return true;
+    if (/attack/.test(matched) && FP_ATTACK_MOD.test(t)) return true;
+    if (/threat/.test(matched) && FP_THREAT_MOD.test(t)) return true;
+    if (/hate/.test(matched) && FP_HATE_MOD.test(t)) return true;
     return false;
   }
 
@@ -173,6 +190,36 @@
     /\bdon'?t (deserve|have the right) to (live|be happy|be alive|be here)\b/i,
   ];
 
+  var THREAT_SIGNALS = [
+    { level:"high", re:/\bi'?ll (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+    { level:"high", re:/\bi (want to|am going to|gonna|will|'ll) (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+    { level:"high", re:/\bi('?m| am) (going to|gonna) (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+    { level:"high", re:/\bi (want to|am going to|gonna|will|'ll) (find|track down|come for) (you|u|him|her|them)\b/i },
+    { level:"high", re:/\bi('?m| am) (going to|gonna) (find|track down|come for) (you|u|him|her|them)\b/i },
+    { level:"high", re:/\b(kill|hurt) yourself\b/i },
+    { level:"high", re:/\byou (deserve|need) to (die|be killed|get hurt)\b/i },
+    { level:"high", re:/\bgoing to (bomb|shoot up|burn down|attack) (the|this|that|your|their|my)? ?(school|office|building|house|home|place|event|campus|store|workplace)\b/i },
+    { level:"high", re:/\bput (a )?(bomb|knife|gun) (in|through|to|at)\b/i },
+    { level:"high", re:/\bbring(ing)? (a )?(gun|knife|weapon) (to|into)\b.*\b(school|work|office|campus|event|building)\b/i },
+    { level:"high", re:/\bmake (you|u|him|her|them) pay\b.*\b(tonight|today|tomorrow|soon|now)\b/i },
+    { level:"low", re:/\bi (want to|am going to|gonna|will|'ll) (ruin|destroy) (you|your life|your career|them)\b/i },
+    { level:"low", re:/\bi('?m| am) (going to|gonna) (ruin|destroy) (you|your life|your career|them)\b/i },
+    { level:"low", re:/\bwatch your back\b/i },
+    { level:"low", re:/\byou haven'?t seen the last of me\b/i },
+  ];
+
+  var PROTECTED_GROUP = "(black|white|asian|jewish|muslim|christian|hindu|sikh|arab|indigenous|aboriginal|gay|lesbian|trans|queer|lgbtq|disabled|autistic|immigrant|refugee|migrant|women|men|girls|boys|old people)";
+  var PROTECTED_GROUP_TARGET = "(" + PROTECTED_GROUP + ")( people|s)?";
+  var HATE_SIGNALS = [
+    { level:"high", re:new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (should|must|need to|ought to) (die|be killed|be eliminated|be wiped out|not exist)\\b", "i") },
+    { level:"high", re:new RegExp("\\b(kill|hurt|attack|eliminate|wipe out) (all |every )?" + PROTECTED_GROUP_TARGET + "\\b", "i") },
+    { level:"high", re:new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (are|aren't) (subhuman|inferior|not human|human)\\b", "i") },
+    { level:"low", re:new RegExp("\\bi hate " + PROTECTED_GROUP_TARGET + "\\b", "i") },
+    { level:"low", re:new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (do not|don't|shouldn'?t|should not) belong (here|anywhere|in this country|in our country)\\b", "i") },
+    { level:"low", re:/\bgo back to (your|their) country\b/i },
+    { level:"low", re:new RegExp("\\bno " + PROTECTED_GROUP_TARGET + " allowed\\b", "i") },
+  ];
+
   function detect(text) {
     if (!text || typeof text !== "string") return { level: "none", matched: null };
     var t = normalise(text);
@@ -185,6 +232,25 @@
       if (m2 && !isFP(t, m2[0])) return { level: "low", matched: m2[0] };
     }
     return { level: "none", matched: null };
+  }
+
+  function detectModeration(text) {
+    if (!text || typeof text !== "string") return { level: "none", category: null, matched: null };
+    var t = normalise(text);
+    var groups = [
+      { category: "threat", signals: THREAT_SIGNALS },
+      { category: "hate", signals: HATE_SIGNALS },
+    ];
+    for (var g = 0; g < groups.length; g++) {
+      for (var i = 0; i < groups[g].signals.length; i++) {
+        var sig = groups[g].signals[i];
+        var m = t.match(sig.re);
+        if (m && !isModerationFP(t, m[0])) {
+          return { level: sig.level, category: groups[g].category, matched: m[0] };
+        }
+      }
+    }
+    return { level: "none", category: null, matched: null };
   }
 
   // ── Geo-detection ──
@@ -437,6 +503,7 @@
 
   var Safechat = {
     detect: detect,
+    detectModeration: detectModeration,
     check: check,
     locateCountry: locateCountry,
     getResources: getResources,

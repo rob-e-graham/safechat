@@ -7,7 +7,7 @@ Use these as starting points. Personalise the first paragraph and send from your
 ## Shared Footer
 
 Rob Graham  
-PhD Candidate, RMIT University  
+PhD Researcher, RMIT University  
 FAMTEC | fineartmedia.tech  
 
 Live site: https://rob-e-graham.github.io/safechat/app/index.html  
@@ -30,7 +30,7 @@ I have built SafeChat, a privacy-preserving crisis safety protocol for AI chat s
 
 I am not asking for endorsement at this stage. I would genuinely value review of how SafeChat presents your service, whether the wording is appropriate, and whether any resource details should be corrected.
 
-SafeChat currently covers 34 countries, 100+ helplines, an installable PWA, and a 424-test detection suite covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, and false-positive guards.
+SafeChat currently covers 34 countries, 100+ helplines, an installable PWA, and a 446-test detection suite covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
 
 [Shared footer]
 
@@ -48,7 +48,7 @@ I have built SafeChat, a drop-in crisis safety layer for AI chat systems. It det
 
 SafeChat is designed as a routing layer, not a clinical system. It does not diagnose, assess risk, or replace professional crisis services. The goal is to give AI chat interfaces a privacy-preserving safety layer that can interrupt or flag high-risk disclosures and surface real-world support.
 
-I would welcome feedback from your safety team on the architecture, implementation model, and whether this could be useful as open crisis safety infrastructure for AI chat systems.
+I would welcome feedback from your safety team on the architecture, implementation model, and whether this could be useful as source-available crisis safety infrastructure for AI chat systems.
 
 [Shared footer]
 
@@ -56,15 +56,15 @@ I would welcome feedback from your safety team on the architecture, implementati
 
 ## RMIT Media
 
-**Subject:** RMIT PhD candidate builds open crisis safety toolkit for AI chatbots
+**Subject:** RMIT PhD researcher builds source-available crisis safety toolkit for AI chatbots
 
 Hello RMIT Media team,
 
-I am a current RMIT PhD candidate in the School of Design, and I have built SafeChat: a privacy-preserving crisis safety toolkit for AI chat systems.
+I am a PhD researcher at RMIT University in the School of Design, and I have built SafeChat: a privacy-preserving crisis safety toolkit for AI chat systems.
 
 SafeChat responds to a growing public safety problem: people are disclosing distress, self-harm, and suicidal ideation to AI chatbots, while many systems lack reliable crisis routing. SafeChat detects textual distress signals locally, with no tracking or cloud processing, and connects users to verified crisis resources across 34 countries.
 
-It is live now, includes an installable PWA, and has 424 automated tests. I would be glad to discuss whether this is suitable for an RMIT news story or media pitch, especially given current regulatory attention on AI companion safety.
+It is live now, includes an installable PWA, and has 446 automated tests. I would be glad to discuss whether this is suitable for an RMIT news story or media pitch, especially given current regulatory attention on AI companion safety.
 
 [Shared footer]
 
@@ -76,11 +76,11 @@ It is live now, includes an installable PWA, and has 424 automated tests. I woul
 
 Hello,
 
-I am a PhD candidate at RMIT University researching sovereign AI infrastructure. I would like to pitch an 800-word article on the urgent need for crisis protocols in AI chat systems.
+I am a PhD researcher at RMIT University researching sovereign AI infrastructure. I would like to pitch an 800-word article on the urgent need for crisis protocols in AI chat systems.
 
 The article would explain why people disclose distress to chatbots, why cloud-based detection can be a privacy problem, and how local-first crisis routing can connect people to professional support without pretending to diagnose or treat them.
 
-I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 424 automated tests. The piece would be written from the perspective of a researcher-builder responding to a live public safety gap.
+I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 446 automated tests. The piece would be written from the perspective of a researcher-builder responding to a live public safety gap.
 
 [Shared footer]
 
@@ -88,15 +88,14 @@ I have built SafeChat as a working example: a local, zero-data-collection crisis
 
 ## 404 Media
 
-**Subject:** Tip: open-source crisis safety layer for AI chatbot harm
+**Subject:** Tip: source-available crisis safety layer for AI chatbot harm
 
 Hello 404 Media,
 
-The FTC and state regulators are asking what AI companion platforms do when users disclose suicidal ideation. I have built a working open/source-available implementation of the kind of crisis routing those systems should have had already.
+The FTC and state regulators are asking what AI companion platforms do when users disclose suicidal ideation. I have built a working source-available implementation of the kind of crisis routing those systems should have had already.
 
 SafeChat runs locally, collects no data, detects distress signals in chat text, and routes users to verified crisis resources. It is not a diagnostic or clinical tool; it is a safety routing layer for AI chat interfaces.
 
-The story angle is simple: regulators are investigating the gap, but the practical open infrastructure now exists.
+The story angle is simple: regulators are investigating the gap, but the practical source-available infrastructure now exists.
 
 [Shared footer]
-

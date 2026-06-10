@@ -3,15 +3,15 @@
 **Prepared:** 2026-05-29
 **Project:** SafeChat — International Chat Safety Protocol
 **Applicant:** Rob Graham / FAMTEC (Fine Art Media Technology)
-**Affiliation:** RMIT University, School of Design (PhD candidate)
+**Affiliation:** RMIT University, School of Design (PhD researcher)
 
 ---
 
 ## Executive Summary
 
-SafeChat is open-source crisis safety infrastructure for AI chat systems. It detects distress signals locally (zero data collection), geo-locates users without GPS, and connects them to verified professional crisis resources across 34 countries. It is a routing layer, not a diagnostic tool.
+SafeChat is source-available crisis safety infrastructure for AI chat systems. It detects distress signals locally (zero data collection), geo-locates users without GPS, and connects them to verified professional crisis resources across 34 countries. It is a routing layer, not a diagnostic tool.
 
-This plan identifies tiered funding opportunities aligned with SafeChat's positioning as open-source digital public infrastructure for AI safety and suicide prevention.
+This plan identifies tiered funding opportunities aligned with SafeChat's positioning as source-available digital public infrastructure for AI safety and suicide prevention.
 
 ---
 
@@ -21,14 +21,14 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 - **Deadline:** June 1, 2026
 - **Amount:** EUR 5,000–50,000
 - **URL:** https://nlnet.nl/commonsfund/
-- **Fit:** Best single match. Open-source, privacy-preserving, local-first, digital commons. SafeChat ticks every box. New calls every 2 months through 2027.
+- **Fit:** Strong match: privacy-preserving, local-first digital commons. License path should be clarified because BSL-1.1 is source-available, not OSI-approved. New calls every 2 months through 2027.
 - **Action:** Submit application by June 1.
 
 ### Sovereign Tech Fund
 - **Deadline:** Rolling (continuous)
 - **Amount:** EUR 50,000+, no upper limit
 - **URL:** https://www.sovereign.tech/programs/fund
-- **Fit:** Open-source digital infrastructure. SafeChat as foundational AI safety layer.
+- **Fit:** Source-available digital infrastructure; strongest if an OSI-approved licence path is clarified.
 - **Note:** Requires OSI-approved license. BSL-1.1 is source-available, not OSI-approved. May need to discuss with STF or consider license path (BSL changes to MPL 2.0 on 2029-01-01).
 - **Action:** Submit application, address license question upfront.
 
@@ -47,7 +47,7 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 - **Deadline:** November 1, 2026 (March 2027 intake)
 - **Amount:** Salary-equivalent fellowship + $275,000/year project funding
 - **URL:** https://www.shuttleworthfoundation.org/funding/fellowship-programme/
-- **Fit:** Excellent. Open-source social innovation. SafeChat is a textbook Shuttleworth project. One of the highest-value opportunities on this list.
+- **Fit:** Excellent public-interest social innovation fit. SafeChat is a strong Shuttleworth-style project One of the highest-value opportunities on this list.
 - **Action:** Begin application preparation. Shuttleworth values demonstrated traction and open licensing commitment.
 
 ### CZI Essential Open Source Software for Science (EOSS)
@@ -92,7 +92,7 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 ### Australian AI Safety Institute (AISI)
 - **Deadline:** TBC — institute launching 2026 with $29.9M
 - **URL:** https://www.industry.gov.au/publications/national-ai-plan
-- **Fit:** SafeChat is exactly the kind of AI safety infrastructure AISI should support. Local-first, open-source, compliance-ready.
+- **Fit:** SafeChat is exactly the kind of AI safety infrastructure AISI should support. Local-first, source-available, compliance-aware.
 - **Action:** Monitor for grant program announcements. Register interest when programs open.
 
 ### Suicide Prevention Australia — Research Grants
@@ -111,7 +111,7 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 ### National Industry PhD Program (Round 8)
 - **Deadline:** Expected late 2026/early 2027
 - **URL:** https://www.aea.gov.au
-- **Fit:** PhD candidate + industry partner (FAMTEC). SafeChat as the PhD-industry project.
+- **Fit:** PhD researcher + industry partner (FAMTEC). SafeChat as the PhD-industry project.
 - **Action:** Prepare for Round 8 when announced.
 
 ---
@@ -122,7 +122,7 @@ This plan identifies tiered funding opportunities aligned with SafeChat's positi
 - **Deadline:** Rolling (no cost)
 - **URL:** https://www.digitalpublicgoods.net/registry
 - **Fit:** Register SafeChat as a Digital Public Good (SDG 3: Good Health and Well-being). Raises profile for UN-adjacent funding.
-- **Action:** Submit registration. Requires open-source license, clear ownership, platform independence, privacy compliance, Sustainable Development Goal relevance — SafeChat meets all criteria.
+- **Action:** Submit registration. Requires an OSI-approved open-source licence, clear ownership, platform independence, privacy compliance, and Sustainable Development Goal relevance — SafeChat needs a dual-licence or accelerated MPL path before submission.
 
 ### Corporate AI Safety Partnerships
 - **OpenAI AI and Mental Health Grant Program** — $5,000–$100,000. Closed for 2026; watch for 2027 cycle. Very strong fit.
@@ -190,11 +190,11 @@ Scale up or down depending on grant size. NLnet applications should target the E
 
 2. **Solution:** SafeChat is a routing layer — it detects textual distress signals and connects users to verified professional crisis resources. It does not diagnose, treat, or replace professional services.
 
-3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 424 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
+3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 446 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
 
 4. **Traction:** Live at rob-e-graham.github.io/safechat. 100+ verified helplines. Configurable Shield class with 6 presets for different deployment contexts. Active CHANGELOG with public git history documenting every improvement.
 
-5. **Sustainability:** FAMTEC commercial licensing for entities over $100K revenue. Open-source core remains free for personal, research, education, nonprofit, and small commercial use.
+5. **Sustainability:** FAMTEC commercial licensing for entities over $100K revenue. Source-available core remains free for personal, research, education, nonprofit, and small commercial use.
 
 ---
 

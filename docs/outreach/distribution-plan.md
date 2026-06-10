@@ -1,8 +1,8 @@
 # SafeChat Distribution Plan
 
-**Date:** 2026-06-01
+**Date:** 2026-06-07
 **Version:** 1.1.0
-**Status:** Share-ready. All disclaimers in place. 424 tests passing.
+**Status:** Mail-out ready. All disclaimers in place. 446 tests passing. Outreach should ask for review and verification, not endorsement.
 
 ---
 
@@ -36,16 +36,16 @@ Every public-facing surface includes:
 - Best time: Tuesday-Thursday, morning AEST
 
 ### Priority 1 Emails
-Send personalised emails to all Priority 1 contacts in `safechat-outreach-contacts.csv`. Use this template with the personalised line from the CSV:
+Send personalised emails using `priority-20-mailout-pack.md`. Start with crisis organisations, RMIT, Australian safety bodies, and expert reviewers before broader media.
 
 ---
-**Subject:** SafeChat -- open-source crisis safety protocol for AI chat systems
+**Subject:** SafeChat -- source-available crisis safety protocol for AI chat systems
 
 [Personalised line from CSV]
 
-SafeChat is a free, open-source crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 424 automated tests.
+SafeChat is a free, source-available crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 446 automated tests.
 
-It's a routing layer, not a diagnostic tool. It does not assess clinical risk or replace professional services.
+It's a routing layer, not a diagnostic tool. It does not assess clinical risk or replace professional services. Threat and hate-speech signals are exposed separately for moderation and do not trigger crisis-resource routing by default.
 
 Live site: https://rob-e-graham.github.io/safechat
 Get help now (PWA): https://rob-e-graham.github.io/safechat/app/popup.html
@@ -54,32 +54,18 @@ Source: https://github.com/rob-e-graham/safechat
 I'd welcome your feedback, review, or any guidance on how SafeChat can better serve [their domain].
 
 Rob Graham
-PhD Candidate, RMIT University
+PhD Researcher, RMIT University
 FAMTEC | fineartmedia.tech
 
 SafeChat is provided as is. It does not replace professional mental health services or emergency services. Full disclaimer: https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md
 
 ---
 
-### Priority 1 Contacts (send this week):
-1. FTC Office of Technology -- OTech@ftc.gov
-2. NY Attorney General Civil Rights -- civilrights@ag.ny.gov
-3. eSafety Commissioner (Australia) -- enquiries@esafety.gov.au
-4. Samaritans Media -- media@samaritans.org
-5. Samaritans Partnerships -- partnerships@samaritans.org
-6. Crisis Text Line -- partnerships@crisistextline.org
-7. Lifeline Australia -- info@lifeline.org.au
-8. Beyond Blue -- information@beyondblue.org.au
-9. findahelpline.com -- hello@findahelpline.com
-10. OpenAI Safety -- safety@openai.com
-11. Anthropic Safety -- safety@anthropic.com
-12. Character.AI Safety -- safety@character.ai
-13. RMIT Media -- media@rmit.edu.au
-14. The Conversation -- pitch@theconversation.com
-15. 404 Media -- tips@404media.co
+### Priority 1 Contacts (send this week)
+Use the ranked 20-contact list in `docs/outreach/priority-20-mailout-pack.md`.
 
 ### Hacker News
-- Post: "Show HN: SafeChat -- open-source crisis detection for AI chatbots (no API, runs locally, 34 countries)"
+- Post: "Show HN: SafeChat -- source-available crisis detection for AI chatbots (no API, runs locally, 34 countries)"
 - URL: https://rob-e-graham.github.io/safechat
 - Best time: Tuesday-Thursday, 9-11am US Eastern (11pm-1am AEST)
 - Be ready to answer comments for the first 2 hours
@@ -105,17 +91,17 @@ Send to all Priority 2 contacts in the CSV: EU AI Office, UK DSIT, IASP, Befrien
 
 ### Reddit Posts
 Post to subreddits (one per day, different angles):
-- r/opensource -- "SafeChat: open-source crisis safety protocol for AI chat systems"
+- r/opensource -- "SafeChat: source-available crisis safety protocol for AI chat systems" (only post here if the BSL-1.1 licence is stated clearly)
 - r/webdev -- "Drop-in crisis detection for any web app -- one script tag"
-- r/javascript -- "Built a regex-based crisis detection engine with 424 tests"
-- r/artificial -- "Open-source crisis safety infrastructure for AI chatbots"
-- r/ChatGPT -- "Why AI chatbots need crisis detection (and an open-source solution)"
+- r/javascript -- "Built a regex-based crisis detection engine with 446 tests"
+- r/artificial -- "Source-available crisis safety infrastructure for AI chatbots"
+- r/ChatGPT -- "Why AI chatbots need crisis detection (and a source-available solution)"
 - r/privacy -- "Crisis detection that runs locally with zero data collection"
 - r/selfhosted -- "Self-hosted crisis helpline PWA -- works offline, 34 countries"
 - r/SideProject -- "Built a crisis safety protocol for AI chatbots during my PhD"
 
 ### RMIT Media Pitch
-Pitch to RMIT media office for university press release: "RMIT PhD candidate builds open-source crisis safety toolkit for AI chatbots -- addressing issues the FTC is investigating."
+Pitch to RMIT media office for university press release: "RMIT PhD researcher builds source-available crisis safety toolkit for AI chatbots -- addressing issues the FTC is investigating."
 
 ---
 
@@ -123,12 +109,12 @@ Pitch to RMIT media office for university press release: "RMIT PhD candidate bui
 
 ### Conference Submissions
 - **ISEA2026 Dubai** -- already confirmed
-- **linux.conf.au 2027** -- open-source infrastructure talk
+- **linux.conf.au 2027** -- public-interest infrastructure talk
 - **YOW! Conference (Melbourne)** -- developer audience
 - **Australian Computer Society events** -- AI safety focus
 - **Web Directions (Sydney)** -- web developer audience
 - **Digital Mental Health Conference** -- clinical/tech crossover
-- **FOSDEM 2027 (Brussels)** -- open-source, European audience (supports NLnet connection)
+- **FOSDEM 2027 (Brussels)** -- only if licence path or OSI-licensed components are clarified
 
 ### Academic Output
 - Submit short paper to CHI Late-Breaking Work or CSCW (ACM conferences on human-computer interaction)
@@ -166,7 +152,7 @@ Pitch to RMIT media office for university press release: "RMIT PhD candidate bui
 ### Government/Regulatory Engagement
 - Respond to any FTC or eSafety consultations on AI chatbot safety
 - Submit SafeChat as evidence/example in regulatory proceedings
-- Engage with Australian AI Safety Institute when it opens
+- Engage with Australia's AI Safety Institute now that it has launched
 
 ### Helpline Organisation Outreach
 - Contact national helpline organisations in each of the 34 countries
@@ -192,7 +178,7 @@ Pitch to RMIT media office for university press release: "RMIT PhD candidate bui
 ### Australian Government (2026-2027)
 - [ ] MRFF Million Minds Mental Health -- check GrantConnect
 - [ ] ARC Linkage Projects 2027 -- expected Jan 2027
-- [ ] Australian AI Safety Institute -- monitor for programs
+- [ ] Australian AI Safety Institute -- contact `AISafetyResearch@industry.gov.au` for technical review and monitor for programs
 - [ ] Suicide Prevention Australia Research Grants -- apply by June 23, 2026
 - [ ] VicHealth Grants -- check current rounds
 - [ ] National Industry PhD Program Round 8 -- expected late 2026
@@ -276,11 +262,13 @@ Build official integrations for:
 
 **For developers:** "One script tag adds crisis detection and verified helplines across 34 countries to any web app. Runs locally, zero data collection, works offline."
 
-**For regulators:** "SafeChat is an open-source implementation of the crisis-response protocols now being mandated for AI companion systems."
+**For regulators:** "SafeChat is a source-available implementation of the crisis-response protocols now being mandated for AI companion systems."
 
 **For health professionals:** "SafeChat is a routing layer, not a diagnostic tool. It detects textual distress signals and connects users to your services. It does not assess clinical risk."
 
-**For media:** "Australian PhD researcher builds the open-source crisis safety infrastructure that regulators are now mandating for AI chatbots."
+**For media:** "Australian PhD researcher builds source-available crisis safety infrastructure that regulators are now mandating for AI chatbots."
+
+**For expert reviewers:** "SafeChat needs a governed, evidence-linked trigger database with clinical, lived-experience, legal, cultural-safety, and platform-safety review before it expands beyond the current tested patterns."
 
 **Always include:** "SafeChat is a routing layer, not a diagnostic tool. It does not replace professional mental health services or emergency services."
 

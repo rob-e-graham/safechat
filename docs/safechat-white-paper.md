@@ -2,7 +2,7 @@
 
 **Rob Graham**
 FAMTEC (Fine Art Media Technology)
-PhD Candidate, School of Design, RMIT University
+PhD Researcher, School of Design, RMIT University
 
 June 2026 (v1.1.0)
 
@@ -10,7 +10,7 @@ June 2026 (v1.1.0)
 
 ## Abstract
 
-As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is an open-source international chat safety protocol -- a routing layer that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. SafeChat does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, configurable deployment modes, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities.
+As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is a source-available international chat safety protocol -- a routing layer that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. SafeChat does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, configurable deployment modes, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities.
 
 ---
 
@@ -20,7 +20,7 @@ AI companion applications now facilitate some of the most emotionally vulnerable
 
 In 2026, the regulatory landscape shifted decisively. New York enacted the first US law mandating crisis-response protocols for AI companions. The US Federal Trade Commission opened formal investigations into chatbot safety practices at Alphabet, Meta, OpenAI, Snap, xAI, and Character Technologies. The VERA-MH framework, the first open-source evaluation for AI mental health safety, demonstrated that major AI systems exhibit significant gaps in detecting and responding to suicidal ideation.
 
-SafeChat responds to this landscape by providing free, open-source crisis safety infrastructure that any developer can integrate into any AI chat application. Its design principles emerge from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage: the conviction that critical infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud services.
+SafeChat responds to this landscape by providing free, source-available crisis safety infrastructure that any developer can integrate into any AI chat application. Its design principles emerge from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage: the conviction that critical infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud services.
 
 ---
 
@@ -63,7 +63,7 @@ Normalised input is matched against two tiers of regex patterns:
 
 **LOW signals** indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness ("can't go on", "no point"), worthlessness ("I'm a burden", "nobody cares"), and passive ideation ("done with life", "no hope left"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response.
 
-The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 424 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
+The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 446 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
 
 ### 3.3 False-Positive Guards
 
@@ -194,9 +194,9 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 
 **FTC Chatbot Safety Inquiry (2026):** Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies.
 
-**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 424-test suite addresses the categories of failure identified by VERA-MH.
+**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 446-test suite addresses the categories of failure identified by VERA-MH.
 
-**EU AI Act (2024-2026):** Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, open-source safety infrastructure that supports compliance without creating cloud dependencies.
+**EU AI Act (2024-2026):** Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, source-available safety infrastructure that supports compliance without creating cloud dependencies.
 
 **Samaritans Safe Messaging Guidelines:** SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language.
 
@@ -207,27 +207,46 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 SafeChat's regex-based approach has inherent limitations:
 
 - **Language coverage.** Detection patterns currently target English-language input only. Multilingual expansion is planned but non-trivial due to the cultural and linguistic variation in crisis expression.
-- **Indirect signals.** While the subtle signal accumulation system (Section 3.4) addresses multi-message distress patterns, highly metaphorical or culturally specific expressions of distress may still evade detection. Future work includes optional integration with small language models for nuanced contextual analysis.
+- **Indirect signals.** While the subtle signal accumulation system (Section 3.4) addresses multi-message distress patterns, highly metaphorical or culturally specific expressions of distress may still evade detection. The cross-classifier module (Section 9) addresses this by running local ML models alongside the regex engine.
 - **Not a clinical tool.** SafeChat is a routing layer, not a diagnostic tool. It identifies signals and connects users to professional resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services.
 - **Helpline data currency.** Despite twice-monthly verification, helpline numbers, URLs, and operating hours can change between verification cycles.
 
 ---
 
-## 9. Ongoing Development
+## 9. Cross-Classifier Module
+
+SafeChat v1.2 introduces an optional cross-classifier layer that runs local machine learning models alongside the deterministic regex engine. This approach was suggested by Professor Stevie Chancellor (University of Minnesota), building on published work in mental health NLP.
+
+**Architecture.** The regex layer remains the fast, deterministic, always-on first pass. The cross-classifier provides a second opinion using clinically trained models:
+
+- **MindGuard** (Sword Health): Lightweight safety classifiers (4B/8B parameters) trained on clinically annotated conversations. Three categories: safe, self-harm risk, harm-to-others risk. AUROC up to 0.982. [9]
+- **MentalLLaMA**: Open-source instruction-following LLMs (7B/13B parameters) for interpretable mental health analysis across eight tasks including depression, stress, and suicidal ideation detection. [10]
+- **MentalChat16K**: Benchmark dataset combining synthetic counseling conversations and real-world clinical transcripts for model evaluation. [11]
+
+**Merge rules.** The cross-classifier never downgrades a regex detection. If the regex engine flags HIGH and the classifier says safe, the result stays HIGH. This preserves the false-negative-first calibration philosophy. The classifier can escalate: if regex detects nothing but the model identifies risk, the result escalates to LOW.
+
+**Privacy.** All inference runs locally on the user's device or a developer-controlled endpoint. No message content is transmitted to external services. The module supports Ollama, Transformers.js, LM Studio, or custom classification functions.
+
+**Optional.** The cross-classifier adds zero dependencies to the core library. SafeChat works identically without it. Developers opt in by configuring a backend and passing it to Shield.
+
+---
+
+## 10. Ongoing Development
 
 SafeChat is under continuous, active development. The project maintains:
 
 - A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains.
-- A test suite (currently 424 automated tests) that must pass before any release.
+- A test suite (currently 517 automated tests) that must pass before any release.
 - A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours).
 - A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects.
 - A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.
+- Active research partnerships with the University of Minnesota (cross-classifier approaches) and Spring Health's VERA-MH team (evaluation framework guidance).
 
 This ongoing process reflects the project's commitment to continuous safety improvement. It does not constitute a warranty, guarantee of fitness, or assumption of liability.
 
 ---
 
-## 10. Availability
+## 11. Availability
 
 SafeChat is released under the Business Source License 1.1, free for personal, educational, research, nonprofit, community, and small commercial use. The helpline database is released under CC0 public domain dedication. The change license (MPL 2.0) takes effect on 2029-01-01.
 
@@ -238,7 +257,7 @@ SafeChat is released under the Business Source License 1.1, free for personal, e
 
 ---
 
-## 11. Disclaimer
+## 12. Disclaimer
 
 SafeChat is a routing layer, not a diagnostic tool. It identifies textual signals that may indicate distress and connects users to verified professional crisis resources. It does not assess clinical risk, provide therapeutic intervention, make diagnoses, or replace professional mental health services, emergency services, qualified clinicians, safeguarding teams, or local crisis response procedures.
 
@@ -258,3 +277,6 @@ If you or someone you know is in crisis, contact your local emergency services o
 6. International Association for Suicide Prevention. (2023). IASP Guidelines for Crisis Centre and Helpline Operations.
 7. Carroll, S.R., Garba, I., Figueroa-Rodriguez, O.L., Holbrook, J., Lovett, R., Materechera, S., Parsons, M., Raseroka, K., Rodriguez-Lonebear, D., Rowe, R., Sara, R., Walker, J.D., Anderson, J. & Hudson, M. (2020). The CARE Principles for Indigenous Data Governance. *Data Science Journal*, 19(1), 43.
 8. Wilkinson, M.D. et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data*, 3, 160018.
+9. Sword Health. (2026). MindGuard: Guardrail Classifiers for Multi-Turn Mental Health Support. *arXiv:2602.00950*.
+10. Yang, K., Ji, S., Zhang, T., Xie, Q., Kuang, Z., & Ananiadou, S. (2024). MentalLLaMA: Interpretable Mental Health Analysis on Social Media with Large Language Models. *arXiv:2309.13567*.
+11. Xu, J., Wei, T., Hou, B., et al. (2025). MentalChat16K: A Benchmark Dataset for Conversational Mental Health Assistance. *Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining*. DOI: 10.1145/3711896.3737393.

@@ -3,6 +3,7 @@
  *
  * Regex-based classifier that runs locally (no API calls, no data leaves the device).
  * Returns 'high', 'low', or 'none' for single-message detection.
+ * Also exposes a separate moderation detector for threats and hate speech.
  *
  * SIGNAL TIERS:
  *   High   = explicit self-harm or suicidal language → immediate intervention
@@ -46,6 +47,7 @@ function normalise(text) {
   t = t.replace(/\boverdoze\b/g, "overdose");
   t = t.replace(/\boverdoase\b/g, "overdose");
   t = t.replace(/\bkil\b/g, "kill");
+  t = t.replace(/\bimma\b/g, "i am going to");
 
   // Misspellings — self-harm / methods
   t = t.replace(/\bselfharm\b/g, "self-harm");
@@ -267,6 +269,61 @@ const LOW_SIGNALS = [
   /\bcan'?t (escape|get away from) (this|it|the pain|my thoughts?)\b/i,
   /\bdon'?t (deserve|have the right) to (live|be happy|be alive|be here)\b/i,
 ];
+
+// ── Moderation patterns ─────────────────────────────────────────────────────
+// Separate from crisis detection so threats/hate speech can be flagged without
+// automatically showing crisis helplines.
+
+const THREAT_SIGNALS = [
+  { level: "high", re: /\bi'?ll (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+  { level: "high", re: /\bi (want to|am going to|gonna|will|'ll) (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+  { level: "high", re: /\bi('?m| am) (going to|gonna) (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
+  { level: "high", re: /\bi (want to|am going to|gonna|will|'ll) (find|track down|come for) (you|u|him|her|them)\b/i },
+  { level: "high", re: /\bi('?m| am) (going to|gonna) (find|track down|come for) (you|u|him|her|them)\b/i },
+  { level: "high", re: /\b(kill|hurt) yourself\b/i },
+  { level: "high", re: /\byou (deserve|need) to (die|be killed|get hurt)\b/i },
+  { level: "high", re: /\bgoing to (bomb|shoot up|burn down|attack) (the|this|that|your|their|my)? ?(school|office|building|house|home|place|event|campus|store|workplace)\b/i },
+  { level: "high", re: /\bput (a )?(bomb|knife|gun) (in|through|to|at)\b/i },
+  { level: "high", re: /\bbring(ing)? (a )?(gun|knife|weapon) (to|into)\b.*\b(school|work|office|campus|event|building)\b/i },
+  { level: "high", re: /\bmake (you|u|him|her|them) pay\b.*\b(tonight|today|tomorrow|soon|now)\b/i },
+  { level: "low", re: /\bi (want to|am going to|gonna|will|'ll) (ruin|destroy) (you|your life|your career|them)\b/i },
+  { level: "low", re: /\bi('?m| am) (going to|gonna) (ruin|destroy) (you|your life|your career|them)\b/i },
+  { level: "low", re: /\bwatch your back\b/i },
+  { level: "low", re: /\byou haven'?t seen the last of me\b/i },
+];
+
+const PROTECTED_GROUP =
+  "(black|white|asian|jewish|muslim|christian|hindu|sikh|arab|indigenous|aboriginal|gay|lesbian|trans|queer|lgbtq|disabled|autistic|immigrant|refugee|migrant|women|men|girls|boys|old people)";
+const PROTECTED_GROUP_TARGET = "(" + PROTECTED_GROUP + ")( people|s)?";
+
+const HATE_SIGNALS = [
+  { level: "high", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (should|must|need to|ought to) (die|be killed|be eliminated|be wiped out|not exist)\\b", "i") },
+  { level: "high", re: new RegExp("\\b(kill|hurt|attack|eliminate|wipe out) (all |every )?" + PROTECTED_GROUP_TARGET + "\\b", "i") },
+  { level: "high", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (are|aren't) (subhuman|inferior|not human|human)\\b", "i") },
+  { level: "low", re: new RegExp("\\bi hate " + PROTECTED_GROUP_TARGET + "\\b", "i") },
+  { level: "low", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (do not|don't|shouldn'?t|should not) belong (here|anywhere|in this country|in our country)\\b", "i") },
+  { level: "low", re: /\bgo back to (your|their) country\b/i },
+  { level: "low", re: new RegExp("\\bno " + PROTECTED_GROUP_TARGET + " allowed\\b", "i") },
+];
+
+const MODERATION_FP_GUARDS = {
+  kill_idiom: /\b(kill|killed|killing) (time|the lights|a process|the server|a task|a habit|the mood|the performance|it|this)\b/i,
+  shoot_idiom: /\bshoot(ing)? (hoops|a video|photos?|an email|a message|the breeze)\b/i,
+  bomb_idiom: /\b(bombed|bombing|bomb) (the exam|an exam|a test|on stage|at karaoke|a performance|a joke)\b/i,
+  attack_idiom: /\b(attack|attacking) (the problem|a bug|this task|the issue|the project)\b/i,
+  threat_model: /\b(threat model|threat detection|security threat|threat assessment|threat level)\b/i,
+  hate_mundane: /\bi hate (monday|mondays|traffic|homework|this app|this bug|my job|the weather|cooking|waiting)\b/i,
+};
+
+function isModerationFalsePositive(text, matchedPattern) {
+  if (/kill|killed|killing/.test(matchedPattern) && MODERATION_FP_GUARDS.kill_idiom.test(text)) return true;
+  if (/shoot/.test(matchedPattern) && MODERATION_FP_GUARDS.shoot_idiom.test(text)) return true;
+  if (/bomb/.test(matchedPattern) && MODERATION_FP_GUARDS.bomb_idiom.test(text)) return true;
+  if (/attack/.test(matchedPattern) && MODERATION_FP_GUARDS.attack_idiom.test(text)) return true;
+  if (/threat/.test(matchedPattern) && MODERATION_FP_GUARDS.threat_model.test(text)) return true;
+  if (/hate/.test(matchedPattern) && MODERATION_FP_GUARDS.hate_mundane.test(text)) return true;
+  return false;
+}
 
 // ── Subtle signals ──────────────────────────────────────────────────────────
 // Individually these are NOT crisis signals. But when 3+ appear in a session,
@@ -491,6 +548,30 @@ function isAnyCrisis(text) {
   return detect(text).level !== "none";
 }
 
+function detectModeration(text) {
+  if (!text || typeof text !== "string") {
+    return { level: "none", category: null, matched: null };
+  }
+
+  const t = normalise(text);
+  const groups = [
+    { category: "threat", signals: THREAT_SIGNALS },
+    { category: "hate", signals: HATE_SIGNALS },
+  ];
+
+  for (const group of groups) {
+    for (const sig of group.signals) {
+      const m = t.match(sig.re);
+      if (m) {
+        if (isModerationFalsePositive(t, m[0])) continue;
+        return { level: sig.level, category: group.category, matched: m[0] };
+      }
+    }
+  }
+
+  return { level: "none", category: null, matched: null };
+}
+
 // Single-message subtle signal check (no accumulation, just detection)
 function detectSubtle(text) {
   if (!text || typeof text !== "string") return [];
@@ -507,12 +588,15 @@ function detectSubtle(text) {
 
 module.exports = {
   detect,
+  detectModeration,
   detectSubtle,
   isHighCrisis,
   isAnyCrisis,
   ConversationTracker,
   HIGH_SIGNALS,
   LOW_SIGNALS,
+  THREAT_SIGNALS,
+  HATE_SIGNALS,
   SUBTLE_SIGNALS,
   SUBTLE_THRESHOLD_LOW,
   SUBTLE_THRESHOLD_HIGH,

@@ -159,7 +159,7 @@ const doc = new Document({
           children: [new TextRun({ text: "Rob Graham", font: "Cambria", size: 28, bold: true })],
         }),
         para([new TextRun({ text: "FAMTEC (Fine Art Media Technology)", font: "Cambria", size: 22, color: "555555" })], { center: true }),
-        para([new TextRun({ text: "PhD Candidate, School of Design, RMIT University", font: "Cambria", size: 22, color: "555555" })], { center: true }),
+        para([new TextRun({ text: "PhD Researcher, School of Design, RMIT University", font: "Cambria", size: 22, color: "555555" })], { center: true }),
         new Paragraph({ spacing: { before: 400 }, alignment: AlignmentType.CENTER, children: [
           new TextRun({ text: "June 2026 (v1.1.0)", font: "Cambria", size: 24, color: "777777" }),
         ]}),
@@ -200,13 +200,13 @@ const doc = new Document({
 
         // ── ABSTRACT ──
         heading(1, "Abstract"),
-        para("As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is an open-source international chat safety protocol that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities."),
+        para("As AI chatbots become primary channels for intimate human conversation, the absence of crisis-response infrastructure represents a critical safety gap. SafeChat is a source-available international chat safety protocol that detects crisis signals in user input, determines the user's geographic location without device permissions, and delivers verified helpline resources across 34 countries. The system runs entirely on-device with zero data collection, addressing both the regulatory demands of emerging AI safety legislation and the ethical obligations of developers building emotionally responsive AI. This paper presents SafeChat's architecture, detection methodology, and its relationship to the broader challenge of building sovereign, privacy-respecting AI infrastructure for communities."),
 
         // ── 1. INTRODUCTION ──
         heading(1, "1. Introduction"),
         para("AI companion applications now facilitate some of the most emotionally vulnerable conversations people have with any system, human or machine. Products including Character.AI, Replika, and general-purpose assistants like ChatGPT routinely encounter users expressing suicidal ideation, self-harm, and acute psychological distress. The consequences of failing to respond appropriately are not theoretical: documented cases have linked AI companion interactions to self-harm and suicide attempts, prompting regulatory action across multiple jurisdictions."),
         para("In 2026, the regulatory landscape shifted decisively. New York enacted the first US law mandating crisis-response protocols for AI companions. The US Federal Trade Commission opened formal investigations into chatbot safety practices at Alphabet, Meta, OpenAI, Snap, xAI, and Character Technologies. The VERA-MH framework, the first open-source evaluation for AI mental health safety, demonstrated that major AI systems exhibit significant gaps in detecting and responding to suicidal ideation."),
-        para("SafeChat responds to this landscape by providing free, open-source crisis safety infrastructure that any developer can integrate into any AI chat application. Its design principles emerge from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage: the conviction that critical infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud services."),
+        para("SafeChat responds to this landscape by providing free, source-available crisis safety infrastructure that any developer can integrate into any AI chat application. Its design principles emerge from the same research programme as ARCHAI, a sovereign AI toolkit for cultural heritage: the conviction that critical infrastructure should be locally deployable, privacy-respecting, and independent of commercial cloud services."),
 
         // ── 2. DESIGN PRINCIPLES ──
         heading(1, "2. Design Principles"),
@@ -231,7 +231,7 @@ const doc = new Document({
         para("Normalised input is matched against two tiers of regex patterns:"),
         boldPara("HIGH signals ", "indicate explicit suicidal language, self-harm, or crisis-level distress. These include direct statements of intent (\"kill myself\", \"end my life\"), method references (\"overdose\", \"jumping off\"), finality language (\"the end for me\", \"this will all be over soon\"), and behavioural indicators (\"writing goodbye letters\", \"gave away everything\"). HIGH signals trigger immediate crisis intervention with full helpline resources."),
         boldPara("LOW signals ", "indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness (\"can't go on\", \"no point\"), worthlessness (\"I'm a burden\", \"nobody cares\"), and passive ideation (\"done with life\", \"no hope left\"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response."),
-        para("The current engine includes 45 HIGH patterns, 22 LOW patterns, and 424 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, and security edge cases."),
+        para("The current engine includes 45 HIGH patterns, 22 LOW patterns, and 446 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, adversarial inputs, and security edge cases."),
 
         heading(2, "3.3 False-Positive Guards"),
         para("Context-aware guards prevent triggering on figurative or idiomatic language:"),
@@ -278,7 +278,7 @@ const doc = new Document({
         para("SafeChat’s design anticipates and addresses requirements from multiple regulatory frameworks:"),
         boldPara("New York AI Companion Law (2026): ", "Mandates detection of suicidal ideation, referral to crisis services, and disclosure of AI’s non-human nature. SafeChat provides the detection and referral components as drop-in infrastructure."),
         boldPara("FTC Chatbot Safety Inquiry (2026): ", "Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies."),
-        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat’s 424-test suite addresses the categories of failure identified by VERA-MH."),
+        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat’s 446-test suite addresses the categories of failure identified by VERA-MH."),
         boldPara("Samaritans Safe Messaging Guidelines: ", "SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language."),
 
         // ── 7. LIMITATIONS ──

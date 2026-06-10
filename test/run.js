@@ -3,11 +3,12 @@
  * Run: node test/run.js
  */
 
-const { detect, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("../src/detect");
+const { detect, detectModeration, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("../src/detect");
 const { fromLocale, fromTimezone, fromRequest } = require("../src/locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat } = require("../src/resources");
 const safechat = require("../src/index");
 const { Shield, createShield, PRESETS } = require("../src/shield");
+const { CrossClassifier, createCrossClassifier, CC_PRESETS, MINDGUARD_MAP, MENTALLLAMA_MAP } = require("../src/crosscheck");
 
 let passed = 0;
 let failed = 0;
@@ -76,6 +77,32 @@ assert("exercise", detect("that workout killed me").level === "none");
 assert("empty string", detect("").level === "none");
 assert("null", detect(null).level === "none");
 assert("undefined", detect(undefined).level === "none");
+
+section("Moderation Detection — Threats");
+assert("threat: I want to kill you", detectModeration("I want to kill you").category === "threat");
+assert("threat: I want to kill you high", detectModeration("I want to kill you").level === "high");
+assert("threat: I'll kill you", detectModeration("I'll kill you").level === "high");
+assert("threat: going to hurt them", detectModeration("I'm going to hurt them").level === "high");
+assert("threat: kill yourself", detectModeration("kys").level === "high");
+assert("threat: you deserve to die", detectModeration("you deserve to die").level === "high");
+assert("threat: watch your back", detectModeration("watch your back").level === "low");
+assert("threat: crisis detector stays separate", detect("I want to kill you").level === "none");
+
+section("Moderation Detection — Hate Speech");
+assert("hate: protected group hostility", detectModeration("I hate disabled people").category === "hate");
+assert("hate: protected group exclusion", detectModeration("refugees do not belong here").level === "low");
+assert("hate: go back to your country", detectModeration("go back to your country").category === "hate");
+assert("hate: violent protected group language", detectModeration("kill all immigrants").level === "high");
+assert("hate: dehumanising protected group language", detectModeration("trans people are not human").level === "high");
+
+section("Moderation Detection — None (should NOT trigger)");
+assert("moderation FP: kill time", detectModeration("Let's kill time before the train").level === "none");
+assert("moderation FP: killed performance", detectModeration("She killed the performance").level === "none");
+assert("moderation FP: shooting hoops", detectModeration("I'm shooting hoops after school").level === "none");
+assert("moderation FP: bombed exam", detectModeration("I bombed the exam").level === "none");
+assert("moderation FP: threat model", detectModeration("We need a threat model for the app").level === "none");
+assert("moderation FP: hate traffic", detectModeration("I hate traffic").level === "none");
+assert("moderation input: null", detectModeration(null).level === "none");
 
 // ── Geo-detection tests ──
 
@@ -909,16 +936,262 @@ section("Shield — exports from index.js");
 assert("index exports Shield", safechat.Shield === Shield);
 assert("index exports createShield", safechat.createShield === createShield);
 assert("index exports PRESETS", safechat.PRESETS === PRESETS);
+assert("index exports detectModeration", typeof safechat.detectModeration === "function");
+assert("index exports CrossClassifier", safechat.CrossClassifier === CrossClassifier);
+assert("index exports createCrossClassifier", typeof safechat.createCrossClassifier === "function");
+assert("index exports CC_PRESETS", typeof safechat.CC_PRESETS === "object");
+
+// ── CrossClassifier tests ──
+
+section("CrossClassifier — construction");
+
+// Custom backend with classify function
+const mockClassifier = createCrossClassifier({
+  backend: "custom",
+  classify: async (text) => {
+    if (/suicid|kill myself|end my life/.test(text.toLowerCase())) {
+      return { risk: "high", confidence: 0.95 };
+    }
+    if (/hopeless|worthless|can't go on/.test(text.toLowerCase())) {
+      return { risk: "low", confidence: 0.8 };
+    }
+    return { risk: "none", confidence: 0.9 };
+  },
+});
+
+assert("CC custom backend created", mockClassifier instanceof CrossClassifier);
+assert("CC backend set", mockClassifier.backend === "custom");
+assert("CC default confidence threshold", mockClassifier.confidenceThreshold === 0.6);
+assert("CC default timeout", mockClassifier.timeout === 5000);
+assert("CC allowDowngrade default false", mockClassifier.allowDowngrade === false);
+
+// Invalid backend throws
+let ccError = false;
+try { createCrossClassifier({ backend: "invalid" }); } catch (e) { ccError = true; }
+assert("CC invalid backend throws", ccError);
+
+// Custom backend without classify throws
+let ccError2 = false;
+try { createCrossClassifier({ backend: "custom" }); } catch (e) { ccError2 = true; }
+assert("CC custom without classify throws", ccError2);
+
+// Presets exist
+assert("CC preset mindguard exists", CC_PRESETS.mindguard.backend === "mindguard");
+assert("CC preset mindguard_fast exists", CC_PRESETS.mindguard_fast.model === "mindguard-4b");
+assert("CC preset mentalllama exists", CC_PRESETS.mentalllama.backend === "mentalllama");
+assert("CC preset local_api exists", CC_PRESETS.local_api.backend === "transformers");
+
+section("CrossClassifier — label mapping");
+assert("CC map: safe → none", MINDGUARD_MAP["safe"] === "none");
+assert("CC map: self-harm → high", MINDGUARD_MAP["self-harm"] === "high");
+assert("CC map: self_harm → high", MINDGUARD_MAP["self_harm"] === "high");
+assert("CC map: harm-to-others → high", MINDGUARD_MAP["harm-to-others"] === "high");
+assert("CC map: harm_to_others → high", MINDGUARD_MAP["harm_to_others"] === "high");
+assert("CC map: depression → low", MENTALLLAMA_MAP["depression"] === "low");
+assert("CC map: suicidal_ideation → high", MENTALLLAMA_MAP["suicidal_ideation"] === "high");
+assert("CC map: stress → low", MENTALLLAMA_MAP["stress"] === "low");
+assert("CC map: none → none", MENTALLLAMA_MAP["none"] === "none");
+
+section("CrossClassifier — stats");
+assert("CC stats initial total", mockClassifier.stats().total === 0);
+assert("CC stats initial errors", mockClassifier.stats().errors === 0);
 
 // ── ESM entry point ──
 
 async function runAsyncTests() {
+  // ── CrossClassifier async tests ──
+
+  section("CrossClassifier — classify (custom backend)");
+
+  const crisisResult = await mockClassifier.classify("I want to kill myself");
+  assert("CC classify crisis: risk=high", crisisResult.risk === "high");
+  assert("CC classify crisis: confidence>0.9", crisisResult.confidence > 0.9);
+
+  const distressResult = await mockClassifier.classify("everything feels hopeless");
+  assert("CC classify distress: risk=low", distressResult.risk === "low");
+  assert("CC classify distress: confidence>0.7", distressResult.confidence > 0.7);
+
+  const safeResult = await mockClassifier.classify("hello how are you today");
+  assert("CC classify safe: risk=none", safeResult.risk === "none");
+
+  const nullResult = await mockClassifier.classify(null);
+  assert("CC classify null: risk=none", nullResult.risk === "none");
+
+  const emptyResult = await mockClassifier.classify("");
+  assert("CC classify empty: risk=none", emptyResult.risk === "none");
+
+  section("CrossClassifier — verify (merge rules)");
+
+  // Rule 1: regex HIGH + classifier HIGH → HIGH confirmed
+  const highConfirmed = await mockClassifier.verify(
+    { level: "high", matched: "kill myself" },
+    "I want to kill myself"
+  );
+  assert("CC verify: HIGH+HIGH = HIGH", highConfirmed.level === "high");
+  assert("CC verify: HIGH+HIGH = confirmed", highConfirmed.crossClassifier.mergeAction === "confirmed");
+  assert("CC verify: has crossClassifier data", highConfirmed.crossClassifier.backend === "custom");
+
+  // Rule 2: regex HIGH + classifier NONE → HIGH (never downgrade)
+  const highOverride = await mockClassifier.verify(
+    { level: "high", matched: "self-harm" },
+    "hello how are you today"
+  );
+  assert("CC verify: HIGH+NONE = HIGH (no downgrade)", highOverride.level === "high");
+  assert("CC verify: HIGH+NONE = regex_override", highOverride.crossClassifier.mergeAction === "regex_override");
+
+  // Rule 3: regex NONE + classifier HIGH → LOW (escalated)
+  const escalatedHigh = await mockClassifier.verify(
+    { level: "none", matched: null },
+    "I want to kill myself"
+  );
+  assert("CC verify: NONE+HIGH = escalated", escalatedHigh.level === "low");
+  assert("CC verify: NONE+HIGH = escalated action", escalatedHigh.crossClassifier.mergeAction === "escalated");
+
+  // Rule 4: regex NONE + classifier LOW → LOW (escalated)
+  const escalatedLow = await mockClassifier.verify(
+    { level: "none", matched: null },
+    "everything feels hopeless"
+  );
+  assert("CC verify: NONE+LOW = escalated", escalatedLow.level === "low");
+
+  // Rule 5: regex NONE + classifier NONE → NONE confirmed
+  const noneConfirmed = await mockClassifier.verify(
+    { level: "none", matched: null },
+    "hello how are you today"
+  );
+  assert("CC verify: NONE+NONE = NONE", noneConfirmed.level === "none");
+  assert("CC verify: NONE+NONE = confirmed", noneConfirmed.crossClassifier.mergeAction === "confirmed");
+
+  // Rule 6: regex LOW + classifier HIGH → HIGH (escalated)
+  const lowToHigh = await mockClassifier.verify(
+    { level: "low", matched: "hopeless" },
+    "I want to kill myself"
+  );
+  assert("CC verify: LOW+HIGH = HIGH", lowToHigh.level === "high");
+  assert("CC verify: LOW+HIGH = escalated", lowToHigh.crossClassifier.mergeAction === "escalated");
+
+  // Rule 7: regex LOW + classifier LOW → LOW confirmed
+  const lowConfirmed = await mockClassifier.verify(
+    { level: "low", matched: "hopeless" },
+    "everything feels hopeless"
+  );
+  assert("CC verify: LOW+LOW = LOW", lowConfirmed.level === "low");
+  assert("CC verify: LOW+LOW = confirmed", lowConfirmed.crossClassifier.mergeAction === "confirmed");
+
+  section("CrossClassifier — stats after verify calls");
+  const stats = mockClassifier.stats();
+  assert("CC stats: total > 0", stats.total > 0);
+  assert("CC stats: confirmed > 0", stats.confirmed > 0);
+  assert("CC stats: escalated > 0", stats.escalated > 0);
+  assert("CC stats: avgLatencyMs >= 0", stats.avgLatencyMs >= 0);
+
+  // Reset stats
+  mockClassifier.resetStats();
+  assert("CC stats reset: total = 0", mockClassifier.stats().total === 0);
+
+  section("CrossClassifier — below confidence threshold");
+
+  const lowConfCC = createCrossClassifier({
+    backend: "custom",
+    confidenceThreshold: 0.99,
+    classify: async () => ({ risk: "high", confidence: 0.5 }),
+  });
+
+  const belowThreshold = await lowConfCC.verify(
+    { level: "none", matched: null },
+    "some text"
+  );
+  assert("CC below threshold: no escalation", belowThreshold.level === "none");
+  assert("CC below threshold: passthrough action", belowThreshold.crossClassifier.mergeAction === "passthrough");
+
+  section("CrossClassifier — error handling");
+
+  const errorCC = createCrossClassifier({
+    backend: "custom",
+    classify: async () => { throw new Error("model crashed"); },
+  });
+
+  const errorResult = await errorCC.verify(
+    { level: "low", matched: "hopeless" },
+    "some text"
+  );
+  assert("CC error: falls back to regex level", errorResult.level === "low");
+  assert("CC error: has error in result", errorResult.crossClassifier.error === "model crashed");
+  assert("CC error: stats tracked", errorCC.stats().errors === 1);
+
+  section("CrossClassifier — error callback");
+
+  let capturedError = null;
+  const errorCbCC = createCrossClassifier({
+    backend: "custom",
+    classify: async () => { throw new Error("inference timeout"); },
+    onError: (err) => { capturedError = err; },
+  });
+
+  await errorCbCC.classify("test");
+  assert("CC onError fired", capturedError !== null);
+  assert("CC onError has message", capturedError.message === "inference timeout");
+
+  section("CrossClassifier — onClassify callback");
+
+  let classifyCallbackResult = null;
+  const callbackCC = createCrossClassifier({
+    backend: "custom",
+    classify: async () => ({ risk: "low", confidence: 0.8 }),
+    onClassify: (result) => { classifyCallbackResult = result; },
+  });
+
+  await callbackCC.verify({ level: "none", matched: null }, "test");
+  assert("CC onClassify fired", classifyCallbackResult !== null);
+  assert("CC onClassify has crossClassifier", classifyCallbackResult.crossClassifier !== undefined);
+
+  section("CrossClassifier — Shield integration");
+
+  const ccShield = createShield({
+    crisis: true,
+    subtle: false,
+    crossClassifier: mockClassifier,
+    responses: { high: "interrupt", low: "inject" },
+  });
+
+  assert("Shield has crossClassifier", ccShield.crossClassifier === mockClassifier);
+
+  // processAsync with cross-classifier
+  const asyncResult = await ccShield.processAsync("hello how are you");
+  assert("Shield processAsync: safe message = none", asyncResult.level === "none");
+  assert("Shield processAsync: has crossClassifier data", asyncResult.crossClassifier !== undefined);
+
+  const asyncCrisis = await ccShield.processAsync("I want to kill myself");
+  assert("Shield processAsync: crisis = high", asyncCrisis.level === "high");
+  assert("Shield processAsync: crisis confirmed", asyncCrisis.crossClassifier.mergeAction === "confirmed");
+
+  // processAsync without cross-classifier (same as process)
+  const plainShield = createShield({ crisis: true });
+  const plainResult = await plainShield.processAsync("I want to kill myself");
+  assert("Shield processAsync no CC: still works", plainResult.level === "high");
+  assert("Shield processAsync no CC: no crossClassifier field", plainResult.crossClassifier === undefined);
+
+  section("CrossClassifier — custom label mapping");
+
+  const customMapCC = createCrossClassifier({
+    backend: "custom",
+    classify: async () => ({ risk: "custom_danger", confidence: 0.9 }),
+    labelMap: { "custom_danger": "high" },
+  });
+
+  const customMapResult = await customMapCC.classify("test");
+  assert("CC custom label map works", customMapResult.risk === "high");
+
   section("ESM exports");
   const esm = await import("../src/index.mjs");
   assert("ESM default exports check", typeof esm.default.check === "function");
   assert("ESM named export check", typeof esm.check === "function");
   assert("ESM named detect works", esm.detect("I feel hopeless").level === "low");
+  assert("ESM named detectModeration works", esm.detectModeration("I want to kill you").category === "threat");
   assert("ESM Shield export", esm.Shield === Shield);
+  assert("ESM CrossClassifier export", esm.CrossClassifier === CrossClassifier);
+  assert("ESM createCrossClassifier export", typeof esm.createCrossClassifier === "function");
+  assert("ESM CC_PRESETS export", typeof esm.CC_PRESETS === "object");
 }
 
 function printResults() {

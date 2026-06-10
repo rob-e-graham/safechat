@@ -450,6 +450,11 @@
       <p>Modal, banner, and full-page popup. One script tag. Auto-monitors inputs. Offline-capable PWA. Native device links for call, text, WhatsApp, email.</p>
     </div>
     <div class="feature">
+      <div class="tag tag-research">v1.2</div>
+      <h3>Cross-Classifier (ML Layer)</h3>
+      <p>Optional second-opinion layer using local ML models (MindGuard, MentalLLaMA) alongside the regex engine. Catches nuanced distress that keyword matching can miss. Everything runs locally. Never downgrades a regex detection.</p>
+    </div>
+    <div class="feature">
       <div class="tag tag-standard">Standard</div>
       <h3>Compliance-Ready</h3>
       <p>Aligned with New York's AI Companion Law, FTC chatbot safety requirements, VERA-MH evaluation framework, and Samaritans safe messaging guidelines.</p>
@@ -495,6 +500,27 @@
         <td><span class="type-badge" style="background:rgba(245,166,35,0.15);color:#f5a623">Framework</span></td>
         <td>Research</td>
         <td>Multi-agent safeguard for AI-human mental health interaction</td>
+        <td>Active</td>
+      </tr>
+      <tr>
+        <td><a href="https://swordhealth.com/newsroom/introducing-mindguard" target="_blank">MindGuard</a></td>
+        <td><span class="type-badge" style="background:rgba(46,204,113,0.15);color:#2ecc71">Toolkit</span></td>
+        <td>Sword Health</td>
+        <td>Open-source 4B/8B safety classifiers for mental health AI conversations</td>
+        <td>Active</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/SteveKGYang/MentalLLaMA" target="_blank">MentalLLaMA</a></td>
+        <td><span class="type-badge" style="background:rgba(46,204,113,0.15);color:#2ecc71">Toolkit</span></td>
+        <td>Research</td>
+        <td>Open-source LLMs for interpretable mental health analysis (7B/13B)</td>
+        <td>Active</td>
+      </tr>
+      <tr>
+        <td><a href="https://dl.acm.org/doi/10.1145/3711896.3737393" target="_blank">MentalChat16K</a></td>
+        <td><span class="type-badge" style="background:rgba(52,152,219,0.15);color:#3498db">Dataset</span></td>
+        <td>Research</td>
+        <td>Benchmark dataset for conversational mental health assistance (KDD 2025)</td>
         <td>Active</td>
       </tr>
       <tr>
@@ -685,7 +711,9 @@
   <div class="features" style="grid-template-columns: 1fr;">
     <div class="feature">
       <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;">
-        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 424 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 517 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+        <br><br>
+        <strong style="color:rgba(255,255,255,0.75);">Research partnerships in progress.</strong> SafeChat is working with researchers at the University of Minnesota (cross-classifier approaches for mental health NLP) and the Spring Health VERA-MH team (evaluation framework for AI crisis response). The cross-classifier module integrates local ML models like MindGuard and MentalLLaMA alongside the regex engine to catch nuanced distress that keyword matching can miss.
       </p>
     </div>
   </div>
@@ -710,7 +738,7 @@
   <p style="margin-top:16px; font-size:12px;">
     If you or someone you know is in crisis: <a href="https://findahelpline.com" target="_blank" style="color:#e94560;">findahelpline.com</a>
   </p>
-  <p style="margin-top:10px;font-size:10px;color:rgba(255,255,255,0.15);">v1.1.0 &middot; BSL-1.1 &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Legal</a> &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Changelog</a></p>
+  <p style="margin-top:10px;font-size:10px;color:rgba(255,255,255,0.15);">v1.2.0 &middot; BSL-1.1 &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Legal</a> &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Changelog</a></p>
 </footer>
 
 <!-- Detection engine (inline for demo) -->

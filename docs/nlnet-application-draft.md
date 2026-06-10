@@ -39,7 +39,7 @@ Source: https://github.com/rob-e-graham/safechat
 
 *(Explain the whole project and expected outcomes. Keep it short and to the point — what and how.)*
 
-SafeChat is an open-source crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device — no data is collected, no messages are transmitted, and no permissions are required.
+SafeChat is a source-available crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device — no data is collected, no messages are transmitted, and no permissions are required.
 
 The project provides three things: a regex-based detection engine that catches explicit and indirect crisis language (including misspellings, text-speak, and negation variants), a geo-location system that finds the user's country from timezone and locale without GPS, and a verified database of 100+ crisis helplines across 34 countries (15 European) covering phone, text, chat, email, and WhatsApp.
 
@@ -59,13 +59,13 @@ Expected outcomes from this funding:
 
 *(Describe relevant past projects or organisational involvement.)*
 
-I am a PhD candidate at RMIT University (Melbourne, Australia) in the School of Design, researching sovereign AI infrastructure — local-first, privacy-respecting systems independent of cloud services. SafeChat emerged directly from this research as a practical application of privacy-preserving AI safety.
+I am a PhD researcher at RMIT University (Melbourne, Australia) in the School of Design, researching sovereign AI infrastructure — local-first, privacy-respecting systems independent of cloud services. SafeChat emerged directly from this research as a practical application of privacy-preserving AI safety.
 
-Through FAMTEC (Fine Art Media Technology), I develop ethical AI tools and creative technology. SafeChat is FAMTEC's first open-source public infrastructure project.
+Through FAMTEC (Fine Art Media Technology), I develop ethical AI tools and creative technology. SafeChat is FAMTEC's first source-available public infrastructure project.
 
 I have presented work on AI ethics and sovereign technology at international conferences, and I am presenting at ISEA2026 in Dubai on related themes.
 
-SafeChat is already live and functional — it is not a concept. The current release (v1.1.0) includes 424 automated tests, a public changelog documenting every detection improvement, and a twice-monthly verification process for crisis resource data. The project follows Samaritans safe messaging guidelines for responsible communication about crisis topics.
+SafeChat is already live and functional — it is not a concept. The current release (v1.1.0) includes 446 automated tests, a public changelog documenting every detection improvement, and a twice-monthly verification process for crisis resource data. The project follows Samaritans safe messaging guidelines for responsible communication about crisis topics.
 
 ---
 
@@ -110,7 +110,7 @@ The closest existing efforts are:
 
 **EmoAgent** (research) — A multi-agent framework for AI-human mental health interaction. EmoAgent requires LLM inference and cloud connectivity; SafeChat runs entirely locally with regex, requires no API calls, works offline, and collects zero data.
 
-No existing tool provides SafeChat's combination: local-only detection, geo-routing without permissions, verified helpline database, configurable integration presets, and offline PWA — all as open-source infrastructure.
+No existing tool provides SafeChat's combination: local-only detection, geo-routing without permissions, verified helpline database, configurable integration presets, and offline PWA — all as source-available infrastructure.
 
 ### Describe the Technical Challenges
 

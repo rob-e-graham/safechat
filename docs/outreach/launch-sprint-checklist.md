@@ -1,6 +1,6 @@
 # SafeChat Public Launch Sprint
 
-**Date:** 2026-06-03  
+**Date:** 2026-06-07  
 **Goal:** Build public proof, gather expert review, and create funder-ready traction.
 
 ---
@@ -39,30 +39,37 @@
 
 ## Next 48 Hours: Priority 1 Outreach
 
-Send personalised emails to:
+Use `docs/outreach/priority-20-mailout-pack.md`. Send the review-first group before the media group:
 
-- [ ] Samaritans Media
-- [ ] Samaritans Partnerships
+- [ ] RMIT News / External Affairs
+- [ ] Samaritans Media Advice
 - [ ] Lifeline Australia
 - [ ] Beyond Blue
+- [ ] eSafety Commissioner
+- [ ] Australia AI Safety Institute
 - [ ] findahelpline.com / ThroughLine
 - [ ] Crisis Text Line
-- [ ] eSafety Commissioner
-- [ ] RMIT Media
-- [ ] The Conversation
+- [ ] Spring Health / VERA-MH
+- [ ] Stevie Chancellor
+- [ ] Munmun De Choudhury
+- [ ] Partnership on AI
+- [ ] Center for AI Safety
+- [ ] Anthropic User Safety
+- [ ] FTC contact route / Office of Technology context
+- [ ] California Senator Steve Padilla office
 - [ ] 404 Media
-- [ ] OpenAI Safety
-- [ ] Anthropic Safety
-- [ ] Character.AI Safety
+- [ ] The Conversation
+- [ ] Open Technology Fund
+- [ ] Digital Rights Watch
 
-Hold regulator emails until the live package, GitHub Pages, and resource verification workflow are pushed.
+Hold broad regulator/company emails until the live package, GitHub Pages, and resource verification workflow are pushed. The first wave should ask for review, verification, and guidance rather than endorsement.
 
 ---
 
 ## This Week: Developer Reach
 
 - [ ] Show HN:
-  - Title: `Show HN: SafeChat - open-source crisis detection for AI chatbots`
+  - Title: `Show HN: SafeChat - source-available crisis detection for AI chatbots`
   - URL: `https://rob-e-graham.github.io/safechat/app/index.html`
   - Best time from Australia: late night AEST for US morning.
 - [ ] Post to r/opensource with the privacy/open commons angle.
@@ -104,8 +111,7 @@ Do not claim:
 
 Say:
 
-- open-source/source-available crisis safety infrastructure
+- source-available crisis safety infrastructure
 - local-first and zero data collection
 - developer tool and PWA resource router
 - requesting review and verification
-

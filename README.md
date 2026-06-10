@@ -6,12 +6,12 @@
 <h3 align="center">International Chat Safety Protocol</h3>
 
 <p align="center">
-  Open-source crisis safety infrastructure for AI apps.<br>
+  Source-available crisis safety infrastructure for AI apps.<br>
   Detects distress, finds local help. Zero tracking. Works offline.
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 100+ verified helplines &middot; 424 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 100+ verified helplines &middot; 517 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -131,6 +131,10 @@ Detection uses regex pattern matching with three layers:
 | **low** | Hopelessness, worthlessness, feeling trapped | Soft safety response with helpline link |
 | **none** | No crisis signals | Normal operation |
 
+Threat and hate-speech detection are exposed separately through `detectModeration()`.
+They do not trigger crisis-resource routing by default; they return local moderation
+signals that an app can use for review, de-escalation, or harm prevention.
+
 ---
 
 ## Geo-Detection
@@ -175,7 +179,7 @@ SafeChat is designed for trust:
 - **Input validation** — type checking, ReDoS protection, JSON structure validation
 - **Scoped service worker** — only intercepts same-origin requests
 - **No cookies, no analytics, no tracking**
-- **424 automated tests** including security/adversarial inputs
+- **517 automated tests** including security/adversarial inputs
 - **Referrer policy** — `no-referrer` on all pages
 
 ---
@@ -197,9 +201,60 @@ safechat.detect("I feel worthless")       // { level: "low", matched: "worthless
 safechat.detect("great day today")        // { level: "none", matched: null }
 ```
 
+### `safechat.detectModeration(text)`
+
+```javascript
+safechat.detectModeration("I want to kill you")
+// { level: "high", category: "threat", matched: "i want to kill you" }
+
+safechat.detectModeration("great day today")
+// { level: "none", category: null, matched: null }
+```
+
 ### `safechat.promptOverride(level, countryCode)`
 ### `safechat.getResources(countryCode, options?)`
 ### `safechat.middleware()`
+
+---
+
+## Cross-Classifier (Optional ML Layer)
+
+SafeChat v1.2 introduces an optional cross-classifier module that runs local ML models alongside the regex engine. The regex layer stays as the fast, deterministic, always-on first pass. The cross-classifier provides a second opinion.
+
+Suggested by [Professor Stevie Chancellor](https://www.steviechancellor.com/) (University of Minnesota) and informed by research from the [VERA-MH](https://www.springhealth.com) evaluation framework.
+
+### Supported models
+
+- **[MindGuard](https://huggingface.co/swordhealth)** (Sword Health) -- 4B/8B crisis classifier. Safe, self-harm, harm-to-others.
+- **[MentalLLaMA](https://github.com/SteveKGYang/MentalLLaMA)** -- 7B/13B mental health analysis. Depression, stress, suicidal ideation.
+- **[MentalChat16K](https://dl.acm.org/doi/10.1145/3711896.3737393)** -- Benchmark dataset for evaluation.
+- Any local model via **Ollama**, **LM Studio**, or a **custom function**.
+
+### Merge rules
+
+The classifier never downgrades a regex detection. If regex says HIGH and the model says safe, it stays HIGH. False negatives cost lives.
+
+```javascript
+const safechat = require('safechat');
+
+const cc = safechat.createCrossClassifier({
+  backend: 'ollama',
+  model: 'mindguard-8b',
+  endpoint: 'http://localhost:11434',
+});
+
+const shield = safechat.createShield({
+  crisis: true,
+  subtle: true,
+  crossClassifier: cc,
+});
+
+// Async processing with cross-classifier verification
+const result = await shield.processAsync(userMessage);
+// result.crossClassifier.mergeAction = 'confirmed' | 'escalated' | 'regex_override'
+```
+
+Everything runs locally. No data leaves the device.
 
 ---
 
@@ -217,7 +272,7 @@ SafeChat is under continuous, active development. See [CHANGELOG.md](CHANGELOG.m
 
 - **False negatives** are treated as critical defects
 - **Crisis resource data** is verified twice monthly
-- **Test suite** must pass before every release (currently 424 tests)
+- **Test suite** must pass before every release (currently 517 tests)
 - **Detection patterns** are reviewed against published clinical literature
 
 ---

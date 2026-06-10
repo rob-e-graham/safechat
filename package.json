@@ -1,6 +1,6 @@
 {
   "name": "safechat",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Crisis safety for AI apps. Detects distress, finds local help. Zero location permissions.",
   "main": "src/index.js",
   "browser": "src/browser.js",

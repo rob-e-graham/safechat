@@ -73,6 +73,9 @@ const DEFAULTS = {
   crisis: true,           // HIGH/LOW crisis detection
   subtle: false,          // session-level subtle signal accumulation
 
+  // Cross-classifier (optional second-opinion layer)
+  crossClassifier: null,  // CrossClassifier instance — see crosscheck.js
+
   // Response mode per level
   responses: {
     high: "interrupt",    // explicit crisis → stop and show resources
@@ -120,6 +123,9 @@ class Shield {
           windowMs: this.config.subtleWindowMs,
         })
       : null;
+
+    // Cross-classifier (optional)
+    this.crossClassifier = this.config.crossClassifier || null;
   }
 
   /**
@@ -215,6 +221,74 @@ class Shield {
     }
 
     return result;
+  }
+
+  /**
+   * Async version of process() that includes cross-classifier verification.
+   *
+   * If no crossClassifier is configured, behaves identically to process().
+   * When a crossClassifier is present, the regex result is passed through
+   * the classifier's verify() method before response mode determination.
+   *
+   * @param {string} text — the user's message
+   * @param {object} options
+   * @param {string} [options.country] — ISO country code override
+   * @param {object} [options.req] — Express request object (for geo-detection)
+   * @param {object} [options.classifierContext] — extra context for the classifier
+   * @returns {Promise<object>} result
+   */
+  async processAsync(text, options = {}) {
+    // Start with the synchronous regex-based detection
+    const baseResult = this.process(text, options);
+
+    // If no cross-classifier, return the regex result as-is
+    if (!this.crossClassifier) {
+      return baseResult;
+    }
+
+    // Run the cross-classifier to verify/enhance the result
+    const context = options.classifierContext || {};
+    const enhanced = await this.crossClassifier.verify(baseResult, text, context);
+
+    // If the classifier changed the level, re-determine the response mode and resources
+    if (enhanced.level !== baseResult.level) {
+      let responseMode = "none";
+      if (enhanced.level === "high") {
+        responseMode = this.config.responses.high || "interrupt";
+      } else if (enhanced.level === "low") {
+        responseMode = this.config.responses.low || "inject";
+      }
+
+      enhanced.action = responseMode;
+
+      // Re-resolve resources if level was escalated
+      if (enhanced.level !== "none" && (responseMode === "interrupt" || responseMode === "inject")) {
+        let country = enhanced.country;
+        if (!country) {
+          if (options.country) {
+            country = options.country.toUpperCase();
+          } else if (options.req) {
+            country = fromRequest(options.req).country;
+          } else {
+            try { country = locateSync().country; } catch (_) {}
+          }
+          enhanced.country = country;
+        }
+
+        const resources = getResources(country);
+        enhanced.resources = resources;
+        enhanced.promptOverride = this._buildPromptOverride(
+          enhanced.level, responseMode, resources
+        );
+      }
+
+      // Fire callbacks for the new level
+      if (enhanced.level !== "none") {
+        this._fireCallbacks(enhanced);
+      }
+    }
+
+    return enhanced;
   }
 
   /**
