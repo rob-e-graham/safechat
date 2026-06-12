@@ -190,6 +190,51 @@
     /\bdon'?t (deserve|have the right) to (live|be happy|be alive|be here)\b/i,
   ];
 
+  var SUBTLE_SIGNALS = [
+    { re:/\b(don'?t want to|can'?t) (see|talk to|be around|face) (anyone|anybody|people|them)\b/i, cat:"withdrawal", weight:2 },
+    { re:/\b(staying|stay|been) (in bed|home|inside|in my room) (all day|all week|for days|again)\b/i, cat:"withdrawal", weight:1 },
+    { re:/\b(pushing|pushed) (everyone|people|them|friends|family) away\b/i, cat:"withdrawal", weight:2 },
+    { re:/\b(stopped|quit|gave up) (going out|seeing friends|answering|responding|talking)\b/i, cat:"withdrawal", weight:2 },
+    { re:/\b(haven'?t|don'?t) (left|leave) (the house|my room|bed|home) (in|for) (days|weeks|a while|ages)\b/i, cat:"withdrawal", weight:2 },
+
+    { re:/\b(can'?t|couldn'?t|unable to) (sleep|fall asleep|stay asleep) (again|anymore|at all|for days|for weeks)\b/i, cat:"sleep", weight:1 },
+    { re:/\b(barely|haven'?t|not) (slept|sleeping|sleep) (in|for) (days|weeks|ages|a long time)\b/i, cat:"sleep", weight:1 },
+    { re:/\bawake (all night|at 3|at 4|every night|again)\b/i, cat:"sleep", weight:1 },
+    { re:/\b(sleep|sleeping) (too much|all day|14|16|18|20 hours)\b/i, cat:"sleep", weight:1 },
+
+    { re:/\b(don'?t|can'?t) (enjoy|care about|feel anything|find joy|find pleasure) (in )?(anything|anymore|any)\b/i, cat:"anhedonia", weight:2 },
+    { re:/\b(nothing|nothings?) (is |feels? )?(fun|interesting|worth|enjoyable|good) (any ?more)\b/i, cat:"anhedonia", weight:1 },
+    { re:/\b(stopped|quit|given up) (caring|trying|eating|showering|washing)\b/i, cat:"anhedonia", weight:2 },
+    { re:/\b(can'?t (be bothered|muster|bring myself)|don'?t have the energy) (to do anything|to get up|to eat|to shower|to move)\b/i, cat:"anhedonia", weight:1 },
+    { re:/\b(haven'?t|not) (eaten|showered|washed|brushed|changed) (in|for) (days|weeks|a while)\b/i, cat:"anhedonia", weight:2 },
+
+    { re:/\b(thank(ing|s)?|want to thank) (you|everyone) for everything\b/i, cat:"farewell", weight:2 },
+    { re:/\b(wanted|want|need) to (say|tell) (goodbye|how much you mean|i love you|thanks)\b.*\b(before|while|in case)\b/i, cat:"farewell", weight:3 },
+    { re:/\b(giving|gave|give) (away|back) my (things|stuff|belongings|money|car|pet)\b/i, cat:"farewell", weight:3 },
+    { re:/\b(tying|tie|tied) up loose ends\b/i, cat:"farewell", weight:2 },
+    { re:/\b(deleting|deleted|clearing|cleared) (all )?(my )?(accounts?|social media|photos?|messages?|history)\b/i, cat:"farewell", weight:2 },
+    { re:/\b(writing|wrote) (letters?|messages?) to (everyone|my family|my friends|people i love|the people)\b/i, cat:"farewell", weight:3 },
+
+    { re:/\b(i'?m |i am )(just |only )?(a (waste|failure|disappointment|mistake|nothing|nobody))\b/i, cat:"self_worth", weight:1 },
+    { re:/\beverything i (do|touch|try) (fails|goes wrong|falls apart|turns to)\b/i, cat:"self_worth", weight:1 },
+    { re:/\b(hate|despise|can'?t stand) (myself|who i am|what i'?ve become|looking at myself)\b/i, cat:"self_worth", weight:2 },
+    { re:/\bi (don'?t|can'?t) (love|like|stand|accept) myself\b/i, cat:"self_worth", weight:1 },
+    { re:/\b(everyone|they|people) (would be|are) (happier|better) (without me|if i left|if i wasn'?t)\b/i, cat:"self_worth", weight:2 },
+
+    { re:/\b(can'?t|don'?t) (imagine|picture|see) (a |my )?(future|tomorrow|next year|getting old)\b/i, cat:"future_loss", weight:2 },
+    { re:/\b(doesn'?t|won'?t|don'?t) matter (soon|in the end|anyway|anymore)\b/i, cat:"future_loss", weight:1 },
+    { re:/\bnone of this (will |is going to )?(matter|last|mean anything)\b/i, cat:"future_loss", weight:2 },
+    { re:/\bwhat'?s the point of (planning|trying|making plans|the future)\b/i, cat:"future_loss", weight:2 },
+
+    { re:/\b(drinking|drunk|high|wasted|smashed|using) (every|all|most) (day|night|time|evening)\b/i, cat:"substance", weight:1 },
+    { re:/\b(don'?t care|doesn'?t matter) (what happens|if i get hurt|about (myself|my safety|consequences))\b/i, cat:"reckless", weight:2 },
+    { re:/\b(driving|drove) (recklessly|dangerously|way too fast|drunk|while drunk)\b/i, cat:"reckless", weight:2 },
+
+    { re:/\bthe pain (never|won'?t|doesn'?t) (stops?|ends?|go away|get better)\b/i, cat:"pain", weight:2 },
+    { re:/\b(i'?m |i am )?(so |really )?(tired|exhausted|worn out) of (the pain|suffering|struggling|fighting)\b/i, cat:"pain", weight:2 },
+    { re:/\b(every|each) day (is |gets |feels )(worse|harder|more painful|more difficult)\b/i, cat:"pain", weight:1 },
+  ];
+
   var THREAT_SIGNALS = [
     { level:"high", re:/\bi'?ll (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
     { level:"high", re:/\bi (want to|am going to|gonna|will|'ll) (kill|murder|stab|shoot|hurt|beat|attack) (you|u|him|her|them|everyone|somebody|someone)\b/i },
@@ -252,6 +297,119 @@
     }
     return { level: "none", category: null, matched: null };
   }
+
+  function detectSubtle(text) {
+    if (!text || typeof text !== "string") return [];
+    var t = normalise(text);
+    var hits = [];
+    for (var i = 0; i < SUBTLE_SIGNALS.length; i++) {
+      var sig = SUBTLE_SIGNALS[i];
+      var m = t.match(sig.re);
+      if (m && !hits.some(function(h) { return h.category === sig.cat; })) {
+        hits.push({ category: sig.cat, weight: sig.weight, matched: m[0] });
+      }
+    }
+    return hits;
+  }
+
+  function ConversationTracker(options) {
+    options = options || {};
+    this.thresholdLow = options.thresholdLow || 4;
+    this.thresholdHigh = options.thresholdHigh || 8;
+    this.windowMs = options.windowMs || 30 * 60 * 1000;
+    this.signals = [];
+  }
+
+  ConversationTracker.prototype._prune = function() {
+    var cutoff = Date.now() - this.windowMs;
+    this.signals = this.signals.filter(function(s) { return s.timestamp > cutoff; });
+  };
+
+  ConversationTracker.prototype.getWeight = function() {
+    this._prune();
+    return this.signals.reduce(function(sum, s) { return sum + s.weight; }, 0);
+  };
+
+  ConversationTracker.prototype.getCategories = function() {
+    this._prune();
+    var seen = {};
+    var out = [];
+    for (var i = 0; i < this.signals.length; i++) {
+      var cat = this.signals[i].category;
+      if (!seen[cat]) {
+        seen[cat] = true;
+        out.push(cat);
+      }
+    }
+    return out;
+  };
+
+  ConversationTracker.prototype.getSignalCount = function() {
+    this._prune();
+    return this.signals.length;
+  };
+
+  ConversationTracker.prototype._recordSubtle = function(text) {
+    if (!text || typeof text !== "string") return [];
+    var hits = detectSubtle(text);
+    for (var i = 0; i < hits.length; i++) {
+      this.signals.push({
+        timestamp: Date.now(),
+        category: hits[i].category,
+        weight: hits[i].weight,
+      });
+    }
+    return hits;
+  };
+
+  ConversationTracker.prototype.process = function(text) {
+    var singleResult = detect(text);
+
+    if (singleResult.level === "high" || singleResult.level === "low") {
+      this._recordSubtle(text);
+      return {
+        level: singleResult.level,
+        matched: singleResult.matched,
+        subtleSignals: [],
+        accumulated: false,
+        sessionWeight: this.getWeight(),
+        sessionCategories: this.getCategories(),
+        sessionSignalCount: this.getSignalCount(),
+      };
+    }
+
+    var subtleHits = this._recordSubtle(text);
+    var weight = this.getWeight();
+    var level = "none";
+    if (weight >= this.thresholdHigh) level = "high";
+    else if (weight >= this.thresholdLow) level = "low";
+
+    return {
+      level: level,
+      matched: singleResult.matched,
+      subtleSignals: subtleHits,
+      accumulated: level !== "none",
+      sessionWeight: weight,
+      sessionCategories: this.getCategories(),
+      sessionSignalCount: this.getSignalCount(),
+    };
+  };
+
+  ConversationTracker.prototype.reset = function() {
+    this.signals = [];
+  };
+
+  ConversationTracker.prototype.summary = function() {
+    this._prune();
+    return {
+      totalWeight: this.getWeight(),
+      signalCount: this.getSignalCount(),
+      categories: this.getCategories(),
+      thresholdLow: this.thresholdLow,
+      thresholdHigh: this.thresholdHigh,
+      wouldEscalate: this.getWeight() >= this.thresholdLow,
+    };
+  };
 
   // ── Geo-detection ──
 
@@ -484,13 +642,18 @@
     options = options || {};
     var selector = options.selector || 'textarea, input[type="text"]';
     var country = options.country || locateCountry();
+    var tracker = options.subtle === false ? null : new ConversationTracker({
+      thresholdLow: options.subtleThresholdLow,
+      thresholdHigh: options.subtleThresholdHigh,
+      windowMs: options.subtleWindowMs,
+    });
 
     document.addEventListener("keydown", function(e) {
       if (e.key !== "Enter" || e.shiftKey) return;
       var el = e.target;
       if (!el || !el.matches(selector)) return;
       var text = el.value || "";
-      var result = detect(text);
+      var result = tracker ? tracker.process(text) : detect(text);
       if (result.level === "high") {
         showModal(getResources(country));
       } else if (result.level === "low") {
@@ -504,6 +667,8 @@
   var Safechat = {
     detect: detect,
     detectModeration: detectModeration,
+    detectSubtle: detectSubtle,
+    ConversationTracker: ConversationTracker,
     check: check,
     locateCountry: locateCountry,
     getResources: getResources,
@@ -513,7 +678,7 @@
     protect: protect,
     RESOURCES: RESOURCES,
     FALLBACK: FALLBACK,
-    version: "1.1.0",
+    version: "1.3.0",
     credit: "SafeChat by FAMTEC — fineartmedia.tech"
   };
 

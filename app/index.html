@@ -329,7 +329,41 @@
     font-family: monospace;
     min-height: 40px;
   }
+  .demo-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .demo-actions button,
+  .demo-examples button {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.62);
+    border-radius: 999px;
+    padding: 8px 11px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .demo-actions button:hover,
+  .demo-examples button:hover {
+    border-color: rgba(180,160,220,0.22);
+    color: rgba(255,255,255,0.82);
+  }
+  .demo-session {
+    color: rgba(255,255,255,0.38);
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .demo-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
   .level-none { background: rgba(92,184,138,0.1); color: #5cb88a; }
+  .level-subtle { background: rgba(120,150,210,0.12); color: #91a9e8; }
   .level-low { background: rgba(212,160,74,0.1); color: #d4a04a; }
   .level-high { background: rgba(180,100,120,0.12); color: #c87888; }
 
@@ -394,7 +428,7 @@
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
     <div><div class="stat-num blue">67</div><div class="stat-label">Resources</div></div>
-    <div><div class="stat-num green">596</div><div class="stat-label">Tests</div></div>
+    <div><div class="stat-num green">601</div><div class="stat-label">Tests</div></div>
     <div><div class="stat-num gold">0</div><div class="stat-label">Permissions</div></div>
   </div>
 
@@ -581,6 +615,18 @@
   <div class="demo-box">
     <input type="text" id="demo-input" placeholder="Type a message to test crisis detection..." autocomplete="off">
     <div id="demo-result" class="demo-result level-none">Level: none — no crisis signals detected</div>
+    <div class="demo-actions">
+      <button type="button" id="demo-add">Add message to session</button>
+      <button type="button" id="demo-reset">Reset session</button>
+    </div>
+    <div id="demo-session" class="demo-session">Session: 0 subtle signals, weight 0/4 toward LOW escalation.</div>
+    <div class="demo-examples" aria-label="Demo examples">
+      <button type="button" data-demo-value="I feel hopeless">Low distress</button>
+      <button type="button" data-demo-value="I haven't left my room in days">Withdrawal</button>
+      <button type="button" data-demo-value="I can't sleep again">Sleep disruption</button>
+      <button type="button" data-demo-value="Nothing is fun anymore">Anhedonia</button>
+      <button type="button" data-demo-value="I can't imagine a future for myself">Future loss</button>
+    </div>
   </div>
 </div>
 
@@ -716,7 +762,7 @@
   <div class="features" style="grid-template-columns: 1fr;">
     <div class="feature">
       <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;">
-        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 596 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 601 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
         <br><br>
         <strong style="color:rgba(255,255,255,0.75);">Expert guidance being incorporated.</strong> SafeChat is incorporating feedback from Professor Stevie Chancellor and public work such as VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K. The cross-classifier module integrates local ML models like MindGuard and MentalLLaMA alongside the regex engine to catch nuanced distress that keyword matching can miss, without presenting this as a research partnership or clinical validation.
       </p>
@@ -751,6 +797,10 @@
 <script>
   var input = document.getElementById('demo-input');
   var result = document.getElementById('demo-result');
+  var addButton = document.getElementById('demo-add');
+  var resetButton = document.getElementById('demo-reset');
+  var sessionStatus = document.getElementById('demo-session');
+  var demoTracker = Safechat.ConversationTracker ? new Safechat.ConversationTracker() : null;
   var lastAlertLevel = 'none';
   var alertTimer = null;
 
@@ -779,18 +829,93 @@
     }, 350);
   }
 
-  input.addEventListener('input', function() {
-    var r = Safechat.detect(input.value);
-    result.className = 'demo-result level-' + r.level;
-    if (r.level === 'none') {
-      result.textContent = 'Level: none — no crisis signals detected';
-    } else if (r.level === 'low') {
-      result.textContent = 'Level: LOW — distress signal detected: "' + r.matched + '"';
-    } else {
-      result.textContent = 'Level: HIGH — crisis signal detected: "' + r.matched + '"';
+  function formatCategories(categories) {
+    if (!categories || categories.length === 0) return 'none';
+    return categories.map(function(cat) { return cat.replace(/_/g, ' '); }).join(', ');
+  }
+
+  function updateDemoSession() {
+    if (!demoTracker || !sessionStatus) return;
+    var summary = demoTracker.summary();
+    sessionStatus.textContent =
+      'Session: ' + summary.signalCount + ' subtle signal' + (summary.signalCount === 1 ? '' : 's') +
+      ', weight ' + summary.totalWeight + '/' + summary.thresholdLow +
+      ' toward LOW escalation. Categories: ' + formatCategories(summary.categories) + '.';
+  }
+
+  function renderDemo(trackMessage) {
+    var text = input.value || '';
+    var direct = Safechat.detect(text);
+    var subtle = Safechat.detectSubtle ? Safechat.detectSubtle(text) : [];
+    var tracked = null;
+    var level = direct.level;
+
+    if (trackMessage && demoTracker && text.trim()) {
+      tracked = demoTracker.process(text);
+      level = tracked.level;
+      updateDemoSession();
     }
-    scheduleSafetyUI(r.level);
+
+    if (!text.trim()) {
+      result.className = 'demo-result level-none';
+      result.textContent = 'Level: none — no crisis signals detected';
+      scheduleSafetyUI('none');
+      return;
+    }
+
+    if (level === 'high') {
+      result.className = 'demo-result level-high';
+      result.textContent = tracked && tracked.accumulated
+        ? 'Level: HIGH — accumulated subtle crisis signals. Session weight: ' + tracked.sessionWeight + '.'
+        : 'Level: HIGH — crisis signal detected: "' + direct.matched + '"';
+    } else if (level === 'low') {
+      result.className = 'demo-result level-low';
+      result.textContent = tracked && tracked.accumulated
+        ? 'Level: LOW — accumulated subtle distress. Session weight: ' + tracked.sessionWeight + '. Categories: ' + formatCategories(tracked.sessionCategories) + '.'
+        : 'Level: LOW — distress signal detected: "' + direct.matched + '"';
+    } else if (subtle.length > 0) {
+      result.className = 'demo-result level-subtle';
+      result.textContent =
+        'Subtle signal observed — ' + subtle.map(function(hit) {
+          return hit.category.replace(/_/g, ' ') + ' (' + hit.weight + ')';
+        }).join(', ') + '. Not a crisis trigger on its own; add messages to see session accumulation.';
+    } else {
+      result.className = 'demo-result level-none';
+      result.textContent = 'Level: none — no crisis signals detected';
+    }
+    scheduleSafetyUI(level);
+  }
+
+  input.addEventListener('input', function() {
+    renderDemo(false);
   });
+
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      renderDemo(true);
+    }
+  });
+
+  addButton.addEventListener('click', function() {
+    renderDemo(true);
+  });
+
+  resetButton.addEventListener('click', function() {
+    if (demoTracker) demoTracker.reset();
+    updateDemoSession();
+    renderDemo(false);
+  });
+
+  document.querySelectorAll('[data-demo-value]').forEach(function(button) {
+    button.addEventListener('click', function() {
+      input.value = button.getAttribute('data-demo-value') || '';
+      renderDemo(false);
+      input.focus();
+    });
+  });
+
+  updateDemoSession();
 
   // Cross-origin download handler — fetch as blob then trigger save
   document.querySelectorAll('.dl-btn').forEach(function(btn) {

@@ -16,7 +16,7 @@ SafeChat is source-available, local-first crisis-routing infrastructure for AI c
 | Verified resource records | 66 |
 | Contact methods | 94 |
 | Detection patterns | 48 HIGH, 43 LOW, 35 SUBTLE (9 categories) |
-| Test suite | 596 passing tests |
+| Test suite | 601 passing tests |
 | License | BSL 1.1 — free under $100K USD revenue; MPL 2.0 from 2029-01-01; helpline data CC0 |
 | Runtime posture | Local-first, zero tracking, offline-capable |
 | Project posture | Routing layer, not a diagnostic or clinical tool |

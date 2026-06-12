@@ -10,6 +10,7 @@ const safechat = require("../src/index");
 const { Shield, createShield, PRESETS } = require("../src/shield");
 const { CrossClassifier, createCrossClassifier, CC_PRESETS, MINDGUARD_MAP, MENTALLLAMA_MAP } = require("../src/crosscheck");
 const { SemanticLayer, createSemanticLayer, cosineSimilarity, DEFAULT_EXEMPLARS } = require("../src/semantic");
+const browserBundle = require("../src/browser");
 
 let passed = 0;
 let failed = 0;
@@ -690,6 +691,18 @@ tracker9.process("Watching a movie with friends");
 const r9 = tracker9.process("Life is good");
 assert("tracker: normal conversation stays none", r9.level === "none");
 assert("tracker: no signals from normal chat", r9.sessionWeight === 0);
+
+section("Browser bundle — subtle detection and tracking");
+assert("browser exports detectSubtle", typeof browserBundle.detectSubtle === "function");
+assert("browser exports ConversationTracker", typeof browserBundle.ConversationTracker === "function");
+const browserSubtle = browserBundle.detectSubtle("I haven't left my room in days");
+assert("browser detectSubtle catches withdrawal", browserSubtle.length > 0 && browserSubtle[0].category === "withdrawal");
+const browserTracker = new browserBundle.ConversationTracker();
+browserTracker.process("I haven't left my room in days");
+browserTracker.process("I can't sleep again");
+const browserAccumulated = browserTracker.process("Nothing is fun anymore");
+assert("browser tracker accumulates subtle distress", browserAccumulated.level === "low");
+assert("browser tracker preserves categories", browserAccumulated.sessionCategories.includes("withdrawal"));
 
 // ══════════════════════════════════════════════════════════════════════════════
 // SHIELD TESTS — configurable safety layer

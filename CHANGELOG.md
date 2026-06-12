@@ -6,6 +6,15 @@ SafeChat follows a philosophy of continuous improvement: every false negative di
 
 ---
 
+## [Unreleased]
+
+### Added
+- Browser bundle now exposes `detectSubtle()` and `ConversationTracker`, so standalone website integrations can detect subtle distress signals and session-level accumulation.
+- Website detection demo now shows subtle-signal observations, lets users add separate messages to a demo session, and demonstrates accumulation toward LOW escalation without sending any text off-device.
+- 5 new browser-bundle tests covering subtle detection and browser-side session tracking (601 total).
+
+---
+
 ## [1.3.0] - 2026-06-12
 
 ### Added

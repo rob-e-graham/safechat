@@ -233,7 +233,7 @@ const doc = new Document({
         para("Normalised input is matched against two tiers of regex patterns:"),
         boldPara("HIGH signals ", "indicate explicit suicidal language, self-harm, or crisis-level distress. These include direct statements of intent (\"kill myself\", \"end my life\"), method references (\"overdose\", \"jumping off\"), finality language (\"the end for me\", \"this will all be over soon\"), and behavioural indicators (\"writing goodbye letters\", \"gave away everything\"). HIGH signals trigger immediate crisis intervention with full helpline resources."),
         boldPara("LOW signals ", "indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness (\"can't go on\", \"no point\"), worthlessness (\"I'm a burden\", \"nobody cares\"), and passive ideation (\"done with life\", \"no hope left\"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response."),
-        para("The current engine (v1.3.0) includes 48 HIGH patterns, 43 LOW patterns, 35 SUBTLE patterns (see Section 3.4), and 596 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
+        para("The current engine (v1.3.0) includes 48 HIGH patterns, 43 LOW patterns, 35 SUBTLE patterns (see Section 3.4), and 601 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
 
         heading(2, "3.3 False-Positive Guards"),
         para("Context-aware guards prevent triggering on figurative or idiomatic language:"),
@@ -369,7 +369,7 @@ const doc = new Document({
         para("SafeChat's design anticipates and addresses requirements from multiple regulatory frameworks:"),
         boldPara("New York AI Companion Law (2026): ", "Mandates detection of suicidal ideation, referral to crisis services, and disclosure of AI's non-human nature. SafeChat provides the detection and referral components as drop-in infrastructure."),
         boldPara("FTC Chatbot Safety Inquiry (2026): ", "Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies."),
-        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 596-test suite addresses the categories of failure identified by VERA-MH."),
+        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 601-test suite addresses the categories of failure identified by VERA-MH."),
         boldPara("EU AI Act (2024–2026): ", "Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, source-available safety infrastructure that supports compliance without creating cloud dependencies."),
         boldPara("Samaritans Safe Messaging Guidelines: ", "SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language."),
 
@@ -419,7 +419,7 @@ const doc = new Document({
         heading(1, "10. Ongoing Development"),
         para("SafeChat is under continuous, active development. The project maintains:"),
         bulletItem("A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains."),
-        bulletItem("A test suite (currently 596 automated tests) that must pass before any release."),
+        bulletItem("A test suite (currently 601 automated tests) that must pass before any release."),
         bulletItem("A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours)."),
         bulletItem("A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects."),
         bulletItem("A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure."),
