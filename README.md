@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 100+ verified helplines &middot; 596 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 67 resource records &middot; 94 contact methods &middot; 596 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@ SafeChat is an **international register and toolkit for chat safety protocol**. 
 
 - **Crisis Detection** — Regex-based detection runs locally. No API calls. No data leaves the device. Catches misspellings, text-speak, indirect warning signs, and passive suicidality.
 - **Geo-Location (No GPS)** — Finds the user's country from timezone and locale. No permissions needed. 7-layer cascade.
-- **Verified Helpline Database** — 100+ helplines across 34 countries. Phone, text, chat, email, WhatsApp. CC0 public domain.
+- **Verified Helpline Database** — 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. CC0 public domain.
 - **AI Prompt Override** — System prompt injections that tell your LLM to show crisis resources. Works with any AI provider.
 - **Drop-in UI** — Modal, banner, and full-page popup. One script tag. PWA-capable. Works offline.
 - **Compliance-Ready** — Aligned with NY AI Companion Law, FTC chatbot safety requirements, VERA-MH framework, and Samaritans guidelines.

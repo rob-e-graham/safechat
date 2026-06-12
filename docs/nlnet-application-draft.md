@@ -41,7 +41,7 @@ Source: https://github.com/rob-e-graham/safechat
 
 SafeChat is a source-available crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device — no data is collected, no messages are transmitted, and no permissions are required.
 
-The project provides three things: a regex-based detection engine that catches explicit and indirect crisis language (including misspellings, text-speak, and negation variants), a geo-location system that finds the user's country from timezone and locale without GPS, and a verified database of 100+ crisis helplines across 34 countries (15 European) covering phone, text, chat, email, and WhatsApp.
+The project provides three things: a regex-based detection engine that catches explicit and indirect crisis language (including misspellings, text-speak, and negation variants), a geo-location system that finds the user's country from timezone and locale without GPS, and a verified database of 67 verified crisis helplines across 34 countries (15 European) covering phone, text, chat, email, and WhatsApp.
 
 SafeChat is designed as a routing layer, not a diagnostic tool. It does not assess clinical risk or replace professional services. It identifies textual signals and routes users to professionals who can help.
 

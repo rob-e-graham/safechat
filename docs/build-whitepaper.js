@@ -214,7 +214,7 @@ const doc = new Document({
         boldPara("2.1 Local-first processing. ", "All crisis detection runs on the user's device using regex pattern matching. No API calls are made. No user data leaves the device. This eliminates the privacy, latency, and availability risks inherent in cloud-based content moderation, and ensures the system functions offline."),
         boldPara("2.2 Zero-permission operation. ", "Geographic location is determined through a cascade of browser-native signals (locale, timezone, cached data) rather than GPS or IP geolocation. No device permissions are requested. This removes the consent friction that could delay help-seeking behaviour."),
         boldPara("2.3 False-negative minimisation. ", "The detection engine is calibrated to prioritise sensitivity over specificity. A false positive (showing crisis resources to someone not in crisis) produces minimal harm: the user sees a help modal and dismisses it. A false negative (missing a genuine crisis signal) could cost a life. The system includes explicit false-positive guards to reduce alarm fatigue without compromising recall."),
-        boldPara("2.4 Verified, auto-updating data. ", "The helpline database covers 100+ verified resources across 34 countries, with phone, text, chat, email, and WhatsApp contact methods. Data is served from CDN with fallback to GitHub raw, localStorage cache, and inline emergency numbers. A verification workflow checks all resources twice monthly."),
+        boldPara("2.4 Verified, auto-updating data. ", "The helpline database currently covers 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. Data is served from CDN with fallback to GitHub raw, localStorage cache, and inline emergency numbers. A verification workflow checks all resources twice monthly."),
         boldPara("2.5 Drop-in integration. ", "SafeChat can be added to any web application with a single script tag. No build step, no API key, no account creation. The system provides modal, banner, and full-page popup interfaces, an Express middleware for server-side integration, and AI prompt overrides that inject crisis-response instructions into any LLM system prompt."),
 
         // ── 3. DETECTION ARCHITECTURE ──
@@ -233,7 +233,7 @@ const doc = new Document({
         para("Normalised input is matched against two tiers of regex patterns:"),
         boldPara("HIGH signals ", "indicate explicit suicidal language, self-harm, or crisis-level distress. These include direct statements of intent (\"kill myself\", \"end my life\"), method references (\"overdose\", \"jumping off\"), finality language (\"the end for me\", \"this will all be over soon\"), and behavioural indicators (\"writing goodbye letters\", \"gave away everything\"). HIGH signals trigger immediate crisis intervention with full helpline resources."),
         boldPara("LOW signals ", "indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness (\"can't go on\", \"no point\"), worthlessness (\"I'm a burden\", \"nobody cares\"), and passive ideation (\"done with life\", \"no hope left\"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response."),
-        para("The current engine (v1.3.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 517 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
+        para("The current engine (v1.3.0) includes 48 HIGH patterns, 43 LOW patterns, 35 SUBTLE patterns (see Section 3.4), and 596 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
 
         heading(2, "3.3 False-Positive Guards"),
         para("Context-aware guards prevent triggering on figurative or idiomatic language:"),
@@ -248,8 +248,8 @@ const doc = new Document({
 
         // ── 3.4 SUBTLE SIGNAL ACCUMULATION ──
         heading(2, "3.4 Subtle Signal Accumulation"),
-        para("Many people in crisis do not use explicit language. Instead, they exhibit clusters of individually unremarkable behaviours that together indicate accumulating distress: social withdrawal, sleep disruption, loss of interest, farewell-like language, self-worth erosion, loss of future orientation, reckless behaviour, and persistent expressions of pain."),
-        para("SafeChat addresses this through a ConversationTracker that monitors signals across a conversation session. Forty-two SUBTLE patterns are organised into eight categories, each weighted by clinical significance (1–3 points). When accumulated weight crosses a threshold (4 points for LOW escalation, 8 points for HIGH), the system escalates its response as if an explicit signal had been detected."),
+        para("Many people in crisis do not use explicit language. Instead, they exhibit clusters of individually unremarkable behaviours that together indicate accumulating distress: social withdrawal, sleep disruption, loss of interest, farewell-like language, self-worth erosion, loss of future orientation, escalating substance use, reckless behaviour, and persistent expressions of pain."),
+        para("SafeChat addresses this through a ConversationTracker that monitors signals across a conversation session. Thirty-five SUBTLE patterns are organised into nine categories, each weighted by clinical significance (1–3 points). When accumulated weight crosses a threshold (4 points for LOW escalation, 8 points for HIGH), the system escalates its response as if an explicit signal had been detected."),
         para("Critically, the tracker stores no message content. Only signal categories and numerical weights are retained in memory, and all data is garbage-collected when the session ends. This preserves the zero-data-collection principle while enabling multi-message risk assessment."),
         new Table({
           width: { size: 9026, type: WidthType.DXA },
@@ -267,6 +267,7 @@ const doc = new Document({
             new TableRow({ children: [tableCell("Farewell", 1800), tableCell("\"giving away my things\", \"writing letters to everyone\"", 4426), tableCell("2–3", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Self-worth", 1800), tableCell("\"I'm just a waste\", \"hate who I've become\"", 4426), tableCell("1–2", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Future loss", 1800), tableCell("\"can't imagine a future\", \"none of this will matter\"", 4426), tableCell("1–2", 1400), tableCell("", 1400)] }),
+            new TableRow({ children: [tableCell("Substance", 1800), tableCell("\"drinking every night\", \"using every day\"", 4426), tableCell("1", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Reckless", 1800), tableCell("\"don't care about my safety\", \"driving drunk\"", 4426), tableCell("2", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Pain", 1800), tableCell("\"the pain never stops\", \"every day gets worse\"", 4426), tableCell("1–2", 1400), tableCell("", 1400)] }),
           ],
@@ -422,7 +423,7 @@ const doc = new Document({
         bulletItem("A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours)."),
         bulletItem("A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects."),
         bulletItem("A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure."),
-        bulletItem("Active research partnerships with the University of Minnesota (cross-classifier approaches) and Spring Health's VERA-MH team (evaluation framework guidance)."),
+        bulletItem("Expert guidance and literature review are being incorporated for cross-classifier approaches and evaluation design, including feedback from Professor Stevie Chancellor and public work such as VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K."),
         para("This ongoing process reflects the project's commitment to continuous safety improvement. It does not constitute a warranty, guarantee of fitness, or assumption of liability."),
 
         // ── 11. AVAILABILITY ──

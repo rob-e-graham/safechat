@@ -192,7 +192,7 @@ Scale up or down depending on grant size. NLnet applications should target the E
 
 3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 446 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
 
-4. **Traction:** Live at rob-e-graham.github.io/safechat. 100+ verified helplines. Configurable Shield class with 6 presets for different deployment contexts. Active CHANGELOG with public git history documenting every improvement.
+4. **Traction:** Live at rob-e-graham.github.io/safechat. 66 verified helplines. Configurable Shield class with 6 presets for different deployment contexts. Active CHANGELOG with public git history documenting every improvement.
 
 5. **Sustainability:** FAMTEC commercial licensing for entities over $100K revenue. Source-available core remains free for personal, research, education, nonprofit, and small commercial use.
 

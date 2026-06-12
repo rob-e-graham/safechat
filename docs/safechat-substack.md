@@ -73,7 +73,7 @@ That's it. No build step. No API key. Works in any web app.
 
 If you need more control, there's a Shield class with presets -- companion apps, chatbots, moderation pipelines, research, whatever your context is. Six response modes: interrupt, inject, flag, log, callback, or just leave it alone. Express middleware if you're server-side. Prompt overrides if you want your LLM to know about crisis context.
 
-The helpline database is CC0 public domain. 100+ helplines across 34 countries. Use it however you want.
+The helpline database is CC0 public domain. 67 helplines (94 contact methods) across 34 countries. Use it however you want.
 
 ## Where This Comes From
 
