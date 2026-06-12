@@ -44,4 +44,9 @@ export const CrossClassifier = safechat.CrossClassifier;
 export const createCrossClassifier = safechat.createCrossClassifier;
 export const CC_PRESETS = safechat.CC_PRESETS;
 
+export const SemanticLayer = safechat.SemanticLayer;
+export const createSemanticLayer = safechat.createSemanticLayer;
+export const cosineSimilarity = safechat.cosineSimilarity;
+export const DEFAULT_EXEMPLARS = safechat.DEFAULT_EXEMPLARS;
+
 export default safechat;

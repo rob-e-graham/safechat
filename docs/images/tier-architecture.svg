@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="t0" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2ecc71"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+    <linearGradient id="t1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3498db"/>
+      <stop offset="100%" stop-color="#2980b9"/>
+    </linearGradient>
+    <linearGradient id="t2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f5a623"/>
+      <stop offset="100%" stop-color="#d4911e"/>
+    </linearGradient>
+    <linearGradient id="t3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e94560"/>
+      <stop offset="100%" stop-color="#c62a42"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="560" fill="url(#bg)" rx="16"/>
+
+  <!-- Title -->
+  <text x="450" y="42" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Progressive Enhancement for Safety</text>
+  <text x="450" y="66" text-anchor="middle" fill="#888" font-size="13">Every tier is sovereign. Every tier is optional. The floor never moves.</text>
+
+  <!-- Tier 3 (top, narrowest) -->
+  <rect x="270" y="95" width="360" height="80" rx="12" fill="#1e1e3a" stroke="#e94560" stroke-width="1.5"/>
+  <rect x="270" y="95" width="8" height="80" rx="4" fill="url(#t3)"/>
+  <text x="295" y="120" fill="#e94560" font-size="11" font-weight="700">TIER 3 — OPT-IN</text>
+  <text x="295" y="141" fill="#fff" font-size="15" font-weight="600">LLM Cross-Classifier</text>
+  <text x="295" y="161" fill="#999" font-size="11.5">MindGuard / MentalLLaMA via Ollama or LM Studio</text>
+  <text x="610" y="120" text-anchor="end" fill="#777" font-size="11">GBs</text>
+  <text x="610" y="141" text-anchor="end" fill="#777" font-size="11">server / desktop</text>
+
+  <!-- Tier 2 -->
+  <rect x="220" y="195" width="460" height="80" rx="12" fill="#1e1e3a" stroke="#f5a623" stroke-width="1.5"/>
+  <rect x="220" y="195" width="8" height="80" rx="4" fill="url(#t2)"/>
+  <text x="245" y="220" fill="#f5a623" font-size="11" font-weight="700">TIER 2 — PLANNED (RESEARCH)</text>
+  <text x="245" y="241" fill="#fff" font-size="15" font-weight="600">Distilled Crisis Classifier</text>
+  <text x="245" y="261" fill="#999" font-size="11.5">Small clinical model distilled from Tier 3 teachers</text>
+  <text x="660" y="220" text-anchor="end" fill="#777" font-size="11">~50 MB</text>
+  <text x="660" y="241" text-anchor="end" fill="#777" font-size="11">browser / phone, offline</text>
+
+  <!-- Tier 1 -->
+  <rect x="170" y="295" width="560" height="80" rx="12" fill="#1e1e3a" stroke="#3498db" stroke-width="1.5"/>
+  <rect x="170" y="295" width="8" height="80" rx="4" fill="url(#t1)"/>
+  <text x="195" y="320" fill="#3498db" font-size="11" font-weight="700">TIER 1 — OPT-IN (v1.3)</text>
+  <text x="195" y="341" fill="#fff" font-size="15" font-weight="600">Semantic Layer — embedding similarity</text>
+  <text x="195" y="361" fill="#999" font-size="11.5">Catches metaphorical distress: "I just want the noise to stop"</text>
+  <text x="710" y="320" text-anchor="end" fill="#777" font-size="11">~25 MB</text>
+  <text x="710" y="341" text-anchor="end" fill="#777" font-size="11">any modern browser, PWA</text>
+
+  <!-- Tier 0 (base, widest) -->
+  <rect x="120" y="395" width="660" height="80" rx="12" fill="#1e1e3a" stroke="#2ecc71" stroke-width="2"/>
+  <rect x="120" y="395" width="8" height="80" rx="4" fill="url(#t0)"/>
+  <text x="145" y="420" fill="#2ecc71" font-size="11" font-weight="700">TIER 0 — ALWAYS ON</text>
+  <text x="145" y="441" fill="#fff" font-size="15" font-weight="600">Regex Engine + ConversationTracker</text>
+  <text x="145" y="461" fill="#999" font-size="11.5">57 HIGH + 40 LOW + 42 SUBTLE patterns · deterministic · zero dependencies</text>
+  <text x="760" y="420" text-anchor="end" fill="#777" font-size="11">KBs</text>
+  <text x="760" y="441" text-anchor="end" fill="#777" font-size="11">everything, always, offline</text>
+
+  <!-- Merge rule banner -->
+  <rect x="120" y="498" width="660" height="38" rx="10" fill="#16162c" stroke="#333" stroke-width="1"/>
+  <text x="450" y="522" text-anchor="middle" fill="#ccc" font-size="13" font-weight="600">
+    Merge rule: higher tiers can only <tspan fill="#2ecc71">confirm</tspan> or <tspan fill="#e94560">escalate</tspan> — never downgrade the tier below
+  </text>
+</svg>

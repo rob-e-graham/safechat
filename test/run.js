@@ -9,6 +9,7 @@ const { getResources, listCountries, getEmergencyNumber, search, formatForChat }
 const safechat = require("../src/index");
 const { Shield, createShield, PRESETS } = require("../src/shield");
 const { CrossClassifier, createCrossClassifier, CC_PRESETS, MINDGUARD_MAP, MENTALLLAMA_MAP } = require("../src/crosscheck");
+const { SemanticLayer, createSemanticLayer, cosineSimilarity, DEFAULT_EXEMPLARS } = require("../src/semantic");
 
 let passed = 0;
 let failed = 0;
@@ -996,6 +997,75 @@ section("CrossClassifier — stats");
 assert("CC stats initial total", mockClassifier.stats().total === 0);
 assert("CC stats initial errors", mockClassifier.stats().errors === 0);
 
+// ── SemanticLayer tests ──
+
+section("SemanticLayer — construction");
+
+// Mock embedder: deterministic 3-dimensional vectors keyed by content.
+// "midalpha" must be checked before "alpha" (substring).
+const mockEmbed = async (texts) => texts.map((t) => {
+  const lower = String(t).toLowerCase();
+  if (lower.includes("midalpha")) return [0.7071, 0.7071, 0];
+  if (lower.includes("alpha")) return [1, 0, 0];
+  if (lower.includes("beta")) return [0, 1, 0];
+  return [0, 0, 1];
+});
+
+const mockSemantic = createSemanticLayer({
+  backend: "custom",
+  embed: mockEmbed,
+  exemplars: { high: ["alpha crisis phrase"], low: ["beta distress phrase"] },
+});
+
+assert("SL custom backend created", mockSemantic instanceof SemanticLayer);
+assert("SL backend set", mockSemantic.backend === "custom");
+assert("SL default high threshold", mockSemantic.highThreshold === 0.75);
+assert("SL default low threshold", mockSemantic.lowThreshold === 0.62);
+assert("SL exemplar counts", mockSemantic.exemplarCounts().high === 1 && mockSemantic.exemplarCounts().low === 1);
+
+// Invalid backend throws
+let slError = false;
+try { createSemanticLayer({ backend: "invalid" }); } catch (e) { slError = true; }
+assert("SL invalid backend throws", slError);
+
+// Custom backend without embed throws
+let slError2 = false;
+try { createSemanticLayer({ backend: "custom" }); } catch (e) { slError2 = true; }
+assert("SL custom without embed throws", slError2);
+
+// Inverted thresholds throw
+let slError3 = false;
+try { createSemanticLayer({ backend: "custom", embed: mockEmbed, highThreshold: 0.5, lowThreshold: 0.8 }); } catch (e) { slError3 = true; }
+assert("SL inverted thresholds throw", slError3);
+
+// Malformed exemplars throw
+let slError4 = false;
+try { createSemanticLayer({ backend: "custom", embed: mockEmbed, exemplars: { high: [] } }); } catch (e) { slError4 = true; }
+assert("SL empty exemplars throw", slError4);
+
+// Default exemplar set ships and is non-trivial
+assert("SL default exemplars: high tier present", Array.isArray(DEFAULT_EXEMPLARS.high) && DEFAULT_EXEMPLARS.high.length >= 10);
+assert("SL default exemplars: low tier present", Array.isArray(DEFAULT_EXEMPLARS.low) && DEFAULT_EXEMPLARS.low.length >= 10);
+
+section("SemanticLayer — cosine similarity");
+assert("cosine identical = 1", Math.abs(cosineSimilarity([1, 0, 0], [1, 0, 0]) - 1) < 1e-9);
+assert("cosine orthogonal = 0", cosineSimilarity([1, 0, 0], [0, 1, 0]) === 0);
+assert("cosine opposite = -1", Math.abs(cosineSimilarity([1, 0], [-1, 0]) + 1) < 1e-9);
+assert("cosine mismatched length = 0", cosineSimilarity([1, 0, 0], [1, 0]) === 0);
+assert("cosine empty = 0", cosineSimilarity([], []) === 0);
+assert("cosine non-array = 0", cosineSimilarity(null, [1, 0]) === 0);
+assert("cosine zero vector = 0", cosineSimilarity([0, 0], [1, 0]) === 0);
+
+section("SemanticLayer — stats");
+assert("SL stats initial total", mockSemantic.stats().total === 0);
+assert("SL stats initial errors", mockSemantic.stats().errors === 0);
+
+section("SemanticLayer — exports from index.js");
+assert("index exports SemanticLayer", safechat.SemanticLayer === SemanticLayer);
+assert("index exports createSemanticLayer", typeof safechat.createSemanticLayer === "function");
+assert("index exports cosineSimilarity", typeof safechat.cosineSimilarity === "function");
+assert("index exports DEFAULT_EXEMPLARS", typeof safechat.DEFAULT_EXEMPLARS === "object");
+
 // ── ESM entry point ──
 
 async function runAsyncTests() {
@@ -1182,6 +1252,205 @@ async function runAsyncTests() {
   const customMapResult = await customMapCC.classify("test");
   assert("CC custom label map works", customMapResult.risk === "high");
 
+  // ── SemanticLayer async tests ──
+
+  section("SemanticLayer — classify");
+
+  const slHigh = await mockSemantic.classify("alpha event unfolding");
+  assert("SL classify high match: risk=high", slHigh.risk === "high");
+  assert("SL classify high match: similarity 1", Math.abs(slHigh.similarity - 1) < 1e-9);
+  assert("SL classify high match: match text", slHigh.match === "alpha crisis phrase");
+
+  const slLow = await mockSemantic.classify("beta feelings today");
+  assert("SL classify low match: risk=low", slLow.risk === "low");
+  assert("SL classify low match: match text", slLow.match === "beta distress phrase");
+
+  const slSafe = await mockSemantic.classify("completely unrelated text");
+  assert("SL classify no match: risk=none", slSafe.risk === "none");
+  assert("SL classify no match: match null", slSafe.match === null);
+
+  const slNull = await mockSemantic.classify(null);
+  assert("SL classify null: risk=none", slNull.risk === "none");
+
+  const slEmpty = await mockSemantic.classify("");
+  assert("SL classify empty: risk=none", slEmpty.risk === "none");
+
+  section("SemanticLayer — threshold behaviour");
+
+  // midalpha sits at cosine ~0.707 to the high exemplar: above lowThreshold
+  // (0.62), below highThreshold (0.75) → degrades to LOW, not HIGH
+  const slMid = await mockSemantic.classify("midalpha signal here");
+  assert("SL between thresholds: risk=low", slMid.risk === "low");
+  assert("SL between thresholds: similarity ~0.707", Math.abs(slMid.similarity - 0.7071) < 0.01);
+
+  section("SemanticLayer — verify (merge rules)");
+
+  // Rule 1: regex HIGH + semantic HIGH → HIGH confirmed
+  const slHighConfirmed = await mockSemantic.verify(
+    { level: "high", matched: "kill myself" },
+    "alpha event unfolding"
+  );
+  assert("SL verify: HIGH+HIGH = HIGH", slHighConfirmed.level === "high");
+  assert("SL verify: HIGH+HIGH = confirmed", slHighConfirmed.semantic.mergeAction === "confirmed");
+  assert("SL verify: has semantic data", slHighConfirmed.semantic.backend === "custom");
+
+  // Rule 2: regex HIGH + semantic NONE → HIGH (never downgrade)
+  const slHighOverride = await mockSemantic.verify(
+    { level: "high", matched: "self-harm" },
+    "completely unrelated text"
+  );
+  assert("SL verify: HIGH+NONE = HIGH (no downgrade)", slHighOverride.level === "high");
+  assert("SL verify: HIGH+NONE = regex_override", slHighOverride.semantic.mergeAction === "regex_override");
+
+  // Rule 3: regex NONE + semantic HIGH → LOW (conservative escalation)
+  const slEscalated = await mockSemantic.verify(
+    { level: "none", matched: null },
+    "alpha event unfolding"
+  );
+  assert("SL verify: NONE+HIGH = LOW escalated", slEscalated.level === "low");
+  assert("SL verify: NONE+HIGH = escalated action", slEscalated.semantic.mergeAction === "escalated");
+
+  // Rule 4: regex NONE + semantic NONE → NONE passthrough
+  const slPassthrough = await mockSemantic.verify(
+    { level: "none", matched: null },
+    "completely unrelated text"
+  );
+  assert("SL verify: NONE+NONE = NONE", slPassthrough.level === "none");
+  assert("SL verify: NONE+NONE = passthrough", slPassthrough.semantic.mergeAction === "passthrough");
+
+  // Rule 5: regex LOW + semantic HIGH → HIGH (escalated)
+  const slLowToHigh = await mockSemantic.verify(
+    { level: "low", matched: "hopeless" },
+    "alpha event unfolding"
+  );
+  assert("SL verify: LOW+HIGH = HIGH", slLowToHigh.level === "high");
+  assert("SL verify: LOW+HIGH = escalated", slLowToHigh.semantic.mergeAction === "escalated");
+
+  // Rule 6: regex LOW + semantic LOW → LOW confirmed
+  const slLowConfirmed = await mockSemantic.verify(
+    { level: "low", matched: "hopeless" },
+    "beta feelings today"
+  );
+  assert("SL verify: LOW+LOW = LOW", slLowConfirmed.level === "low");
+  assert("SL verify: LOW+LOW = confirmed", slLowConfirmed.semantic.mergeAction === "confirmed");
+
+  section("SemanticLayer — stats after verify calls");
+  const slStats = mockSemantic.stats();
+  assert("SL stats: total > 0", slStats.total > 0);
+  assert("SL stats: confirmed > 0", slStats.confirmed > 0);
+  assert("SL stats: escalated > 0", slStats.escalated > 0);
+  assert("SL stats: avgLatencyMs >= 0", slStats.avgLatencyMs >= 0);
+
+  mockSemantic.resetStats();
+  assert("SL stats reset: total = 0", mockSemantic.stats().total === 0);
+
+  section("SemanticLayer — ping");
+  const slPing = await mockSemantic.ping();
+  assert("SL ping ok", slPing.ok === true);
+  assert("SL ping dimensions", slPing.dimensions === 3);
+
+  section("SemanticLayer — error handling");
+
+  const errorSL = createSemanticLayer({
+    backend: "custom",
+    embed: async () => { throw new Error("embedder crashed"); },
+  });
+
+  const slErrorResult = await errorSL.verify(
+    { level: "low", matched: "hopeless" },
+    "some text"
+  );
+  assert("SL error: falls back to regex level", slErrorResult.level === "low");
+  assert("SL error: has error in result", slErrorResult.semantic.error === "embedder crashed");
+  assert("SL error: stats tracked", errorSL.stats().errors === 1);
+
+  // Index failure is not cached — a recovered embedder works on retry
+  let slEmbedCalls = 0;
+  const flakySL = createSemanticLayer({
+    backend: "custom",
+    exemplars: { high: ["alpha crisis phrase"], low: ["beta distress phrase"] },
+    embed: async (texts) => {
+      slEmbedCalls++;
+      if (slEmbedCalls === 1) throw new Error("first call fails");
+      return mockEmbed(texts);
+    },
+  });
+  const flakyFirst = await flakySL.classify("alpha event");
+  assert("SL flaky: first call degrades to none", flakyFirst.risk === "none");
+  const flakySecond = await flakySL.classify("alpha event");
+  assert("SL flaky: recovers on retry", flakySecond.risk === "high");
+
+  section("SemanticLayer — error callback");
+
+  let slCapturedError = null;
+  const errorCbSL = createSemanticLayer({
+    backend: "custom",
+    embed: async () => { throw new Error("embedding timeout"); },
+    onError: (err) => { slCapturedError = err; },
+  });
+
+  await errorCbSL.classify("test");
+  assert("SL onError fired", slCapturedError !== null);
+  assert("SL onError has message", slCapturedError.message === "embedding timeout");
+
+  section("SemanticLayer — onMatch callback");
+
+  let slMatchResult = null;
+  const matchCbSL = createSemanticLayer({
+    backend: "custom",
+    embed: mockEmbed,
+    exemplars: { high: ["alpha crisis phrase"], low: ["beta distress phrase"] },
+    onMatch: (result) => { slMatchResult = result; },
+  });
+
+  await matchCbSL.verify({ level: "none", matched: null }, "alpha event");
+  assert("SL onMatch fired", slMatchResult !== null);
+  assert("SL onMatch has semantic", slMatchResult.semantic !== undefined);
+
+  section("SemanticLayer — Shield integration");
+
+  const slShield = createShield({
+    crisis: true,
+    subtle: false,
+    semanticLayer: mockSemantic,
+    responses: { high: "interrupt", low: "inject" },
+  });
+
+  assert("Shield has semanticLayer", slShield.semanticLayer === mockSemantic);
+
+  // Safe message stays none, carries semantic data
+  const slShieldSafe = await slShield.processAsync("completely unrelated text", { country: "AU" });
+  assert("Shield processAsync SL: safe = none", slShieldSafe.level === "none");
+  assert("Shield processAsync SL: has semantic data", slShieldSafe.semantic !== undefined);
+
+  // Metaphorical message regex misses → semantic escalates → resources resolved
+  const slShieldEscalated = await slShield.processAsync("alpha event unfolding", { country: "AU" });
+  assert("Shield processAsync SL: escalated to low", slShieldEscalated.level === "low");
+  assert("Shield processAsync SL: action = inject", slShieldEscalated.action === "inject");
+  assert("Shield processAsync SL: resources resolved", slShieldEscalated.resources !== null && slShieldEscalated.resources !== undefined);
+
+  // Explicit crisis still HIGH with semantic layer present
+  const slShieldHigh = await slShield.processAsync("I want to kill myself", { country: "AU" });
+  assert("Shield processAsync SL: explicit crisis = high", slShieldHigh.level === "high");
+
+  section("SemanticLayer — Shield with both tiers chained");
+
+  const bothShield = createShield({
+    crisis: true,
+    semanticLayer: mockSemantic,
+    crossClassifier: mockClassifier,
+    responses: { high: "interrupt", low: "inject" },
+  });
+
+  const bothResult = await bothShield.processAsync("alpha event unfolding", { country: "AU" });
+  assert("Shield both tiers: has semantic data", bothResult.semantic !== undefined);
+  assert("Shield both tiers: has crossClassifier data", bothResult.crossClassifier !== undefined);
+  assert("Shield both tiers: semantic escalation survives", bothResult.level === "low" || bothResult.level === "high");
+
+  // Explicit crisis: both layers see it, level stays high
+  const bothCrisis = await bothShield.processAsync("I want to kill myself", { country: "AU" });
+  assert("Shield both tiers: crisis = high", bothCrisis.level === "high");
+
   section("ESM exports");
   const esm = await import("../src/index.mjs");
   assert("ESM default exports check", typeof esm.default.check === "function");
@@ -1192,6 +1461,10 @@ async function runAsyncTests() {
   assert("ESM CrossClassifier export", esm.CrossClassifier === CrossClassifier);
   assert("ESM createCrossClassifier export", typeof esm.createCrossClassifier === "function");
   assert("ESM CC_PRESETS export", typeof esm.CC_PRESETS === "object");
+  assert("ESM SemanticLayer export", esm.SemanticLayer === SemanticLayer);
+  assert("ESM createSemanticLayer export", typeof esm.createSemanticLayer === "function");
+  assert("ESM cosineSimilarity export", typeof esm.cosineSimilarity === "function");
+  assert("ESM DEFAULT_EXEMPLARS export", typeof esm.DEFAULT_EXEMPLARS === "object");
 }
 
 function printResults() {

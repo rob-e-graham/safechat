@@ -4,7 +4,7 @@
 FAMTEC (Fine Art Media Technology)
 PhD Researcher, School of Design, RMIT University
 
-June 2026 (v1.1.0)
+June 2026 (v1.3.0)
 
 ---
 
@@ -63,7 +63,7 @@ Normalised input is matched against two tiers of regex patterns:
 
 **LOW signals** indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness ("can't go on", "no point"), worthlessness ("I'm a burden", "nobody cares"), and passive ideation ("done with life", "no hope left"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response.
 
-The current engine (v1.1.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 446 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
+The current engine (v1.3.0) includes 57 HIGH patterns, 40 LOW patterns, 42 SUBTLE patterns (see Section 3.4), and 596 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases.
 
 ### 3.3 False-Positive Guards
 
@@ -194,7 +194,7 @@ SafeChat's design anticipates and addresses requirements from multiple regulator
 
 **FTC Chatbot Safety Inquiry (2026):** Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies.
 
-**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 446-test suite addresses the categories of failure identified by VERA-MH.
+**VERA-MH Framework (Spring Health, 2026):** The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 596-test suite addresses the categories of failure identified by VERA-MH.
 
 **EU AI Act (2024-2026):** Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, source-available safety infrastructure that supports compliance without creating cloud dependencies.
 
@@ -229,6 +229,23 @@ SafeChat v1.2 introduces an optional cross-classifier layer that runs local mach
 
 **Optional.** The cross-classifier adds zero dependencies to the core library. SafeChat works identically without it. Developers opt in by configuring a backend and passing it to Shield.
 
+### 9.1 Semantic Layer and Tiered Architecture (v1.3)
+
+SafeChat v1.3 adds a semantic layer: an embedding-similarity tier that sits between the regex engine and the LLM cross-classifier. A curated set of exemplar phrases -- indirect, metaphorical expressions of distress drawn from clinical warning-sign literature -- is embedded once on-device. Each incoming message is embedded and compared to the exemplar set by cosine similarity; a strong match escalates the result under the same merge contract as the cross-classifier (confirm or escalate, never downgrade).
+
+The semantic layer requires only a small sentence-embedding model (approximately 25 MB, e.g. all-MiniLM-L6-v2 via Transformers.js), making it the first ML tier in SafeChat that runs in any modern browser, including installed progressive web apps on phones, fully offline after first load. Exemplar sets are plain, auditable text and can be replaced wholesale, enabling community-authored, culturally specific pattern sets governed under the CARE Principles (Section 6.1).
+
+This completes a progressive enhancement architecture for safety:
+
+| Tier | Layer | Footprint | Runs on |
+|------|-------|-----------|---------|
+| 0 | Regex engine + ConversationTracker | KBs | Everything, always, offline |
+| 1 | Semantic layer (embedding similarity) | ~25 MB | Any modern browser, PWA |
+| 2 | Distilled crisis classifier (planned) | ~50 MB | Browser/phone, offline |
+| 3 | LLM cross-classifier | GBs | Server/desktop, opt-in |
+
+Every tier is sovereign, every tier above 0 is optional, and the merge rules guarantee that adding a tier can only reduce false negatives, never introduce them: the failure mode of any ML tier is "no worse than the tier below."
+
 ---
 
 ## 10. Ongoing Development
@@ -236,7 +253,7 @@ SafeChat v1.2 introduces an optional cross-classifier layer that runs local mach
 SafeChat is under continuous, active development. The project maintains:
 
 - A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains.
-- A test suite (currently 517 automated tests) that must pass before any release.
+- A test suite (currently 596 automated tests) that must pass before any release.
 - A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours).
 - A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects.
 - A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.

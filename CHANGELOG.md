@@ -6,6 +6,40 @@ SafeChat follows a philosophy of continuous improvement: every false negative di
 
 ---
 
+## [1.3.0] - 2026-06-12
+
+### Added
+- **Semantic layer (Tier 1)** — optional embedding-similarity verification light enough for any modern browser, including installed PWAs on phones, fully offline after first load (~25 MB models such as all-MiniLM-L6-v2). Catches metaphorical distress that keyword patterns can't express by comparing messages against curated crisis exemplar phrases in embedding space.
+- **Curated exemplar set** — 29 indirect/metaphorical distress exemplars across HIGH and LOW tiers, drawn from clinical warning-sign literature. Plain, auditable text — replaceable wholesale for community-authored, culturally specific language packs (CARE-aligned governance).
+- **Three embedding backends** — `custom` (any embed function, e.g. Transformers.js in-browser), `ollama` (/api/embeddings), `local_api` (OpenAI-compatible /v1/embeddings: LM Studio, llama.cpp, vLLM).
+- **Shield integration** — `semanticLayer` config option; `processAsync()` now chains Tier 1 (semantic) then Tier 3 (cross-classifier), each under the same confirm-or-escalate merge contract.
+- **Tier architecture documentation** — new diagrams (tier-architecture.svg, dual-path-merge.svg) and progressive-enhancement framing in README and white paper.
+- **79 new tests** (596 total) — construction validation, cosine similarity edge cases, threshold behaviour, all merge rules, error fallback and recovery, callbacks, ping/warm-up, Shield integration, both-tiers chaining, ESM exports.
+
+### Changed
+- White paper updated to v1.3.0 with Section 9.1 (Semantic Layer and Tiered Architecture); .docx rebuilt with previously missing sections (negation normalisation, subtle signal accumulation, Shield class, CARE Principles, EU AI Act, Ongoing Development, Disclaimer).
+
+### Security
+- Same privacy contract as all tiers: no message content stored or transmitted; embeddings computed on-device or on a developer-controlled endpoint; exemplar index held in memory only.
+- Merge rules guarantee the semantic layer can only confirm or escalate — a failing or malicious embedder degrades to regex-only behaviour, never below it.
+
+---
+
+## [1.2.0] - 2026-06-11
+
+### Added
+- **Cross-classifier module (Tier 3)** — optional second-opinion layer running local clinical ML models alongside the regex engine. Suggested by Professor Stevie Chancellor (University of Minnesota).
+- **Five backends** — MindGuard (Sword Health 4B/8B crisis classifiers), MentalLLaMA (7B/13B interpretable mental health analysis), Ollama, Transformers/OpenAI-compatible APIs, and custom classification functions.
+- **Merge rules** — the classifier never downgrades a regex detection; it can only confirm or escalate. Regex HIGH stays HIGH regardless of model opinion.
+- **`Shield.processAsync()`** — async processing path with cross-classifier verification, response-mode re-determination, and resource re-resolution on escalation.
+- **71 new tests** (517 total) — label mapping, merge rules, confidence thresholds, error handling, callbacks, Shield integration.
+
+### Security
+- All inference local or developer-controlled; no message content transmitted to external services.
+- Classifier errors fall back silently to regex results — the safety floor never depends on model availability.
+
+---
+
 ## [1.1.0] - 2026-05-29
 
 ### Added

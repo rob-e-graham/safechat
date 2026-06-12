@@ -21,6 +21,7 @@ const { locate, locateSync, fromRequest, fromLocale, fromTimezone } = require(".
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat, formatForHTML, loadData } = require("./resources");
 const { Shield, createShield, PRESETS } = require("./shield");
 const { CrossClassifier, createCrossClassifier, CC_PRESETS } = require("./crosscheck");
+const { SemanticLayer, createSemanticLayer, cosineSimilarity, DEFAULT_EXEMPLARS } = require("./semantic");
 
 /**
  * One-call safety check: detect crisis level + get localized resources.
@@ -174,4 +175,10 @@ module.exports = {
   CrossClassifier,
   createCrossClassifier,
   CC_PRESETS,
+
+  // Semantic layer — optional embedding-similarity layer (Tier 1)
+  SemanticLayer,
+  createSemanticLayer,
+  cosineSimilarity,
+  DEFAULT_EXEMPLARS,
 };

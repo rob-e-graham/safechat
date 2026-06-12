@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 100+ verified helplines &middot; 517 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 100+ verified helplines &middot; 596 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -179,7 +179,7 @@ SafeChat is designed for trust:
 - **Input validation** — type checking, ReDoS protection, JSON structure validation
 - **Scoped service worker** — only intercepts same-origin requests
 - **No cookies, no analytics, no tracking**
-- **517 automated tests** including security/adversarial inputs
+- **596 automated tests** including security/adversarial inputs
 - **Referrer policy** — `no-referrer` on all pages
 
 ---
@@ -258,6 +258,56 @@ Everything runs locally. No data leaves the device.
 
 ---
 
+## Semantic Layer (Optional Embedding Tier) — v1.3
+
+![Tier Architecture](docs/images/tier-architecture.svg)
+
+SafeChat v1.3 adds a **semantic layer**: an embedding-similarity tier light enough to run in any modern browser — including installed PWAs on phones — fully offline after first load. It catches metaphorical distress that keyword patterns can't express ("I just want the noise to stop") by comparing each message against a curated set of crisis exemplar phrases in embedding space.
+
+- **~25 MB** instead of gigabytes — works with small sentence-embedding models like all-MiniLM-L6-v2
+- **Same merge contract** as the cross-classifier: confirm or escalate, never downgrade
+- **Plain-text exemplars** — auditable, replaceable, community-ownable for culturally specific language packs
+- **Zero new dependencies** — the embedder is injected; SafeChat works identically without it
+
+```javascript
+// Browser / PWA with Transformers.js
+import { pipeline } from '@huggingface/transformers';
+const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+
+const sem = safechat.createSemanticLayer({
+  backend: 'custom',
+  embed: async (texts) => {
+    const out = await extractor(texts, { pooling: 'mean', normalize: true });
+    return out.tolist();
+  },
+});
+
+// Or server-side via Ollama
+const sem = safechat.createSemanticLayer({
+  backend: 'ollama',
+  model: 'nomic-embed-text',
+});
+
+const shield = safechat.createShield({ crisis: true, semanticLayer: sem });
+const result = await shield.processAsync(userMessage);
+// result.semantic.mergeAction = 'confirmed' | 'escalated' | 'regex_override' | 'passthrough'
+```
+
+### How the layers combine
+
+![Independent Verification, Deterministic Merge](docs/images/dual-path-merge.svg)
+
+Every layer examines the message independently — no layer sees another's verdict, so no layer can be anchored by it or argue it down. A deterministic merge (~20 lines of auditable code, not a model) takes the most cautious opinion. The safety floor is architectural: a flaky model can only fail toward "no worse than regex alone."
+
+| Tier | Layer | Footprint | Runs on |
+|------|-------|-----------|---------|
+| 0 | Regex engine + ConversationTracker | KBs | Everything, always, offline |
+| 1 | Semantic layer (embedding similarity) | ~25 MB | Any modern browser, PWA |
+| 2 | Distilled crisis classifier (planned) | ~50 MB | Browser/phone, offline |
+| 3 | LLM cross-classifier | GBs | Server/desktop, opt-in |
+
+---
+
 ## Countries Covered
 
 Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Finland, France, Germany, Ghana, Hong Kong, India, Ireland, Israel, Italy, Japan, Kenya, Mexico, Netherlands, New Zealand, Nigeria, Norway, Pakistan, Philippines, Portugal, Russia, South Africa, South Korea, Spain, Sweden, Switzerland, United Kingdom, United States.
@@ -272,7 +322,7 @@ SafeChat is under continuous, active development. See [CHANGELOG.md](CHANGELOG.m
 
 - **False negatives** are treated as critical defects
 - **Crisis resource data** is verified twice monthly
-- **Test suite** must pass before every release (currently 517 tests)
+- **Test suite** must pass before every release (currently 596 tests)
 - **Detection patterns** are reviewed against published clinical literature
 
 ---

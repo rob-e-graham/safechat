@@ -76,6 +76,9 @@ const DEFAULTS = {
   // Cross-classifier (optional second-opinion layer)
   crossClassifier: null,  // CrossClassifier instance — see crosscheck.js
 
+  // Semantic layer (optional embedding-similarity layer, Tier 1)
+  semanticLayer: null,    // SemanticLayer instance — see semantic.js
+
   // Response mode per level
   responses: {
     high: "interrupt",    // explicit crisis → stop and show resources
@@ -126,6 +129,9 @@ class Shield {
 
     // Cross-classifier (optional)
     this.crossClassifier = this.config.crossClassifier || null;
+
+    // Semantic layer (optional)
+    this.semanticLayer = this.config.semanticLayer || null;
   }
 
   /**
@@ -224,11 +230,14 @@ class Shield {
   }
 
   /**
-   * Async version of process() that includes cross-classifier verification.
+   * Async version of process() that includes the optional ML verification tiers.
    *
-   * If no crossClassifier is configured, behaves identically to process().
-   * When a crossClassifier is present, the regex result is passed through
-   * the classifier's verify() method before response mode determination.
+   * If neither a semanticLayer nor a crossClassifier is configured, behaves
+   * identically to process(). When present, the regex result is passed through
+   * each layer's verify() method in tier order — semantic layer (Tier 1,
+   * embedding similarity, cheap) first, then cross-classifier (Tier 3, LLM)
+   * — before response mode determination. Both layers share the same merge
+   * contract: confirm or escalate, never downgrade.
    *
    * @param {string} text — the user's message
    * @param {object} options
@@ -241,14 +250,22 @@ class Shield {
     // Start with the synchronous regex-based detection
     const baseResult = this.process(text, options);
 
-    // If no cross-classifier, return the regex result as-is
-    if (!this.crossClassifier) {
+    // If no ML tiers are configured, return the regex result as-is
+    if (!this.semanticLayer && !this.crossClassifier) {
       return baseResult;
     }
 
-    // Run the cross-classifier to verify/enhance the result
-    const context = options.classifierContext || {};
-    const enhanced = await this.crossClassifier.verify(baseResult, text, context);
+    // Tier 1: embedding-similarity verification (if configured)
+    let enhanced = baseResult;
+    if (this.semanticLayer) {
+      enhanced = await this.semanticLayer.verify(enhanced, text);
+    }
+
+    // Tier 3: LLM cross-classifier verification (if configured)
+    if (this.crossClassifier) {
+      const context = options.classifierContext || {};
+      enhanced = await this.crossClassifier.verify(enhanced, text, context);
+    }
 
     // If the classifier changed the level, re-determine the response mode and resources
     if (enhanced.level !== baseResult.level) {
