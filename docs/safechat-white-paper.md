@@ -1,4 +1,4 @@
-# SafeChat: An Open-Source Crisis Safety Protocol for AI Chat Systems
+# SafeChat: A Source-Available Crisis Safety Protocol for AI Chat Systems
 
 **Rob Graham**
 FAMTEC (Fine Art Media Technology)

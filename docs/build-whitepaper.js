@@ -147,7 +147,7 @@ const doc = new Document({
           new TextRun({ text: "SafeChat", font: "Cambria", size: 56, bold: true, color: "1A1A2E" }),
         ]}),
         new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 120 }, children: [
-          new TextRun({ text: "An Open-Source Crisis Safety Protocol", font: "Cambria", size: 32, color: "2C3E50" }),
+          new TextRun({ text: "A Source-Available Crisis Safety Protocol", font: "Cambria", size: 32, color: "2C3E50" }),
         ]}),
         new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 600 }, children: [
           new TextRun({ text: "for AI Chat Systems", font: "Cambria", size: 32, color: "2C3E50" }),
