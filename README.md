@@ -16,6 +16,8 @@
 
 <p align="center">
   <a href="https://rob-e-graham.github.io/safechat/app/index.html">Live Site</a> &middot;
+  <a href="https://rob-e-graham.github.io/safechat/app/inspector.html">Test Inspector</a> &middot;
+  <a href="docs/SafeChat-Partner-Overview.docx">Partner Overview</a> &middot;
   <a href="https://rob-e-graham.github.io/safechat/app/popup.html">Get Help Now</a> &middot;
   <a href="https://github.com/rob-e-graham/safechat/discussions">Community</a> &middot;
   <a href="https://fineartmedia.tech">FAMTEC</a>
