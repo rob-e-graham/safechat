@@ -11,5 +11,5 @@ node_modules/
 !.github/workflows/verify-resources.yml
 
 # Internal meeting prep — keep local, never publish
-docs/vera-mh-meeting-brief.md
-docs/vera-mh-demo-runsheet.md
+docs/vera-mh-meeting-brief.*
+docs/vera-mh-demo-runsheet.*
