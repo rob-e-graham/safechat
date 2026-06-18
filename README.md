@@ -40,6 +40,7 @@ SafeChat is an **international register and toolkit for chat safety protocol**. 
 - **Maintained Helpline Database** — 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. CC0 public domain.
 - **AI Prompt Override** — System prompt injections that tell your LLM to show crisis resources. Works with any AI provider.
 - **Drop-in UI** — Modal, banner, and full-page popup. One script tag. PWA-capable. Works offline.
+- **Configurable Routing** — Verified helplines by default, or hand off to a human moderator, safeguarding lead, or your own escalation path — the deployment decides where a signal goes.
 - **Safety-oriented** — Designed to support crisis-routing implementations and informed by VERA-MH and Samaritans guidance; compliance and clinical suitability remain the integrator's responsibility.
 
 ---
