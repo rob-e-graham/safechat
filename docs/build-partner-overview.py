@@ -280,7 +280,7 @@ def add_cover(doc):
 
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    set_run_font(p.add_run("Rob Graham  |  FAMTEC  |  18 June 2026"), size=10, color=MUTED)
+    set_run_font(p.add_run("Rob Graham  |  FAMTEC  |  19 June 2026"), size=10, color=MUTED)
     doc.add_page_break()
 
 

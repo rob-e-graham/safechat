@@ -40,6 +40,26 @@ SafeChat gives developers a separate, inspectable routing layer. It is designed 
 
 The current engineering suite contains 647 automated tests. These tests demonstrate repeatable software behaviour and regression protection. They do not establish clinical validity, population-level accuracy, fairness, or improved health outcomes.
 
+## How the evidence was applied
+
+SafeChat reviewed the published methods, risk taxonomies, and permitted public examples from C-SSRS, Reddit C-SSRS, CLPsych, eRisk, VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K. It did not ingest every original research dataset. Several source collections contain restricted or sensitive records and are deliberately not distributed with SafeChat.
+
+The evidence was applied through a reproducible engineering process:
+
+1. review published evidence and permitted public examples;
+2. identify observable language families and contextual risk concepts;
+3. translate relevant concepts into source-attributed local trigger rules and session categories;
+4. test direct examples, paraphrases, misspellings, indirect wording, and multi-turn accumulation;
+5. test benign and figurative language to reduce false-positive behaviour;
+6. verify consistent behaviour across server and browser builds; and
+7. retain only categories, configured weights, and timestamps during accumulation rather than storing conversation text.
+
+Every reviewed production rule records a source, signal family, rationale, and routing level. False-positive guards run before reviewed signals can trigger, and moderation signals remain separate from self-directed crisis routing.
+
+For VERA-MH specifically, all 100 public final seed phrases were inspected as a coverage audit. The audit was used to find missing observable language families and contextual categories. It was not used to calculate sensitivity or specificity because some VERA-MH persona openings deliberately omit or obscure the hidden risk condition.
+
+The current 647-test suite is engineering evidence: it demonstrates deterministic behaviour, regression protection, false-positive boundaries, multi-turn accumulation, and server/browser parity. It is not clinical evidence and does not establish population-level accuracy, fairness, improved health outcomes, or a formal VERA-MH score.
+
 ## What the demonstration shows
 
 The interactive inspector makes each layer visible. It can show:
@@ -137,4 +157,4 @@ PhD Researcher, RMIT University | FAMTEC
 
 [Interactive inspector](https://rob-e-graham.github.io/safechat/app/inspector.html) | [Project overview](https://fineartmedia.tech/safechat) | [SafeChat repository](https://github.com/rob-e-graham/safechat) | [VERA-MH](https://www.vera-mh.com/) | [Legal disclaimer](https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md)
 
-*Prepared 18 June 2026. SafeChat is under active development.*
+*Prepared 19 June 2026. SafeChat is under active development.*
