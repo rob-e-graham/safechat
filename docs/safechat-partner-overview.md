@@ -18,7 +18,7 @@ During multi-turn accumulation, SafeChat holds only signal categories, configure
 
 This makes SafeChat suitable for privacy-sensitive contexts such as workplaces, schools, universities, health-adjacent services, community organisations, and private-sector applications. It can help an organisation provide a safety response without centralising vulnerable conversation content or introducing covert behavioural profiling.
 
-That creates a basis for trust: employers, educators, and service providers can offer a protective pathway without spying on employees, students, or users. Trust still depends on clear disclosure, accountable governance, and a firm boundary preventing safety signals from being reused for discipline, performance monitoring, advertising, or unrelated profiling.
+That creates a basis for trust: employers, educators, and service providers can offer a protective pathway without centralising or repurposing private conversations for surveillance. Trust still depends on clear disclosure, accountable governance, and a firm boundary preventing safety signals from being reused for discipline, performance monitoring, advertising, or unrelated profiling.
 
 Local-first processing supports data minimisation and can reduce privacy, security, retention, access, and breach exposure. It does not make every deployment automatically lawful or ethical. Implementers must disclose the safeguard appropriately and assess consent, purpose, proportionality, employment and education rules, safeguarding duties, privacy law, and any human escalation process in their jurisdiction.
 
@@ -60,6 +60,8 @@ VERA-MH is a clinically grounded framework for evaluating how a chatbot behaves 
 SafeChat is a routing component rather than a complete chatbot. It directly supports parts of the recognition and human-care-routing workflow. Empathy, clarifying questions, conversational quality, clinical appropriateness, and safe response generation remain responsibilities of the host chatbot and deployment.
 
 Public VERA-MH v1.1 risk-presentation concepts have informed attributed SafeChat regression families and contextual categories. SafeChat did not import complete persona biographies, diagnoses, demographic attributes, hidden risk labels, or generated conversations into its production detector.
+
+In the current configurable accumulation model, a reviewed hedged-passive disclosure produces an immediate LOW support route and records a `passive_ideation` session weight of 2. This allows later contextual evidence to affect the session route while preserving the distinction between a software control and a clinical risk score.
 
 SafeChat has not been run through, scored, endorsed, certified, or clinically validated by VERA-MH. Using public VERA-MH materials for regression design does not imply a relationship with Spring Health or the VERA-MH authors.
 

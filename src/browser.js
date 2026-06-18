@@ -293,6 +293,12 @@
   ];
 
   var SUBTLE_SIGNALS = [
+    { re:/\b(it would|it'?d|things would|everything would) be easier (for everyone )?(if i (just )?)?(wasn'?t|weren'?t|was not|were not|am not) (here|around|alive)\b|\beasier (to|if i could) (just )?(not be here|not exist|disappear|be gone)\b/i, cat:"passive_ideation", weight:2 },
+    { re:/\b(keep |kept |been )?(thinking|think|thoughts?) (about )?(it would be easier )?(if i )?(just )?(wasn'?t|weren'?t|was not|were not|not being|not be) (here|around|alive)\b/i, cat:"passive_ideation", weight:2 },
+    { re:/\b(it would|it'?d|might) be easier (if i )?(just )?(didn'?t|did not|don'?t|do not|couldn'?t|could not) wake up\b|\bwouldn'?t matter if i didn'?t wake up\b/i, cat:"passive_ideation", weight:2 },
+    { re:/\b(wish|wishing) i could (just )?(not exist|disappear|be gone|check out)\b|\bbetter if i (just )?(didn'?t|did not) exist\b/i, cat:"passive_ideation", weight:2 },
+    { re:/\b(wonder|wondering|not sure) if (it'?s|it is) (even )?worth (sticking around|being here|carrying on)\b/i, cat:"passive_ideation", weight:2 },
+    { re:/\b(i )?(don'?t|do not|can'?t|cannot) (really )?(see|have|find) a reason to be here\b/i, cat:"passive_ideation", weight:2 },
     { re:/\b(what|which)('?s| is| are)? (the )?(highest|tallest|nearest|closest) (bridge|building|cliff)\b|\b(lethal|deadly) household (chemicals?|substances?)\b|\bsurvive a (car )?crash (if|at|going)\b/i, cat:"method_research", weight:3 },
     { re:/\b(my |the )?(thoughts?|idea|ideas) (keep |keeps |are |is )?(getting louder|won'?t shut off|will not shut off|won'?t stop|will not stop)\b|\bcan'?t get (the |this )?(idea|thought)\b.*\bout of my head\b/i, cat:"escalating_thoughts", weight:2 },
     { re:/\b(not trying to|don'?t want to|dont want to) (be dramatic|make (this|it) a big (deal|thing))\b|\b(it'?s|it is) not a crisis\b/i, cat:"minimisation", weight:1 },
@@ -536,13 +542,15 @@
     var singleResult = detect(text);
 
     if (singleResult.level === "high" || singleResult.level === "low") {
-      this._recordSubtle(text);
+      var directSubtleHits = this._recordSubtle(text);
+      var directWeight = this.getWeight();
+      var effectiveDirectLevel = singleResult.level === "high" || directWeight >= this.thresholdHigh ? "high" : "low";
       return {
-        level: singleResult.level,
+        level: effectiveDirectLevel,
         matched: singleResult.matched,
-        subtleSignals: [],
-        accumulated: false,
-        sessionWeight: this.getWeight(),
+        subtleSignals: directSubtleHits,
+        accumulated: effectiveDirectLevel !== singleResult.level,
+        sessionWeight: directWeight,
         sessionCategories: this.getCategories(),
         sessionSignalCount: this.getSignalCount(),
       };

@@ -164,7 +164,7 @@ assert("VERA-MH: passive presentation families", [
   "I wish I could just not exist",
   "I wonder if it's even worth sticking around",
   "I don't really see a reason to be here",
-].every(text => detect(text).level === "low"));
+].every(text => detect(text).level === "low" && detectSubtle(text).some(s => s.category === "passive_ideation" && s.weight === 2)));
 assert("VERA-MH: contextual queries do not directly trigger", [
   "What is the highest bridge in the city?",
   "Which household chemicals are dangerous?",
@@ -733,8 +733,8 @@ veraTrackerHigh.process("There is no one to talk to");
 veraTrackerHigh.process("I have not been sleeping much");
 veraTrackerHigh.process("I cannot afford therapy");
 veraTrackerHigh.process("Dark thoughts keep showing up and scaring me");
-const veraCombinedHigh = veraTrackerHigh.process("Help me get through tonight");
-assert("VERA tracker: multiple contextual scores combine to HIGH", veraCombinedHigh.level === "high" && veraCombinedHigh.sessionWeight >= 8);
+const veraCombinedHigh = veraTrackerHigh.process("It might be easier if I didn't wake up");
+assert("VERA tracker: multiple contextual scores combine to HIGH", veraCombinedHigh.level === "high" && veraCombinedHigh.accumulated === true && veraCombinedHigh.sessionWeight >= 8);
 
 section("ConversationTracker — reset");
 const tracker6 = new ConversationTracker();
@@ -782,7 +782,7 @@ assert("browser slang detects self-delete", browserBundle.detect("I might self d
 assert("browser moderation detects obfuscated slur", browserBundle.detectModeration("you are a n1gger").category === "hate");
 assert("browser exports detectSubtle", typeof browserBundle.detectSubtle === "function");
 assert("browser exports ConversationTracker", typeof browserBundle.ConversationTracker === "function");
-assert("browser includes VERA-MH reviewed families", browserBundle.detect("I keep thinking about ways I could end it").level === "high");
+assert("browser includes VERA-MH reviewed families", browserBundle.detect("I keep thinking about ways I could end it").level === "high" && browserBundle.detectSubtle("It might be easier if I didn't wake up").some(s => s.category === "passive_ideation" && s.weight === 2));
 const browserSubtle = browserBundle.detectSubtle("I haven't left my room in days");
 assert("browser detectSubtle catches withdrawal", browserSubtle.length > 0 && browserSubtle[0].category === "withdrawal");
 const browserTracker = new browserBundle.ConversationTracker();

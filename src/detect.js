@@ -687,6 +687,14 @@ function isModerationFalsePositive(text, matchedPattern) {
 // Each has a weight (1-3). Threshold to escalate = 5 points within a session.
 
 const SUBTLE_SIGNALS = [
+  // Reviewed passive ideation routes LOW immediately and also contributes to
+  // session context, so later evidence can escalate without storing text.
+  { re: /\b(it would|it'?d|things would|everything would) be easier (for everyone )?(if i (just )?)?(wasn'?t|weren'?t|was not|were not|am not) (here|around|alive)\b|\beasier (to|if i could) (just )?(not be here|not exist|disappear|be gone)\b/i, cat: "passive_ideation", weight: 2 },
+  { re: /\b(keep |kept |been )?(thinking|think|thoughts?) (about )?(it would be easier )?(if i )?(just )?(wasn'?t|weren'?t|was not|were not|not being|not be) (here|around|alive)\b/i, cat: "passive_ideation", weight: 2 },
+  { re: /\b(it would|it'?d|might) be easier (if i )?(just )?(didn'?t|did not|don'?t|do not|couldn'?t|could not) wake up\b|\bwouldn'?t matter if i didn'?t wake up\b/i, cat: "passive_ideation", weight: 2 },
+  { re: /\b(wish|wishing) i could (just )?(not exist|disappear|be gone|check out)\b|\bbetter if i (just )?(didn'?t|did not) exist\b/i, cat: "passive_ideation", weight: 2 },
+  { re: /\b(wonder|wondering|not sure) if (it'?s|it is) (even )?worth (sticking around|being here|carrying on)\b/i, cat: "passive_ideation", weight: 2 },
+  { re: /\b(i )?(don'?t|do not|can'?t|cannot) (really )?(see|have|find) a reason to be here\b/i, cat: "passive_ideation", weight: 2 },
   // VERA-MH contextual presentations. These do not trigger alone; they combine
   // with other session signals under the same transparent 4/8 thresholds.
   { re: /\b(what|which)('?s| is| are)? (the )?(highest|tallest|nearest|closest) (bridge|building|cliff)\b|\b(lethal|deadly) household (chemicals?|substances?)\b|\bsurvive a (car )?crash (if|at|going)\b/i, cat: "method_research", weight: 3 },
@@ -798,13 +806,20 @@ class ConversationTracker {
   process(text) {
     const singleResult = detect(text);
 
-    // If HIGH or LOW already, record any subtle signals but return immediately
+    // Direct detections route immediately, while their contextual evidence can
+    // still raise the effective session level when the HIGH threshold is met.
     if (singleResult.level === "high" || singleResult.level === "low") {
-      this._recordSubtle(text); // still record for trend data
+      const subtleHits = this._recordSubtle(text); // still record for trend data
+      const weight = this.getWeight();
+      const effectiveLevel = singleResult.level === "high" || weight >= this.thresholdHigh
+        ? "high"
+        : "low";
       return {
         ...singleResult,
-        accumulated: false,
-        sessionWeight: this.getWeight(),
+        level: effectiveLevel,
+        subtleSignals: subtleHits,
+        accumulated: effectiveLevel !== singleResult.level,
+        sessionWeight: weight,
         sessionCategories: this.getCategories(),
         sessionSignalCount: this.getSignalCount(),
       };
