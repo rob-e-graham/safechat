@@ -4,4 +4,12 @@ node_modules/
 .env
 .claude/
 ~$*
-.github/
+.github/*
+!.github/scripts/
+!.github/scripts/verify-resources.js
+!.github/workflows/
+!.github/workflows/verify-resources.yml
+
+# Internal meeting prep — keep local, never publish
+docs/vera-mh-meeting-brief.md
+docs/vera-mh-demo-runsheet.md

@@ -42,7 +42,7 @@ People don't always say it directly. They talk about giving things away, writing
 
 And then there's the other side: you have to NOT trigger on "cut my hair" or "suicide squeeze in baseball" or "overdosed on coffee" or "magic trick disappear." Because if you cry wolf too often, people turn it off. And then it catches nothing.
 
-I've got 446 automated tests covering all of this. True positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, adversarial inputs, security edge cases, and separate threat and hate-speech moderation signals. Every release has to pass all of them.
+I've got 647 automated tests covering all of this. True positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, adversarial inputs, security edge cases, and separate threat and hate-speech moderation signals. Every release has to pass all of them.
 
 The calibration philosophy is simple: a false positive shows someone a help modal they close. A false negative could cost a life. I know which side I'd rather err on.
 

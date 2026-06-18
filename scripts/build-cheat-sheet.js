@@ -74,6 +74,9 @@ const patterns = {
   low: detect.LOW_SIGNALS.length,
   subtle: detect.SUBTLE_SIGNALS.length,
   subtleCategories: new Set(detect.SUBTLE_SIGNALS.map((s) => s.cat)).size,
+  reviewedHigh: detect.REVIEWED_HIGH_SIGNALS.length,
+  reviewedLow: detect.REVIEWED_LOW_SIGNALS.length,
+  reviewedSources: Object.keys(detect.REVIEWED_SIGNAL_SOURCES || {}).length,
 };
 
 const markdown = `# SafeChat Cheat Sheet
@@ -93,7 +96,7 @@ SafeChat is source-available, local-first crisis-routing infrastructure for AI c
 | Resource records | ${stats.resourceRecords} |
 | Verified resource records | ${stats.verifiedRecords} |
 | Contact methods | ${stats.contactMethods} |
-| Detection patterns | ${patterns.high} HIGH, ${patterns.low} LOW, ${patterns.subtle} SUBTLE (${patterns.subtleCategories} categories) |
+| Detection patterns | ${patterns.high} HIGH, ${patterns.low} LOW, ${patterns.subtle} SUBTLE (${patterns.subtleCategories} categories), ${patterns.reviewedHigh + patterns.reviewedLow} reviewed source-linked signals |
 | Test suite | ${tests.passed} passing tests |
 | License | BSL 1.1 — free under $100K USD revenue; MPL 2.0 from 2029-01-01; helpline data CC0 |
 | Runtime posture | Local-first, zero tracking, offline-capable |
@@ -113,9 +116,11 @@ SafeChat is source-available, local-first crisis-routing infrastructure for AI c
 - Detects crisis language locally using deterministic rules, normalization, false-positive guards, and subtle signal accumulation.
 - Separates **HIGH** signals such as explicit self-harm or suicidal intent from **LOW** distress signals such as hopelessness, worthlessness, or feeling trapped.
 - Tracks subtle multi-message warning signs without storing message content; it keeps only signal categories and weights in memory.
+- Uses transparent routing weights from 1-3: combined weight 4 triggers LOW routing and 8 triggers HIGH. These are deterministic thresholds, not probabilities or a clinical risk score.
 - Finds country-level crisis resources without GPS using locale, timezone, request headers, cached country, and global fallback.
 - Provides crisis resources through modal, banner, popup, prompt override, callback, log, and middleware patterns.
-- Exposes separate local moderation detection for threats and hate speech through \`detectModeration()\`.
+- Exposes separate local moderation detection for threats, hate speech, and protected-class slurs through \`detectModeration()\`.
+- Exposes an evidence-linked reviewed signal pack through \`detectReviewed()\`, currently covering ${patterns.reviewedSources} source families without embedding raw restricted posts or transcripts.
 
 ## What SafeChat Does Not Do
 
@@ -142,6 +147,7 @@ Core merge rule: extra ML layers can **confirm or escalate**, but they must not 
 - The desktop/server path is the cross-classifier: run MindGuard, MentalLLaMA, or another local classifier through Ollama, LM Studio, Transformers.js, an OpenAI-compatible local endpoint, or a custom function.
 - MindGuard is the most directly relevant crisis-safety model direction because it separates safe mental-health disclosure, self-harm risk, and harm-to-others risk.
 - MentalLLaMA is useful for broader interpretable mental-health analysis, but should be treated as a second opinion, not a clinical authority.
+- VERA-MH public risk presentations inform regression design and multi-turn accumulation; VERA-MH is not a trigger dictionary and does not validate SafeChat.
 - MentalChat16K and VERA-MH are useful evaluation references, not proof that SafeChat is clinically validated.
 - Future work: a smaller distilled crisis classifier that can run locally in browser/phone contexts after careful evaluation and governance.
 
@@ -152,6 +158,14 @@ Core merge rule: extra ML layers can **confirm or escalate**, but they must not 
 - Review should include crisis-service expertise, lived experience, legal/privacy review, cultural safety review, and platform-safety review.
 - Culturally specific distress language should be community-authored and community-governed where possible.
 - The system should preserve user autonomy and avoid surveillance misuse.
+
+## Living Signal Database
+
+- The future "large phrase database" should not ship as millions of literal user phrases. It should be compressed into normalisation rules, phrase templates, lexical/slang variants, reviewed exemplars, embeddings, and optional distilled local classifiers.
+- Large peer-reviewed or restricted datasets should be used for evaluation, distillation, and reviewer calibration, not copied into the public package.
+- The compact browser path is: deterministic regex + reviewed source-linked signals + semantic embeddings + optional tiny distilled classifier.
+- The desktop/server path can add local MindGuard, MentalLLaMA, Ollama, or LM Studio classifiers as a second opinion.
+- Slang, bad spelling, code words, and slurs should be handled as separate updateable lexicons with false-positive guards and cultural scope notes.
 
 ## Ethics And Legal Guardrails
 

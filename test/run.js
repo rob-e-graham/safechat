@@ -3,7 +3,18 @@
  * Run: node test/run.js
  */
 
-const { detect, detectModeration, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("../src/detect");
+const {
+  detect,
+  detectModeration,
+  detectReviewed,
+  scanReviewedSignals,
+  detectSubtle,
+  isHighCrisis,
+  isAnyCrisis,
+  ConversationTracker,
+  REVIEWED_SIGNAL_PACK,
+  REVIEWED_SIGNAL_SOURCES,
+} = require("../src/detect");
 const { fromLocale, fromTimezone, fromRequest } = require("../src/locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat } = require("../src/resources");
 const safechat = require("../src/index");
@@ -46,6 +57,14 @@ assert("hurt myself", detect("I want to hurt myself").level === "high");
 assert("cut myself", detect("I've been cutting myself").level === "high");
 assert("overdose", detect("thinking about overdose").level === "high");
 assert("end the pain", detect("I need to end the pain").level === "high");
+assert("misspelled disappear", detect("I want to dissapear forever").level === "high");
+assert("slang: unalive myself", detect("I want to unalive myself").level === "high");
+assert("slang: self delete", detect("I might self delete").level === "high");
+assert("slang: delete myself", detect("I want to delete myself").level === "high");
+assert("slang: checkout of life", detect("I want to check out of life").level === "high");
+assert("obfuscated: sewer slide", detect("thinking about sewer slide").level === "high");
+assert("obfuscated: k m s", detect("I might k m s").level === "high");
+assert("obfuscated: k!ll myself", detect("I want to k!ll myself").level === "high");
 assert("isHighCrisis helper", isHighCrisis("I want to kill myself") === true);
 assert("isHighCrisis negative", isHighCrisis("I had a great day") === false);
 
@@ -65,6 +84,7 @@ assert("I can't do this", detect("I just can't do this anymore").level === "low"
 assert("no way out", detect("there's no way out").level === "low");
 assert("I'm a burden", detect("I'm a burden to everyone").level === "low");
 assert("nothing matters", detect("nothing matters anymore").level === "low");
+assert("nobody will miss me", detect("Nobody will miss me").level === "low");
 assert("isAnyCrisis helper", isAnyCrisis("I feel worthless") === true);
 
 section("Crisis Detection — None (should NOT trigger)");
@@ -85,8 +105,10 @@ assert("threat: I want to kill you", detectModeration("I want to kill you").cate
 assert("threat: I want to kill you high", detectModeration("I want to kill you").level === "high");
 assert("threat: I'll kill you", detectModeration("I'll kill you").level === "high");
 assert("threat: going to hurt them", detectModeration("I'm going to hurt them").level === "high");
+assert("threat: I want to hurt you", detectModeration("I want to hurt you").level === "high");
 assert("threat: kill yourself", detectModeration("kys").level === "high");
 assert("threat: you deserve to die", detectModeration("you deserve to die").level === "high");
+assert("threat: you need to die", detectModeration("You need to die!").level === "high");
 assert("threat: watch your back", detectModeration("watch your back").level === "low");
 assert("threat: crisis detector stays separate", detect("I want to kill you").level === "none");
 
@@ -96,6 +118,9 @@ assert("hate: protected group exclusion", detectModeration("refugees do not belo
 assert("hate: go back to your country", detectModeration("go back to your country").category === "hate");
 assert("hate: violent protected group language", detectModeration("kill all immigrants").level === "high");
 assert("hate: dehumanising protected group language", detectModeration("trans people are not human").level === "high");
+assert("hate: directed slur", detectModeration("you are a n1gger").category === "hate");
+assert("hate: obfuscated slur", detectModeration("kill all f@ggots").level === "high");
+assert("hate: disability slur", detectModeration("they are all retards").level === "low");
 
 section("Moderation Detection — None (should NOT trigger)");
 assert("moderation FP: kill time", detectModeration("Let's kill time before the train").level === "none");
@@ -104,7 +129,47 @@ assert("moderation FP: shooting hoops", detectModeration("I'm shooting hoops aft
 assert("moderation FP: bombed exam", detectModeration("I bombed the exam").level === "none");
 assert("moderation FP: threat model", detectModeration("We need a threat model for the app").level === "none");
 assert("moderation FP: hate traffic", detectModeration("I hate traffic").level === "none");
+assert("moderation FP: fire retardant", detectModeration("Use fire retardant paint").level === "none");
+assert("moderation FP: dyke geology", detectModeration("The dyke geology paper is open").level === "none");
 assert("moderation input: null", detectModeration(null).level === "none");
+
+section("Reviewed Crisis-Language Pack");
+assert("reviewed pack has version", REVIEWED_SIGNAL_PACK.version === "2026-06-18");
+assert("reviewed sources include C-SSRS", REVIEWED_SIGNAL_SOURCES.cssrs_2011.shortName === "C-SSRS");
+assert("reviewed sources include VERA-MH", REVIEWED_SIGNAL_SOURCES.vera_mh_2026.shortName === "VERA-MH v1.1");
+assert("reviewed: sleep and not wake up", detect("I wish I could go to sleep and never wake up").level === "low");
+assert("reviewed: detects C-SSRS source", detectReviewed("I wish I could go to sleep and never wake up").sourceId === "cssrs_2011");
+assert("reviewed: active suicidal thoughts", detect("I've been thinking about hurting myself").level === "high");
+assert("reviewed: method or plan", detect("I have worked out a method to end everything").level === "high");
+assert("reviewed: self safety", detect("I can't keep myself safe tonight").level === "high");
+assert("reviewed: scared might hurt myself", detect("I'm scared I might hurt myself").level === "high");
+assert("reviewed: self-harm urge", detect("The urge to cut myself is back").level === "high");
+assert("reviewed: recent attempt", detect("I almost tried to kill myself").level === "high");
+assert("reviewed: taking up space", detect("I feel like just taking up space").level === "low");
+assert("reviewed: social erasure", detect("Everyone would be relieved if I vanished").level === "low");
+assert("reviewed: no future", detect("I see no future ahead of me").level === "low");
+assert("reviewed: source scan returns hits", scanReviewedSignals("I don't trust myself alone").some(h => h.sourceId === "mindguard_2026"));
+assert("reviewed: neutral returns none", detectReviewed("I am making dinner").level === "none");
+assert("VERA-MH: high presentation families", [
+  "I keep thinking about ways I could end it",
+  "I have a plan and I am scared I will follow through tonight",
+  "I tried to end it all two nights ago but someone stopped me",
+  "I don't feel safe with my own thoughts tonight",
+  "I looked up how many pills would do it last night",
+].every(text => detect(text).level === "high"));
+assert("VERA-MH: passive presentation families", [
+  "I keep thinking it would be easier to not be here",
+  "Sometimes I think it would be easier if I just wasn't alive",
+  "It might be easier if I didn't wake up",
+  "I wish I could just not exist",
+  "I wonder if it's even worth sticking around",
+  "I don't really see a reason to be here",
+].every(text => detect(text).level === "low"));
+assert("VERA-MH: contextual queries do not directly trigger", [
+  "What is the highest bridge in the city?",
+  "Which household chemicals are dangerous?",
+  "How common is it to survive a car crash at 60 mph?",
+].every(text => detect(text).level === "none"));
 
 // ── Geo-detection tests ──
 
@@ -656,6 +721,21 @@ tracker5.process("I'm giving away my things");                         // farewe
 const r5 = tracker5.process("Every day is worse");                     // pain: 1
 assert("tracker: accumulates to high", r5.level === "high" || r5.sessionWeight >= 8);
 
+section("ConversationTracker — VERA-MH contextual accumulation");
+const veraTrackerLow = new ConversationTracker();
+const veraMethodOnly = veraTrackerLow.process("What is the highest bridge in the city?");
+assert("VERA tracker: method query alone does not trigger", veraMethodOnly.level === "none" && veraMethodOnly.sessionWeight === 3);
+const veraCombinedLow = veraTrackerLow.process("Everything is piling up");
+assert("VERA tracker: contextual scores combine to LOW", veraCombinedLow.level === "low" && veraCombinedLow.accumulated === true);
+
+const veraTrackerHigh = new ConversationTracker();
+veraTrackerHigh.process("There is no one to talk to");
+veraTrackerHigh.process("I have not been sleeping much");
+veraTrackerHigh.process("I cannot afford therapy");
+veraTrackerHigh.process("Dark thoughts keep showing up and scaring me");
+const veraCombinedHigh = veraTrackerHigh.process("Help me get through tonight");
+assert("VERA tracker: multiple contextual scores combine to HIGH", veraCombinedHigh.level === "high" && veraCombinedHigh.sessionWeight >= 8);
+
 section("ConversationTracker — reset");
 const tracker6 = new ConversationTracker();
 tracker6.process("I'm pushing everyone away");
@@ -693,8 +773,16 @@ assert("tracker: normal conversation stays none", r9.level === "none");
 assert("tracker: no signals from normal chat", r9.sessionWeight === 0);
 
 section("Browser bundle — subtle detection and tracking");
+assert("browser exports detectReviewed", typeof browserBundle.detectReviewed === "function");
+assert("browser reviewed pack detects passive ideation",
+  browserBundle.detect("I wish I could go to sleep and never wake up").level === "low");
+assert("browser reviewed source available",
+  browserBundle.detectReviewed("I wish I could go to sleep and never wake up").sourceId === "cssrs_2011");
+assert("browser slang detects self-delete", browserBundle.detect("I might self delete").level === "high");
+assert("browser moderation detects obfuscated slur", browserBundle.detectModeration("you are a n1gger").category === "hate");
 assert("browser exports detectSubtle", typeof browserBundle.detectSubtle === "function");
 assert("browser exports ConversationTracker", typeof browserBundle.ConversationTracker === "function");
+assert("browser includes VERA-MH reviewed families", browserBundle.detect("I keep thinking about ways I could end it").level === "high");
 const browserSubtle = browserBundle.detectSubtle("I haven't left my room in days");
 assert("browser detectSubtle catches withdrawal", browserSubtle.length > 0 && browserSubtle[0].category === "withdrawal");
 const browserTracker = new browserBundle.ConversationTracker();
@@ -1470,6 +1558,8 @@ async function runAsyncTests() {
   assert("ESM named export check", typeof esm.check === "function");
   assert("ESM named detect works", esm.detect("I feel hopeless").level === "low");
   assert("ESM named detectModeration works", esm.detectModeration("I want to kill you").category === "threat");
+  assert("ESM named detectReviewed works", esm.detectReviewed("I wish I could go to sleep and never wake up").sourceId === "cssrs_2011");
+  assert("ESM reviewed sources export", esm.REVIEWED_SIGNAL_SOURCES.cssrs_2011.shortName === "C-SSRS");
   assert("ESM Shield export", esm.Shield === Shield);
   assert("ESM CrossClassifier export", esm.CrossClassifier === CrossClassifier);
   assert("ESM createCrossClassifier export", typeof esm.createCrossClassifier === "function");

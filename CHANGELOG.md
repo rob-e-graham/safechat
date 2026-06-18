@@ -11,7 +11,14 @@ SafeChat follows a philosophy of continuous improvement: every false negative di
 ### Added
 - Browser bundle now exposes `detectSubtle()` and `ConversationTracker`, so standalone website integrations can detect subtle distress signals and session-level accumulation.
 - Website detection demo now shows subtle-signal observations, lets users add separate messages to a demo session, and demonstrates accumulation toward LOW escalation without sending any text off-device.
-- 5 new browser-bundle tests covering subtle detection and browser-side session tracking (601 total).
+- `detectReviewed()` adds an evidence-linked reviewed signal pack with C-SSRS, Reddit C-SSRS, CLPsych, eRisk, MindGuard, MentalLLaMA, and MentalChat16K source metadata.
+- VERA-MH v1.1 is now an explicit reviewed source. Public synthetic risk presentations inform new active-ideation, passive-absence, recent-attempt, preparation, self-safety, and contextual accumulation families without presenting VERA-MH as a trigger dictionary or validation of SafeChat.
+- Conversation tracking now covers 45 contextual patterns across 17 categories. Transparent routing weights combine at 4 for LOW and 8 for HIGH; they are not probabilities or clinical risk scores, and message content is not retained.
+- Crisis detection now catches additional slang, obfuscation, and bad-spelling cases such as self-delete language, spaced abbreviations, leetspeak, and suicide euphemisms.
+- `detectModeration()` now includes protected-class slur detection with false-positive guards, kept separate from crisis-resource routing.
+- New living signal database and reviewed-source docs describe how SafeChat can grow via compressed rules, templates, lexicons, embeddings, and optional local classifiers rather than raw phrase dumps.
+- 34 new tests covering reviewed source-linked signals, browser/ESM exports, slang, obfuscation, slur moderation, and false-positive guards (639 total).
+- 8 additional regression tests cover VERA-MH public presentation families, false-positive boundaries, browser parity, and contextual accumulation (647 total).
 
 ---
 
@@ -107,7 +114,7 @@ Test count history: 205 (v1.0.0) -> 308 (subtle signals) -> 403 (Shield) -> 420 
 
 ## Verification Schedule
 
-- Crisis resource data (phone numbers, URLs, operating hours) is verified twice monthly.
+- Automated resource checks cover structure, phone formatting, and chat-link reachability; service details require human verification.
 - Detection patterns are reviewed against published clinical literature on suicide risk assessment.
 - False-positive reports from users are triaged within 48 hours.
 - False-negative reports are treated as critical defects.

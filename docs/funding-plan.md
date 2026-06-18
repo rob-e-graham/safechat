@@ -190,7 +190,7 @@ Scale up or down depending on grant size. NLnet applications should target the E
 
 2. **Solution:** SafeChat is a routing layer — it detects textual distress signals and connects users to verified professional crisis resources. It does not diagnose, treat, or replace professional services.
 
-3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 446 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
+3. **Differentiators:** Zero data collection (all local), works offline (PWA), 34 countries, 647 automated tests, Samaritans-compliant, BSL-1.1 licensed, drop-in integration (one script tag).
 
 4. **Traction:** Live at rob-e-graham.github.io/safechat. 66 verified helplines. Configurable Shield class with 6 presets for different deployment contexts. Active CHANGELOG with public git history documenting every improvement.
 

@@ -12,7 +12,7 @@ SafeChat is a local-first crisis routing layer for AI chat systems. It detects t
 
 Current status:
 - 34 countries and 100+ verified helplines.
-- 446 automated tests.
+- 647 automated tests.
 - Crisis detection, subtle distress accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
 - Threat and hate-speech detection is exposed separately through `detectModeration()` and does not trigger crisis-resource routing by default.
 - The next step is a governed, evidence-linked trigger database with clinical, lived-experience, legal, cultural-safety, and platform-safety review.
@@ -104,7 +104,7 @@ I am a PhD researcher at RMIT University in the School of Design, and I have bui
 
 I am planning a small, careful mail-out to crisis organisations, AI safety researchers, and online safety bodies tomorrow morning, and I would value RMIT's guidance on how to frame this responsibly.
 
-SafeChat detects textual distress signals locally, with no tracking or cloud processing, and connects users to verified crisis resources across 34 countries. It now has 446 automated tests covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
+SafeChat detects textual distress signals locally, with no tracking or cloud processing, and connects users to verified crisis resources across 34 countries. It now has 647 automated tests covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
 
 I am not presenting SafeChat as clinically validated. The next step is expert review: clinical, legal, lived-experience, cultural-safety, and platform-safety input on how an evolving trigger database should be governed.
 
@@ -125,7 +125,7 @@ Hello Samaritans Media Advice team,
 
 I have built SafeChat, a local-first crisis routing layer for AI chat systems, and I am contacting you because Samaritans' guidance on suicide and self-harm communication is one of the clearest public references for this work.
 
-SafeChat detects textual distress signals locally in the browser or server runtime, without sending messages to a cloud API, and routes users to verified professional crisis resources. It covers 34 countries and has 446 automated tests.
+SafeChat detects textual distress signals locally in the browser or server runtime, without sending messages to a cloud API, and routes users to verified professional crisis resources. It covers 34 countries and has 647 automated tests.
 
 I am not asking for endorsement. I would value review of the wording, safe-messaging posture, and whether any aspect of the public explanation risks overclaiming, unsafe framing, or accidental method/detail amplification.
 
@@ -150,7 +150,7 @@ I am a PhD researcher at RMIT University in Australia and have built SafeChat, a
 
 SafeChat includes Lifeline Australia as a primary Australian crisis resource. I would genuinely value review of how your service is presented, including wording, phone/text/chat details, and whether the framing is appropriate.
 
-SafeChat runs locally, collects no user data, and routes people to verified professional crisis resources when textual distress signals are detected. It now has 446 automated tests covering crisis language, subtle distress accumulation, false-positive guards, and separate moderation signals for threats and hate speech.
+SafeChat runs locally, collects no user data, and routes people to verified professional crisis resources when textual distress signals are detected. It now has 647 automated tests covering crisis language, subtle distress accumulation, false-positive guards, and separate moderation signals for threats and hate speech.
 
 I am not asking for endorsement. I am asking for verification and guidance so SafeChat does not misrepresent your service or create unsafe expectations.
 
@@ -173,7 +173,7 @@ I am a PhD researcher at RMIT University and have built SafeChat, a local-first 
 
 SafeChat includes Beyond Blue among Australian support resources, and I would value review of how your service is presented. The project detects textual distress signals locally and routes users to professional support options without collecting user data.
 
-SafeChat currently covers 34 countries, 100+ helplines, and 446 automated tests. It is a routing layer, not a diagnostic or counselling system. It does not assess clinical risk or replace professional services.
+SafeChat currently covers 34 countries, 67 resource records, 94 contact methods, and 647 automated tests. It is a routing layer, not a diagnostic or counselling system. It does not assess clinical risk or replace professional services.
 
 I am not asking for endorsement. I am seeking correction, review, or guidance before broader public outreach, especially because AI chat systems are increasingly used by people in emotional distress.
 
@@ -196,7 +196,7 @@ I am a PhD researcher at RMIT University in Australia and have built SafeChat, a
 
 SafeChat detects textual distress signals locally, collects no user data, and routes users to verified crisis resources. It is intended as practical safety infrastructure for chat interfaces, especially emotionally responsive AI systems.
 
-I am contacting eSafety because the project aligns with Safety by Design concerns: user safety, transparency, privacy, and harm minimisation. SafeChat now has 446 automated tests and separate moderation detection for threats and hate speech, but these signals do not trigger crisis-resource routing by default.
+I am contacting eSafety because the project aligns with Safety by Design concerns: user safety, transparency, privacy, and harm minimisation. SafeChat now has 647 automated tests and separate moderation detection for threats and hate speech, but these signals do not trigger crisis-resource routing by default.
 
 I would value guidance on:
 - whether the public framing is appropriate
@@ -220,7 +220,7 @@ Hello Australia AI Safety Institute team,
 
 I am a PhD researcher at RMIT University working on sovereign AI infrastructure, and I have built SafeChat: a local-first crisis routing layer for AI chat systems.
 
-SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 446 automated tests. It also exposes separate threat/hate-speech moderation signals so these can be handled as platform-safety signals rather than crisis-resource events.
+SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 647 automated tests. It also exposes separate threat/hate-speech moderation signals so these can be handled as platform-safety signals rather than crisis-resource events.
 
 I am contacting you because Australia's AI Safety Institute is focused on emerging AI risks, harms, testing, and safe deployment. SafeChat is small, source-available, and practical, but it needs serious governance before expanding its trigger database.
 
@@ -245,7 +245,7 @@ I have built SafeChat, a local-first crisis routing layer for AI chat systems. S
 
 I am contacting you through the ThroughLine partnership route to ask whether there is a recommended data, attribution, or partnership pathway for a source-available crisis routing tool.
 
-SafeChat currently covers 34 countries, 100+ helplines, and 446 automated tests. It collects no user data and runs locally. It is not a diagnostic or counselling tool; it simply detects textual distress signals and routes users toward professional support resources.
+SafeChat currently covers 34 countries, 67 resource records, 94 contact methods, and 647 automated tests. It collects no user data and runs locally. It is not a diagnostic or counselling tool; it simply detects textual distress signals and routes users toward professional support resources.
 
 I would value guidance on:
 - correct attribution
@@ -270,7 +270,7 @@ I have built SafeChat, a local-first crisis routing layer for AI chat systems. S
 
 I am not asking for endorsement. I would value review of how Crisis Text Line is presented, whether the wording is accurate, and whether there is a preferred partnership or resource-verification pathway.
 
-SafeChat collects no user data. Detection runs locally, and the project is deliberately framed as a routing layer rather than a clinical system. It now has 446 automated tests and separate moderation detection for threats and hate speech.
+SafeChat collects no user data. Detection runs locally, and the project is deliberately framed as a routing layer rather than a clinical system. It now has 647 automated tests and separate moderation detection for threats and hate speech.
 
 The next step is to build a governed trigger database, rather than simply adding more phrases. I would welcome any guidance your team can offer on safe wording, escalation boundaries, and text-resource presentation.
 
@@ -291,7 +291,7 @@ I am a PhD researcher at RMIT University and have built SafeChat, a local-first 
 
 I am contacting you because VERA-MH directly addresses the gap SafeChat is trying to operationalise: how AI chat systems respond when users disclose distress, self-harm, or suicidal ideation.
 
-SafeChat is not a mental health chatbot and does not provide counselling. It detects textual distress signals locally, collects no data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 446 automated tests.
+SafeChat is not a mental health chatbot and does not provide counselling. It detects textual distress signals locally, collects no data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 647 automated tests.
 
 The current question is how to evolve responsibly. I am considering a governed trigger database with evidence links, reviewer notes, severity, false-positive guards, cultural/language scope, and expiry/review dates.
 
@@ -314,7 +314,7 @@ I am a PhD researcher at RMIT University working on sovereign AI infrastructure,
 
 Your work on human-centered AI, online mental-health risk, and the ethics of predictive systems is directly relevant to the next stage of this project.
 
-SafeChat currently uses deterministic local detection, not user profiling or cloud inference. It detects textual distress signals and routes users to verified professional crisis resources. It has 446 automated tests and stores no message content. It is not intended to predict suicide risk, diagnose, or classify people.
+SafeChat currently uses deterministic local detection, not user profiling or cloud inference. It detects textual distress signals and routes users to verified professional crisis resources. It has 647 automated tests and stores no message content. It is not intended to predict suicide risk, diagnose, or classify people.
 
 The question I am trying to handle carefully is how a trigger database should evolve. I do not want a blunt keyword list that can stigmatise users, over-police vulnerable language, or be used for surveillance. I am considering an evidence-linked, governed trigger database with review status, false-positive guards, cultural scope, versioning, and expiry dates.
 
@@ -337,7 +337,7 @@ I am a PhD researcher at RMIT University working on sovereign AI infrastructure,
 
 Your work in computational mental health and social wellbeing is highly relevant to the next stage of this project.
 
-SafeChat does not profile users or attempt clinical prediction. It detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 446 automated tests.
+SafeChat does not profile users or attempt clinical prediction. It detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 647 automated tests.
 
 The problem I am thinking through is how to evolve a trigger database responsibly. The wrong design could become brittle, culturally narrow, or harmful if used as a risk-scoring system. My current direction is a governed database where every trigger includes source evidence, severity, false-positive guards, reviewer notes, language/cultural scope, and re-review dates.
 
@@ -358,7 +358,7 @@ Hello Partnership on AI team,
 
 I am a PhD researcher at RMIT University and have built SafeChat, a local-first crisis routing layer for AI chat systems.
 
-SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It is not a diagnostic or therapeutic tool. It currently covers 34 countries and has 446 automated tests.
+SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It is not a diagnostic or therapeutic tool. It currently covers 34 countries and has 647 automated tests.
 
 I am contacting PAI because this sits between AI safety, human connection, platform governance, transparency, and safety-critical deployment. I would value advice on whether SafeChat is relevant to any PAI working group, research area, or partner community.
 
@@ -383,7 +383,7 @@ I am a PhD researcher at RMIT University and have built SafeChat, a local-first 
 
 SafeChat is not a frontier-model evaluation tool. It is practical application-layer infrastructure: a deterministic local detector that can route users toward professional crisis resources when distress signals appear in chat text.
 
-It currently covers 34 countries, 100+ helplines, and 446 automated tests. It also exposes separate threat/hate-speech moderation signals that are not treated as crisis-resource events.
+It currently covers 34 countries, 67 resource records, 94 contact methods, and 647 automated tests. It also exposes separate threat/hate-speech moderation signals that are not treated as crisis-resource events.
 
 I am seeking review or referral rather than endorsement. The key question is how to govern an evolving trigger database in a way that is transparent, tested, privacy-preserving, and resistant to misuse.
 
@@ -404,7 +404,7 @@ Hello Anthropic User Safety team,
 
 I am a PhD researcher at RMIT University and have built SafeChat, a local-first crisis routing layer for AI chat systems.
 
-SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It can run in a browser, Node service, or middleware layer. It currently covers 34 countries and has 446 automated tests.
+SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It can run in a browser, Node service, or middleware layer. It currently covers 34 countries and has 647 automated tests.
 
 I am not asking for endorsement or integration. I would value feedback on whether this kind of local routing layer could complement AI assistant safety systems, especially where developers are building smaller emotionally responsive chat interfaces without a large trust-and-safety team.
 
@@ -429,7 +429,7 @@ I am a PhD researcher at RMIT University in Australia and have built SafeChat, a
 
 I am contacting you because the FTC's inquiry into AI chatbots acting as companions asks how firms measure, test, monitor, and mitigate negative impacts, particularly for children and teens.
 
-SafeChat is a working source-available implementation of one safety layer: local detection of textual distress signals and routing to verified professional crisis resources. It collects no user data, works offline, covers 34 countries, and has 446 automated tests.
+SafeChat is a working source-available implementation of one safety layer: local detection of textual distress signals and routing to verified professional crisis resources. It collects no user data, works offline, covers 34 countries, and has 647 automated tests.
 
 It is not a diagnostic or clinical risk assessment system. It does not claim regulatory compliance. I am sharing it as practical infrastructure and would welcome any guidance on relevant public submissions, workshops, or technical input channels.
 
@@ -454,7 +454,7 @@ I am a PhD researcher at RMIT University in Australia and have built SafeChat, a
 
 I am contacting you because California SB 243 requires companion chatbot operators to maintain protocols for suicidal ideation, suicide, and self-harm content, including referral to crisis service providers.
 
-SafeChat is not a commercial chatbot platform. It is source-available safety infrastructure that detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 446 automated tests.
+SafeChat is not a commercial chatbot platform. It is source-available safety infrastructure that detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It currently covers 34 countries and has 647 automated tests.
 
 I am not claiming compliance certification or clinical validation. I am sharing this because it may be useful as an example of privacy-preserving, application-layer crisis routing that smaller developers can understand and inspect.
 
@@ -477,7 +477,7 @@ I am a PhD researcher at RMIT University in Australia and have built SafeChat, a
 
 The story angle is simple: regulators are asking what AI companion systems do when users disclose suicidal ideation or self-harm, but practical source-available infrastructure now exists.
 
-SafeChat detects textual distress signals locally, collects no user data, works offline, and routes users to verified professional crisis resources. It covers 34 countries and has 446 automated tests. It now also exposes separate threat/hate-speech moderation signals without confusing those with crisis-resource routing.
+SafeChat detects textual distress signals locally, collects no user data, works offline, and routes users to verified professional crisis resources. It covers 34 countries and has 647 automated tests. It now also exposes separate threat/hate-speech moderation signals without confusing those with crisis-resource routing.
 
 I am deliberately not presenting this as clinically validated. The next stage is governance: a reviewed, evidence-linked trigger database that can evolve without becoming surveillance infrastructure or a fake suicide-risk score.
 
@@ -500,7 +500,7 @@ I am a PhD researcher at RMIT University researching sovereign AI infrastructure
 
 The piece would explain why people disclose distress to chatbots, why cloud-only safety systems can create privacy and accountability problems, and how local-first crisis routing can help without pretending to diagnose or treat users.
 
-I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 446 automated tests.
+I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 647 automated tests.
 
 The article would be grounded and careful. The core argument is not "my tool solves this"; it is that AI safety needs practical, reviewable public infrastructure, governed trigger databases, and crisis-service input.
 
@@ -519,7 +519,7 @@ Hello Open Technology Fund team,
 
 I am a PhD researcher at RMIT University and have built SafeChat, a local-first crisis routing layer for AI chat systems.
 
-SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It runs without a cloud API and can work offline. It currently covers 34 countries and has 446 automated tests.
+SafeChat detects textual distress signals locally, collects no user data, and routes users to verified professional crisis resources. It runs without a cloud API and can work offline. It currently covers 34 countries and has 647 automated tests.
 
 I am contacting OTF because SafeChat sits at the intersection of online safety, privacy-preserving infrastructure, and user autonomy. The next stage is to build a governed trigger database and update mechanism that can evolve with review while remaining transparent and resistant to surveillance misuse.
 
@@ -540,7 +540,7 @@ Hello Digital Rights Watch team,
 
 I am a PhD researcher at RMIT University and have built SafeChat, a local-first crisis routing layer for AI chat systems.
 
-SafeChat detects textual distress signals locally and routes users to verified professional crisis resources without sending message content to a server. It currently covers 34 countries and has 446 automated tests.
+SafeChat detects textual distress signals locally and routes users to verified professional crisis resources without sending message content to a server. It currently covers 34 countries and has 647 automated tests.
 
 I am contacting you because I do not want this kind of tool to become surveillance infrastructure. The design deliberately avoids cloud scoring, user profiling, account-level risk labels, or automatic reporting. Threat and hate-speech signals are separated from crisis-resource routing.
 

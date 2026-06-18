@@ -16,9 +16,13 @@ export const middleware = safechat.middleware;
 
 export const detect = safechat.detect;
 export const detectModeration = safechat.detectModeration;
+export const detectReviewed = safechat.detectReviewed;
+export const scanReviewedSignals = safechat.scanReviewedSignals;
 export const detectSubtle = safechat.detectSubtle;
 export const isHighCrisis = safechat.isHighCrisis;
 export const isAnyCrisis = safechat.isAnyCrisis;
+export const REVIEWED_SIGNAL_PACK = safechat.REVIEWED_SIGNAL_PACK;
+export const REVIEWED_SIGNAL_SOURCES = safechat.REVIEWED_SIGNAL_SOURCES;
 
 export const ConversationTracker = safechat.ConversationTracker;
 

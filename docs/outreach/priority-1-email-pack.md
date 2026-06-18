@@ -30,7 +30,7 @@ I have built SafeChat, a privacy-preserving crisis safety protocol for AI chat s
 
 I am not asking for endorsement at this stage. I would genuinely value review of how SafeChat presents your service, whether the wording is appropriate, and whether any resource details should be corrected.
 
-SafeChat currently covers 34 countries, 100+ helplines, an installable PWA, and a 446-test detection suite covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
+SafeChat currently covers 34 countries, 67 resource records and 94 contact methods, an installable PWA, and a 647-test detection suite covering direct crisis language, misspellings, text-speak, passive suicidality, subtle signal accumulation, false-positive guards, and separate threat/hate-speech moderation signals.
 
 [Shared footer]
 
@@ -64,7 +64,7 @@ I am a PhD researcher at RMIT University in the School of Design, and I have bui
 
 SafeChat responds to a growing public safety problem: people are disclosing distress, self-harm, and suicidal ideation to AI chatbots, while many systems lack reliable crisis routing. SafeChat detects textual distress signals locally, with no tracking or cloud processing, and connects users to verified crisis resources across 34 countries.
 
-It is live now, includes an installable PWA, and has 446 automated tests. I would be glad to discuss whether this is suitable for an RMIT news story or media pitch, especially given current regulatory attention on AI companion safety.
+It is live now, includes an installable PWA, and has 647 automated tests. I would be glad to discuss whether this is suitable for an RMIT news story or media pitch, especially given current regulatory attention on AI companion safety.
 
 [Shared footer]
 
@@ -80,7 +80,7 @@ I am a PhD researcher at RMIT University researching sovereign AI infrastructure
 
 The article would explain why people disclose distress to chatbots, why cloud-based detection can be a privacy problem, and how local-first crisis routing can connect people to professional support without pretending to diagnose or treat them.
 
-I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 446 automated tests. The piece would be written from the perspective of a researcher-builder responding to a live public safety gap.
+I have built SafeChat as a working example: a local, zero-data-collection crisis routing layer for AI chat interfaces, with verified helplines across 34 countries and 647 automated tests. The piece would be written from the perspective of a researcher-builder responding to a live public safety gap.
 
 [Shared footer]
 

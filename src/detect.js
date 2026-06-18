@@ -33,6 +33,7 @@ function normalise(text) {
 
   // Collapse all whitespace (tabs, multiple spaces, nbsp) to single space
   t = t.replace(/[\s ]+/g, " ").trim();
+  t = t.replace(/[\u200B-\u200D\uFEFF]/g, "");
 
   // Smart quotes → ASCII
   t = t.replace(/[‘’‚‛]/g, "'");  // ' ' ‚ ‛  → '
@@ -41,13 +42,20 @@ function normalise(text) {
   // Common misspellings of crisis terms
   t = t.replace(/\bsuicde\b/g, "suicide");
   t = t.replace(/\bsuiside\b/g, "suicide");
+  t = t.replace(/\bsu[i1!|]c[i1!|]de\b/g, "suicide");
   t = t.replace(/\bsuciide?\b/g, "suicide");
   t = t.replace(/\bsuidice?\b/g, "suicide");
   t = t.replace(/\bsuicd\b/g, "suicide");
   t = t.replace(/\boverdoze\b/g, "overdose");
   t = t.replace(/\boverdoase\b/g, "overdose");
+  t = t.replace(/\bdiss?ap+ear\b/g, "disappear");
+  t = t.replace(/\bdisapear\b/g, "disappear");
+  t = t.replace(/\bsewer[- ]?slide\b/g, "suicide");
+  t = t.replace(/\bsue[- ]?aside\b/g, "suicide");
+  t = t.replace(/\bk[1!|i]ll\b/g, "kill");
   t = t.replace(/\bkil\b/g, "kill");
   t = t.replace(/\bimma\b/g, "i am going to");
+  t = t.replace(/\bthnking\b/g, "thinking");
 
   // Misspellings — self-harm / methods
   t = t.replace(/\bselfharm\b/g, "self-harm");
@@ -81,6 +89,8 @@ function normalise(text) {
   t = t.replace(/\b2 die\b/g, "to die");
   t = t.replace(/\bkms\b/g, "kill myself");
   t = t.replace(/\bkys\b/g, "kill yourself");
+  t = t.replace(/\bk\s*m\s*s\b/g, "kill myself");
+  t = t.replace(/\bk\s*y\s*s\b/g, "kill yourself");
   t = t.replace(/\bidk\b/g, "i don't know");
   t = t.replace(/\birl\b/g, "in real life");
   t = t.replace(/\btbh\b/g, "to be honest");
@@ -184,6 +194,11 @@ const HIGH_SIGNALS = [
   // Text-speak / slang (after normalisation, but keep originals for safety)
   /\boff myself\b/i,
   /\btop myself\b/i,
+  /\bunalive (myself|me)\b/i,
+  /\bself[- ]?delete\b/i,
+  /\bdelete myself\b/i,
+  /\berase myself\b/i,
+  /\b(log out|checkout|check out) (of life|forever|for good)\b/i,
 
   // Passive but high-risk
   /\bbetter off dead\b/i,
@@ -223,7 +238,7 @@ const HIGH_SIGNALS = [
 const LOW_SIGNALS = [
   /\bcan'?t go on\b/i,
   /\bno point\b/i,
-  /\bnobody (cares|would miss me|would notice)\b/i,
+  /\bnobody (cares|would miss me|will miss me|would notice|will notice)\b/i,
   /\beveryone (would be |is )?better off (without me)?\b/i,
   /\bworthless\b/i,
   /\b(completely |utterly |totally )?hopeless\b/i,
@@ -234,7 +249,7 @@ const LOW_SIGNALS = [
   /\bi (just )?can'?t (do this|take (it|this)( anymore)?|anymore)\b/i,
   /\bno way out\b/i,
   /\btoo much to bear\b/i,
-  /\bno one (cares|understands|would miss)\b/i,
+  /\bno one (cares|understands|would miss|will miss|would notice|will notice)\b/i,
   /\bi('?m| am) (a |so |such a )?burden\b/i,
   /\blife is(n'?t| not) worth\b/i,
   /\bwish i (wasn'?t|weren'?t) (here|alive|born)\b/i,
@@ -270,6 +285,339 @@ const LOW_SIGNALS = [
   /\bdon'?t (deserve|have the right) to (live|be happy|be alive|be here)\b/i,
 ];
 
+// ── Reviewed crisis-language signal pack ───────────────────────────────────
+// Source-linked signal families distilled from peer-reviewed or clinically
+// governed crisis-language resources. We do not ship raw restricted datasets or
+// user-authored posts here; these are auditable signal concepts and synthetic
+// phrasings derived from public descriptions, clinical taxonomies, and papers.
+
+const REVIEWED_SIGNAL_PACK = {
+  version: "2026-06-18",
+  status: "draft-research",
+  language: "en",
+  reviewAfter: "2026-09-18",
+  governance: [
+    "No raw sensitive social-media posts are embedded in the package.",
+    "Signals are source-linked and can be individually reviewed, expired, or disabled.",
+    "False-positive guards remain active before any reviewed signal can trigger.",
+    "The pack is a routing aid only; it is not a diagnostic or risk-scoring instrument.",
+  ],
+};
+
+const REVIEWED_SIGNAL_SOURCES = {
+  cssrs_2011: {
+    shortName: "C-SSRS",
+    title: "Columbia-Suicide Severity Rating Scale: initial validity and internal consistency findings",
+    authors: "Posner et al.",
+    year: 2011,
+    url: "https://doi.org/10.1176/appi.ajp.2011.10111704",
+    sourceType: "peer_reviewed_clinical_scale",
+    useInSafeChat: "Signal families for wish-to-be-dead, active suicidal thoughts, method, intent, plan, and preparatory behaviour.",
+  },
+  reddit_cssrs_2019: {
+    shortName: "Reddit C-SSRS",
+    title: "Knowledge-aware assessment of severity of suicide risk for early intervention",
+    authors: "Gaur et al.",
+    year: 2019,
+    url: "https://doi.org/10.1145/3308558.3313698",
+    sourceType: "peer_reviewed_dataset",
+    useInSafeChat: "Severity-linked concepts based on medical knowledge bases, suicide ontology, and psychiatrist C-SSRS annotations.",
+  },
+  clpsych_2019: {
+    shortName: "CLPsych 2019",
+    title: "CLPsych 2019 Shared Task: Predicting the Degree of Suicide Risk in Reddit Posts",
+    authors: "Zirikly et al.",
+    year: 2019,
+    url: "https://aclanthology.org/W19-3003/",
+    sourceType: "peer_reviewed_shared_task",
+    useInSafeChat: "Risk-tier framing for no, low, moderate, and severe risk language without importing restricted Reddit data.",
+  },
+  clpsych_2021: {
+    shortName: "CLPsych 2021",
+    title: "Community-level Research on Suicidality Prediction in a Secure Environment",
+    authors: "MacAvaney et al.",
+    year: 2021,
+    url: "https://aclanthology.org/2021.clpsych-1.7/",
+    sourceType: "peer_reviewed_secure_enclave_task",
+    useInSafeChat: "Longitudinal and privacy-preserving design lesson: derive indicators, do not redistribute sensitive donated text.",
+  },
+  erisk_self_harm_2021: {
+    shortName: "eRisk Self-Harm",
+    title: "CLEF eRisk early detection of signs of self-harm",
+    authors: "Losada et al. / CLEF eRisk Lab",
+    year: 2021,
+    url: "https://erisk.irlab.org/2021/index.html",
+    sourceType: "peer_reviewed_evaluation_lab",
+    useInSafeChat: "Sequential evidence model for accumulating subtle self-harm signals over a session.",
+  },
+  mindguard_2026: {
+    shortName: "MindGuard",
+    title: "MindGuard: Guardrail Classifiers for Multi-Turn Mental Health Support",
+    authors: "Farinhas et al.",
+    year: 2026,
+    url: "https://arxiv.org/abs/2602.00950",
+    sourceType: "clinically_annotated_public_benchmark",
+    useInSafeChat: "Actionable-harm taxonomy: distinguish therapeutic disclosure from self-harm or harm-to-others crisis.",
+  },
+  mentalchat16k_2025: {
+    shortName: "MentalChat16K",
+    title: "MentalChat16K: A Benchmark Dataset for Conversational Mental Health Assistance",
+    authors: "Xu et al.",
+    year: 2025,
+    url: "https://doi.org/10.1145/3711896.3737393",
+    sourceType: "peer_reviewed_benchmark_dataset",
+    useInSafeChat: "Conversational mental-health assistance benchmark for future local evaluation, not raw trigger import.",
+  },
+  mentalllama_2023: {
+    shortName: "MentalLLaMA",
+    title: "MentalLLaMA: Interpretable Mental Health Analysis on Social Media with Large Language Models",
+    authors: "Yang et al.",
+    year: 2023,
+    url: "https://github.com/SteveKGYang/MentalLLaMA",
+    sourceType: "open_source_research_model_and_instruction_data",
+    useInSafeChat: "Optional local cross-classifier target for interpretable mental-health analysis.",
+  },
+  vera_mh_2026: {
+    shortName: "VERA-MH v1.1",
+    title: "Validation of Ethical and Responsible AI in Mental Health",
+    authors: "Belli, Bentley et al.",
+    year: 2026,
+    url: "https://github.com/SpringCare/VERA-MH",
+    sourceType: "clinically_grounded_open_evaluation",
+    useInSafeChat: "Public risk-presentation families and synthetic persona seed phrases used for regression design; VERA-MH remains a chatbot-response evaluation, not a trigger dictionary or validation of SafeChat.",
+  },
+};
+
+const REVIEWED_HIGH_SIGNALS = [
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "active_ideation_or_method",
+    rationale: "VERA-MH includes hedged active-ideation presentations that refer to ways of ending or being gone.",
+    re: /\b(keep |kept |been )?(thinking|thought) about ways? (i (could|might|would) )?(to )?(end it|end things|be gone|not be here|do it)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "intent_plan_and_timeframe",
+    rationale: "A stated plan or intent combined with a near-term timeframe requires immediate routing.",
+    re: /\b(have|got|made) (a )?plan\b.*\b(tonight|today|right now|next hour|soon|follow through)\b|\b(planning|going) to (end it|end things|do it) (all )?(tonight|today|right now)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "preparatory_behaviour",
+    rationale: "Preparing means or setting items aside alongside self-directed intent is a high-urgency presentation.",
+    re: /\b(gathered|got|set|put|have) (some |my |the )?(pills|things|stuff|means) (ready|aside|together)\b.*\b(end it|do it|not be here|tonight|in case)\b|\b(ready|aside|together)\b.*\b(pills|means)\b.*\b(end it|do it|not be here)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "recent_attempt_or_interruption",
+    rationale: "VERA-MH treats recent attempts, aborted attempts, and interrupted attempts as immediate-risk presentations.",
+    re: /\b(tried|attempted) to end it( all)?\b|\btried something\b.*\b(stopped|someone stopped me|not do it again)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "method_research_with_self_reference",
+    rationale: "Self-referential method research or preparatory searching is actionable even when hedged.",
+    re: /\b(looked|looking|searching) up (how|ways?|methods?|how many pills)\b.*\b(end|do it|die|not wake|last night|tonight)\b|\bhow many pills\b.*\b(do it|would do it|to die|not wake)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "loss_of_self_safety",
+    rationale: "Feeling unsafe with one's own thoughts indicates an immediate need for human support.",
+    re: /\bi (don'?t|do not) feel safe with (my|these) (own )?thoughts?( tonight| right now| anymore)?\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "vera_mh_2026",
+    family: "imminent_finality",
+    rationale: "Direct finality language plus a near-term timeframe is treated as high urgency.",
+    re: /\b(going to|gonna|i have to) (end it|do it) (all )?(tonight|today|right now)\b|\b(i have|everything is|things are) (all )?ready\b.*\b(tonight|end it|do it)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "cssrs_2011",
+    family: "active_suicidal_thoughts",
+    rationale: "C-SSRS active suicidal thoughts map to immediate routing.",
+    re: /\b(thoughts?|thinking|keep thinking|been thinking) (of|about) (killing|ending|hurting|harming) (myself|my life)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "cssrs_2011",
+    family: "method_or_plan",
+    rationale: "C-SSRS method/plan/intent language is treated as high urgency.",
+    re: /\bi (know|have|had|found|chose|chosen|picked|worked out|made|have worked out|have found|have chosen|have picked|have made) (a )?(method|way|plan)\b.*\b(kill|end|hurt|harm|die|overdose)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "cssrs_2011",
+    family: "method_or_plan",
+    rationale: "Specific method knowledge or planning requires crisis routing.",
+    re: /\b(i know how|i have worked out how|i figured out how) (i would|to|i can) (do it|end it|kill myself|end my life)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "cssrs_2011",
+    family: "intent_or_imminence",
+    rationale: "Self-described loss of immediate safety is actionable crisis language.",
+    re: /\bi can'?t keep myself safe( tonight| today| right now| anymore)?\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "mindguard_2026",
+    family: "actionable_self_harm",
+    rationale: "MindGuard-style actionable-harm signals include imminent self-harm risk.",
+    re: /\bi('?m| am) (scared|afraid|worried) i (will|might|could|may) (hurt|harm|kill|cut) myself\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "reddit_cssrs_2019",
+    family: "self_harm_urge",
+    rationale: "Self-harm urge language maps to self-directed harm indicators.",
+    re: /\b(the urge|urges|impulse|impulses) to (cut|hurt|harm|kill) myself\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "reddit_cssrs_2019",
+    family: "self_harm_recurrence",
+    rationale: "Recent recurrence of self-harm behaviour should route to support.",
+    re: /\bi (relapsed|started|began) (cutting|self[- ]?harming|hurting myself|harming myself) again\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "clpsych_2019",
+    family: "preparatory_or_farewell",
+    rationale: "Preparatory behaviour and farewell language align with severe-risk evidence families.",
+    re: /\bi('?ve| have) (been )?(saying goodbye|making goodbye messages|writing goodbye messages|writing goodbye notes)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "clpsych_2021",
+    family: "recent_attempt_or_near_attempt",
+    rationale: "Recent attempt or near-attempt disclosure requires immediate crisis routing.",
+    re: /\bi (tried|attempted|almost|nearly) to (kill|end|hurt|harm) (myself|my life)\b/i,
+  },
+  {
+    level: "high",
+    sourceId: "mindguard_2026",
+    family: "immediate_self_safety",
+    rationale: "Actionable self-harm risk includes inability to trust oneself alone.",
+    re: /\bi don'?t trust myself (alone|by myself|right now|tonight|today)\b/i,
+  },
+];
+
+const REVIEWED_LOW_SIGNALS = [
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "passive_absence",
+    rationale: "VERA-MH personas include hedged wishes that it would be easier not to be present or alive.",
+    re: /\b(it would|it'?d|things would|everything would) be easier (for everyone )?(if i (just )?)?(wasn'?t|weren'?t|was not|were not|am not) (here|around|alive)\b|\beasier (to|if i could) (just )?(not be here|not exist|disappear|be gone)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "passive_absence",
+    rationale: "Repeated thoughts about not being present are routed softly even when intent is denied.",
+    re: /\b(keep |kept |been )?(thinking|think|thoughts?) (about )?(it would be easier )?(if i )?(just )?(wasn'?t|weren'?t|was not|were not|not being|not be) (here|around|alive)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "passive_death_wish",
+    rationale: "Not-waking language is a passive suicidal-thought presentation in VERA-MH.",
+    re: /\b(it would|it'?d|might) be easier (if i )?(just )?(didn'?t|did not|don'?t|do not|couldn'?t|could not) wake up\b|\bwouldn'?t matter if i didn'?t wake up\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "passive_nonexistence",
+    rationale: "A wish not to exist is routed as passive ideation unless stronger intent is present.",
+    re: /\b(wish|wishing) i could (just )?(not exist|disappear|be gone|check out)\b|\bbetter if i (just )?(didn'?t|did not) exist\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "social_withdrawal_finality",
+    rationale: "Questioning whether it is worth remaining is a crisis-adjacent presentation.",
+    re: /\b(wonder|wondering|not sure) if (it'?s|it is) (even )?worth (sticking around|being here|carrying on)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "vera_mh_2026",
+    family: "loss_of_reason_for_presence",
+    rationale: "A stated lack of reason to remain present should trigger a soft safety response.",
+    re: /\b(i )?(don'?t|do not|can'?t|cannot) (really )?(see|have|find) a reason to be here\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "cssrs_2011",
+    family: "wish_to_be_dead",
+    rationale: "C-SSRS wish-to-be-dead language maps to passive ideation and should at least trigger a soft safety response.",
+    re: /\bwish (i could |i would |i'?d |i can )?(go to sleep|fall asleep) and (not|never) wake up\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "cssrs_2011",
+    family: "wish_to_be_dead",
+    rationale: "Passive non-existence language is a crisis-adjacent signal even without stated intent.",
+    re: /\bi (would rather|wish i could|wish i would) (not exist|not be alive|never have been born)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "reddit_cssrs_2019",
+    family: "perceived_burdensomeness",
+    rationale: "Perceived burdensomeness is a recurrent suicide-risk language family.",
+    re: /\bi('?m| am| feel like) (just )?(taking up space|a waste of space|a burden to everyone|nothing but a burden)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "clpsych_2019",
+    family: "social_erasure",
+    rationale: "Low-to-moderate risk language often includes social erasure and not-being-missed themes.",
+    re: /\b(people|everyone|they) (would be|would feel|will be) (relieved|better|happier) if i (was gone|were gone|left|disappeared|vanished)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "clpsych_2019",
+    family: "social_erasure",
+    rationale: "Vanishing/not mattering language is routed softly unless intent or method is present.",
+    re: /\bit wouldn'?t matter if i (disappeared|vanished|was gone|were gone|stopped showing up)\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "erisk_self_harm_2021",
+    family: "future_loss",
+    rationale: "Sequential early-risk work treats future-loss language as an accumulating risk marker.",
+    re: /\bi (have|see) no future( for myself| ahead of me)?\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "erisk_self_harm_2021",
+    family: "future_loss",
+    rationale: "Loss of future orientation should contribute to distress routing.",
+    re: /\bi have nothing to look forward to\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "mentalchat16k_2025",
+    family: "conversational_distress",
+    rationale: "Conversational mental-health benchmarks include persistent exhaustion, despair, and support-seeking contexts.",
+    re: /\bi('?m| am) tired in a way (sleep|rest) (doesn'?t|does not|won'?t|will not) fix\b/i,
+  },
+  {
+    level: "low",
+    sourceId: "mentalllama_2023",
+    family: "interpretable_distress",
+    rationale: "Interpretable mental-health analysis tasks include loneliness, hopelessness, and perceived isolation.",
+    re: /\bi feel (invisible|unseen|like nobody sees me|like nobody hears me)\b/i,
+  },
+];
+
 // ── Moderation patterns ─────────────────────────────────────────────────────
 // Separate from crisis detection so threats/hate speech can be flagged without
 // automatically showing crisis helplines.
@@ -295,15 +643,21 @@ const THREAT_SIGNALS = [
 const PROTECTED_GROUP =
   "(black|white|asian|jewish|muslim|christian|hindu|sikh|arab|indigenous|aboriginal|gay|lesbian|trans|queer|lgbtq|disabled|autistic|immigrant|refugee|migrant|women|men|girls|boys|old people)";
 const PROTECTED_GROUP_TARGET = "(" + PROTECTED_GROUP + ")( people|s)?";
+const SLUR_TERM =
+  "(n[i1!|]gg(?:er|a)s?|k[i1!|]kes?|f[a@]gg?(?:ot|ots)?|tr[a@]nn(?:y|ies)|r[e3]t[a@]rds?|sp[a@]stics?|ch[i1!|]nks?|g[o0]{2}ks?|p[a@]k[i1!|]s?|d[yv]kes?)";
 
 const HATE_SIGNALS = [
   { level: "high", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (should|must|need to|ought to) (die|be killed|be eliminated|be wiped out|not exist)\\b", "i") },
   { level: "high", re: new RegExp("\\b(kill|hurt|attack|eliminate|wipe out) (all |every )?" + PROTECTED_GROUP_TARGET + "\\b", "i") },
   { level: "high", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (are|aren't) (subhuman|inferior|not human|human)\\b", "i") },
+  { level: "high", re: new RegExp("\\b" + SLUR_TERM + " (should|must|need to|ought to) (die|be killed|be eliminated|be wiped out|not exist|leave)\\b", "i") },
+  { level: "high", re: new RegExp("\\b(kill|hurt|attack|eliminate|wipe out) (all |every )?" + SLUR_TERM + "\\b", "i") },
   { level: "low", re: new RegExp("\\bi hate " + PROTECTED_GROUP_TARGET + "\\b", "i") },
   { level: "low", re: new RegExp("\\b" + PROTECTED_GROUP_TARGET + " (do not|don't|shouldn'?t|should not) belong (here|anywhere|in this country|in our country)\\b", "i") },
   { level: "low", re: /\bgo back to (your|their) country\b/i },
   { level: "low", re: new RegExp("\\bno " + PROTECTED_GROUP_TARGET + " allowed\\b", "i") },
+  { level: "low", re: new RegExp("\\b(you|u|they|those people|these people|all of them) (are|are all|look like|sound like) (a |an |the )?" + SLUR_TERM + "\\b", "i") },
+  { level: "low", re: new RegExp("\\b(i hate|no|ban|keep out|go away) " + SLUR_TERM + "\\b", "i") },
 ];
 
 const MODERATION_FP_GUARDS = {
@@ -313,6 +667,7 @@ const MODERATION_FP_GUARDS = {
   attack_idiom: /\b(attack|attacking) (the problem|a bug|this task|the issue|the project)\b/i,
   threat_model: /\b(threat model|threat detection|security threat|threat assessment|threat level)\b/i,
   hate_mundane: /\bi hate (monday|mondays|traffic|homework|this app|this bug|my job|the weather|cooking|waiting)\b/i,
+  slur_context: /\b(flame retardant|fire retardant|retardant paint|dyke wall|dyke geology)\b/i,
 };
 
 function isModerationFalsePositive(text, matchedPattern) {
@@ -322,6 +677,7 @@ function isModerationFalsePositive(text, matchedPattern) {
   if (/attack/.test(matchedPattern) && MODERATION_FP_GUARDS.attack_idiom.test(text)) return true;
   if (/threat/.test(matchedPattern) && MODERATION_FP_GUARDS.threat_model.test(text)) return true;
   if (/hate/.test(matchedPattern) && MODERATION_FP_GUARDS.hate_mundane.test(text)) return true;
+  if (MODERATION_FP_GUARDS.slur_context.test(text)) return true;
   return false;
 }
 
@@ -331,6 +687,18 @@ function isModerationFalsePositive(text, matchedPattern) {
 // Each has a weight (1-3). Threshold to escalate = 5 points within a session.
 
 const SUBTLE_SIGNALS = [
+  // VERA-MH contextual presentations. These do not trigger alone; they combine
+  // with other session signals under the same transparent 4/8 thresholds.
+  { re: /\b(what|which)('?s| is| are)? (the )?(highest|tallest|nearest|closest) (bridge|building|cliff)\b|\b(lethal|deadly) household (chemicals?|substances?)\b|\bsurvive a (car )?crash (if|at|going)\b/i, cat: "method_research", weight: 3 },
+  { re: /\b(my |the )?(thoughts?|idea|ideas) (keep |keeps |are |is )?(getting louder|won'?t shut off|will not shut off|won'?t stop|will not stop)\b|\bcan'?t get (the |this )?(idea|thought)\b.*\bout of my head\b/i, cat: "escalating_thoughts", weight: 2 },
+  { re: /\b(not trying to|don'?t want to|dont want to) (be dramatic|make (this|it) a big (deal|thing))\b|\b(it'?s|it is) not a crisis\b/i, cat: "minimisation", weight: 1 },
+  { re: /\b(don'?t|dont|do not) (tell|ask) me to (call|talk to|see) (someone|anyone|a therapist|hotlines?)\b|\b(can'?t|cannot) afford (therapy|help|treatment)\b/i, cat: "help_barrier", weight: 1 },
+  { re: /\b(no one|nobody|don'?t have anyone|there'?s no one) (to talk to|to turn to|i can tell|who understands)\b/i, cat: "isolation", weight: 2 },
+  { re: /\b(everything|things|it)('?s| is| are| has been| have been)? (just )?(piling up|too much|falling apart)\b/i, cat: "overwhelm", weight: 1 },
+  { re: /\b(help me )?(get|make it) through (tonight|the night|the next hour|right now)\b|\b(might not|won'?t|will not) make it through (tonight|the night|today)\b/i, cat: "acute_timeframe", weight: 2 },
+  { re: /\b(sleep('?s| is) (awful|gone|wrecked)|not sleeping much|no sleep all (week|wk)|haven'?t been sleeping)\b/i, cat: "sleep", weight: 1 },
+  { re: /\b(drinking|smoking|using) (a lot |much )?more (at night|lately|recently)?\b/i, cat: "substance", weight: 1 },
+  { re: /\b(dark|scary|intrusive) thoughts? (keep |keeps |are |is )?(showing up|coming back|scaring me|getting worse)\b/i, cat: "distressing_thoughts", weight: 2 },
   // Withdrawal / isolation (weight 2)
   { re: /\b(don'?t want to|can'?t) (see|talk to|be around|face) (anyone|anybody|people|them)\b/i, cat: "withdrawal", weight: 2 },
   { re: /\b(staying|stay|been) (in bed|home|inside|in my room) (all day|all week|for days|again)\b/i, cat: "withdrawal", weight: 1 },
@@ -529,12 +897,31 @@ function detect(text) {
     }
   }
 
+  const reviewedHits = scanReviewedSignals(text);
+  const reviewedHigh = reviewedHits.find((hit) => hit.level === "high");
+  if (reviewedHigh) {
+    return {
+      level: "high",
+      matched: reviewedHigh.matched,
+      reviewed: reviewedHigh,
+    };
+  }
+
   for (const re of LOW_SIGNALS) {
     const m = t.match(re);
     if (m) {
       if (isFalsePositive(t, m[0])) continue;
       return { level: "low", matched: m[0] };
     }
+  }
+
+  const reviewedLow = reviewedHits.find((hit) => hit.level === "low");
+  if (reviewedLow) {
+    return {
+      level: "low",
+      matched: reviewedLow.matched,
+      reviewed: reviewedLow,
+    };
   }
 
   return { level: "none", matched: null };
@@ -572,6 +959,52 @@ function detectModeration(text) {
   return { level: "none", category: null, matched: null };
 }
 
+function scanReviewedSignals(text) {
+  if (!text || typeof text !== "string") return [];
+
+  const t = normalise(text);
+  const hits = [];
+  const addHits = (signals) => {
+    for (const sig of signals) {
+      const m = t.match(sig.re);
+      if (!m || isFalsePositive(t, m[0])) continue;
+      hits.push({
+        level: sig.level,
+        matched: m[0],
+        sourceId: sig.sourceId,
+        source: REVIEWED_SIGNAL_SOURCES[sig.sourceId] || null,
+        family: sig.family,
+        rationale: sig.rationale,
+      });
+    }
+  };
+
+  addHits(REVIEWED_HIGH_SIGNALS);
+  addHits(REVIEWED_LOW_SIGNALS);
+  return hits;
+}
+
+function detectReviewed(text) {
+  const hits = scanReviewedSignals(text);
+  const high = hits.find((h) => h.level === "high");
+  const low = hits.find((h) => h.level === "low");
+  const best = high || low;
+
+  if (!best) {
+    return {
+      level: "none",
+      matched: null,
+      sourceId: null,
+      source: null,
+      family: null,
+      rationale: null,
+      hits,
+    };
+  }
+
+  return { ...best, hits };
+}
+
 // Single-message subtle signal check (no accumulation, just detection)
 function detectSubtle(text) {
   if (!text || typeof text !== "string") return [];
@@ -589,10 +1022,16 @@ function detectSubtle(text) {
 module.exports = {
   detect,
   detectModeration,
+  detectReviewed,
+  scanReviewedSignals,
   detectSubtle,
   isHighCrisis,
   isAnyCrisis,
   ConversationTracker,
+  REVIEWED_SIGNAL_PACK,
+  REVIEWED_SIGNAL_SOURCES,
+  REVIEWED_HIGH_SIGNALS,
+  REVIEWED_LOW_SIGNALS,
   HIGH_SIGNALS,
   LOW_SIGNALS,
   THREAT_SIGNALS,

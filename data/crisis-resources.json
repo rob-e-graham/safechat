@@ -6,7 +6,8 @@
     "license": "CC0-1.0",
     "source_notes": "Community maintained. Please verify before use. Submit corrections via pull request.",
     "contributing": "See CONTRIBUTING.md",
-    "findahelpline_api": "https://findahelpline.com — covers 175+ countries, consider this a fallback"
+    "findahelpline_api": "https://findahelpline.com — covers 175+ countries, consider this a fallback",
+    "last_automated_check": "2026-06-18"
   },
   "countries": {
     "AU": {
@@ -216,7 +217,7 @@
           "name": "Suomen Mielenterveysseura",
           "type": ["phone", "chat"],
           "phone": "09 2525 0111",
-          "chat_url": "https://mieli.fi/tukea-ja-apua/kriisikeskukset/",
+          "chat_url": "https://mieli.fi/en/support-and-help/chat-or-write/",
           "hours": "24/7",
           "languages": ["fi", "sv"],
           "specialties": ["mental_health", "crisis"],
@@ -232,7 +233,7 @@
           "name": "SOS Amitié",
           "type": ["phone", "chat"],
           "phone": "09 72 39 40 50",
-          "chat_url": "https://www.sos-amitie.com",
+          "chat_url": "https://www.sosamitie.org/besoin-aide/chat",
           "hours": "24/7",
           "languages": ["fr"],
           "specialties": ["general", "crisis"],

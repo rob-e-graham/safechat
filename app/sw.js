@@ -1,4 +1,4 @@
-const CACHE_NAME = 'safechat-v3';
+const CACHE_NAME = 'safechat-v4';
 const CACHE_URLS = [
   './',
   './index.html',
@@ -32,6 +32,22 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Safety logic must not remain one release behind when the app is online.
+  if (event.request.destination === 'script') {
     event.respondWith(
       fetch(event.request)
         .then((response) => {

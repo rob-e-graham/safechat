@@ -6,27 +6,39 @@ const path = require('path');
 const DATA_PATH = path.join(__dirname, '..', '..', 'data', 'crisis-resources.json');
 
 async function verifyUrl(url, timeout = 10000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
-  try {
-    const res = await fetch(url, {
-      method: 'HEAD',
-      signal: controller.signal,
-      headers: { 'User-Agent': 'safechat-verify/1.0 (+https://github.com/rob-e-graham/safechat)' },
-      redirect: 'follow',
-    });
-    clearTimeout(timer);
-    return res.ok || res.status === 405; // some sites reject HEAD
-  } catch {
-    clearTimeout(timer);
-    return false;
+  for (const method of ['HEAD', 'GET']) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const res = await fetch(url, {
+        method,
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'safechat-verify/1.0 (+https://github.com/rob-e-graham/safechat)',
+          ...(method === 'GET' ? { Range: 'bytes=0-0' } : {}),
+        },
+        redirect: 'follow',
+      });
+      clearTimeout(timer);
+      if (res.body) await res.body.cancel();
+      // Authentication and bot-protection responses still prove the endpoint exists.
+      if (res.ok || [401, 403].includes(res.status)) return true;
+      if (method === 'GET' && res.status !== 405) return false;
+    } catch {
+      clearTimeout(timer);
+    }
   }
+  return false;
 }
 
 function validatePhone(phone) {
   if (!phone) return true; // optional field
-  const digits = phone.replace(/\D/g, '');
-  return digits.length >= 3 && digits.length <= 15;
+  const values = Array.isArray(phone) ? phone : [phone];
+  return values.length > 0 && values.every((value) => {
+    if (typeof value !== 'string') return false;
+    const digits = value.replace(/\D/g, '');
+    return digits.length >= 3 && digits.length <= 15;
+  });
 }
 
 async function main() {
@@ -88,10 +100,14 @@ async function main() {
     }
   }
 
-  // Update last_verified timestamp in meta
-  if (!data._meta.last_verified || data._meta.last_verified !== now) {
-    data._meta.last_verified = now;
-    fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2) + '\n');
+  // Record the automated check separately from human verification.
+  if (!data._meta.last_automated_check || data._meta.last_automated_check !== now) {
+    data._meta.last_automated_check = now;
+    const checkLine = `"last_automated_check": "${now}"`;
+    const nextRaw = /"last_automated_check"\s*:\s*"[^"]*"/.test(raw)
+      ? raw.replace(/"last_automated_check"\s*:\s*"[^"]*"/, checkLine)
+      : raw.replace(/("findahelpline_api"\s*:\s*"[^"]*")(\s*\n\s*})/, `$1,\n    ${checkLine}$2`);
+    fs.writeFileSync(DATA_PATH, nextRaw);
     updated = true;
   }
 
@@ -105,7 +121,7 @@ async function main() {
   }
 
   // Console report
-  console.log(`\nSafechat Resource Verification — ${now}`);
+  console.log(`\nSafechat Automated Resource Check — ${now}`);
   console.log(`Countries: ${Object.keys(countries).length}`);
   const total = Object.values(countries).reduce((n, c) => n + (c.resources?.length || 0), 0);
   console.log(`Resources: ${total}`);
@@ -117,7 +133,7 @@ async function main() {
       console.log(`  ✗ ${f.country} — ${f.name}: ${f.issue}`);
     }
   } else {
-    console.log('\n✓ All resources passed validation');
+    console.log('\n✓ All automated checks passed');
   }
 
   process.exit(failures.length > 0 ? 1 : 0);

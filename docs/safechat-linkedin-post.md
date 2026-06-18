@@ -17,7 +17,7 @@ How it works:
 - Finds the user's country without location permissions
 - Shows verified helplines -- phone, text, chat, email, WhatsApp
 - Configurable Shield class with 6 presets for different deployment contexts
-- 446 automated tests including adversarial inputs and false-positive guards
+- 647 automated tests including adversarial inputs and false-positive guards
 - Works offline as an installable PWA
 
 Why now? New York passed the first US law mandating crisis protocols for AI companions. The FTC is investigating chatbot safety at OpenAI, Meta, Alphabet, Snap, xAI, and Character.AI. The VERA-MH framework (2026) found significant gaps in how major AI systems respond to suicidal ideation. The infrastructure to comply didn't exist as source-available. Now it does.
@@ -26,7 +26,7 @@ SafeChat emerged from my PhD research at RMIT University, where I'm building sov
 
 A false positive shows someone a help modal they dismiss. A false negative could cost a life. That's the calibration philosophy.
 
-False negatives are treated as critical defects. Crisis resource data is verified twice monthly. Detection patterns are reviewed against published clinical literature. Every change is tested, timestamped, and publicly documented.
+False negatives are treated as critical defects. Automated resource checks are scheduled twice monthly, with service details still requiring human verification. Detection patterns are reviewed against published clinical literature. Every change is tested, timestamped, and publicly documented.
 
 Live site: https://rob-e-graham.github.io/safechat
 Get help now (PWA): https://rob-e-graham.github.io/safechat/app/popup.html
@@ -44,7 +44,7 @@ If you or someone you know is in crisis: findahelpline.com
 
 People tell AI chatbots things they don't tell anyone else. Most of those systems have no plan for when someone says they want to end their life.
 
-I built SafeChat -- a free, source-available crisis safety protocol. It detects distress signals locally (zero data collection), finds the user's country without GPS, and shows verified helplines across 34 countries. 446 automated tests. Works offline. One script tag to integrate.
+I built SafeChat -- a free, source-available crisis safety protocol. It detects distress signals locally (zero data collection), finds the user's country without GPS, and shows verified helplines across 34 countries. 647 automated tests. Works offline. One script tag to integrate.
 
 The FTC is investigating AI chatbot safety. New York is mandating crisis protocols. The source-available infrastructure to comply now exists.
 

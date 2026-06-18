@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SafeChat</title>
-<meta name="description" content="Free, open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. 34 countries, 67 resource records, zero tracking.">
+<meta name="description" content="Source-available crisis safety infrastructure for AI apps. Detects distress, finds local help. 34 countries, 67 resource records, zero tracking.">
 <meta name="theme-color" content="#0a0b10">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: cdn.jsdelivr.net; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
 <meta name="referrer" content="no-referrer">
@@ -366,6 +366,7 @@
   .level-subtle { background: rgba(120,150,210,0.12); color: #91a9e8; }
   .level-low { background: rgba(212,160,74,0.1); color: #d4a04a; }
   .level-high { background: rgba(180,100,120,0.12); color: #c87888; }
+  .level-moderation { background: rgba(233,69,96,0.12); color: #e98598; }
 
   /* Footer */
   footer {
@@ -423,12 +424,12 @@
 <div class="hero">
   <img src="./images/icon-512.png" alt="SafeChat" class="hero-logo">
   <h1>International <span class="accent">Chat Safety</span> Protocol</h1>
-  <p class="sub">Free, open-source crisis safety infrastructure for AI apps. Detects distress, finds local help. Zero tracking. Works offline.</p>
+  <p class="sub">Source-available crisis safety infrastructure for AI apps. Detects distress, finds local help. Zero tracking. Works offline.</p>
 
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
     <div><div class="stat-num blue">67</div><div class="stat-label">Resources</div></div>
-    <div><div class="stat-num green">601</div><div class="stat-label">Tests</div></div>
+    <div><div class="stat-num green">647</div><div class="stat-label">Tests</div></div>
     <div><div class="stat-num gold">0</div><div class="stat-label">Permissions</div></div>
   </div>
 
@@ -451,7 +452,12 @@
     <div class="feature">
       <div class="tag tag-free">Free Forever</div>
       <h3>Crisis Detection</h3>
-      <p>Regex-based detection runs locally on the device. No API calls. No data leaves the user. Catches misspellings, text-speak, negation variants, indirect warning signs, and passive suicidality. False-positive guards filter figurative language.</p>
+      <p>Regex-based detection runs locally on the device. No API calls. No data leaves the user. Catches misspellings, text-speak, negation variants, indirect warning signs, passive suicidality, and source-linked reviewed signal families. False-positive guards filter figurative language.</p>
+    </div>
+    <div class="feature">
+      <div class="tag tag-research">v1.3</div>
+      <h3>Reviewed Signal Pack</h3>
+      <p>Evidence-linked local trigger families informed by C-SSRS, CLPsych, eRisk, VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K. VERA-MH's public risk presentations inform regression design, not a claim that it validates SafeChat.</p>
     </div>
     <div class="feature">
       <div class="tag tag-free">Free Forever</div>
@@ -460,13 +466,13 @@
     </div>
     <div class="feature">
       <div class="tag tag-free">Free Forever</div>
-      <h3>Verified Helpline Database</h3>
-      <p>67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. Community-verified. Auto-checked twice monthly. CC0 public domain data.</p>
+      <h3>Maintained Helpline Database</h3>
+      <p>67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. Automated structural and chat-link checks are scheduled twice monthly; service details require human verification. CC0 public domain data.</p>
     </div>
     <div class="feature">
       <div class="tag tag-research">v1.1</div>
       <h3>Subtle Signal Accumulation</h3>
-      <p>Tracks 35 patterns across 9 categories (withdrawal, sleep, anhedonia, farewell, self-worth, future loss, substance, reckless, pain) across a conversation session. Escalates when distress accumulates over time.</p>
+      <p>Tracks 45 patterns across 17 categories. Each contextual signal contributes a transparent routing weight of 1-3; combined weight 4 triggers LOW routing and 8 triggers HIGH. These are deterministic thresholds, not a clinical risk score. Message text is never stored.</p>
     </div>
     <div class="feature">
       <div class="tag tag-tool">Developer Tool</div>
@@ -495,8 +501,8 @@
     </div>
     <div class="feature">
       <div class="tag tag-standard">Standard</div>
-      <h3>Compliance-Ready</h3>
-      <p>Aligned with New York's AI Companion Law, FTC chatbot safety requirements, VERA-MH evaluation framework, and Samaritans safe messaging guidelines.</p>
+      <h3>Safety-Oriented</h3>
+      <p>Designed to support crisis-routing implementations and informed by VERA-MH and Samaritans guidance. SafeChat is not itself a compliance certification or clinical validation.</p>
     </div>
   </div>
 </div>
@@ -622,10 +628,18 @@
     <div id="demo-session" class="demo-session">Session: 0 subtle signals, weight 0/4 toward LOW escalation.</div>
     <div class="demo-examples" aria-label="Demo examples">
       <button type="button" data-demo-value="I feel hopeless">Low distress</button>
+      <button type="button" data-demo-value="I wish I could go to sleep and never wake up">C-SSRS signal</button>
+      <button type="button" data-demo-value="I can't keep myself safe tonight">Self-safety</button>
+      <button type="button" data-demo-value="Nobody will miss me">Passive ideation</button>
+      <button type="button" data-demo-value="I might self delete">Slang</button>
+      <button type="button" data-demo-value="I want to dissapear forever">Misspelling</button>
+      <button type="button" data-demo-value="I want to hurt you">Threat</button>
       <button type="button" data-demo-value="I haven't left my room in days">Withdrawal</button>
       <button type="button" data-demo-value="I can't sleep again">Sleep disruption</button>
       <button type="button" data-demo-value="Nothing is fun anymore">Anhedonia</button>
       <button type="button" data-demo-value="I can't imagine a future for myself">Future loss</button>
+      <button type="button" data-demo-value="What is the highest bridge in the city?">Method query (3)</button>
+      <button type="button" data-demo-value="Everything is piling up">Overwhelm (+1)</button>
     </div>
   </div>
 </div>
@@ -748,7 +762,7 @@
     <div class="feature">
       <div class="tag tag-research">Research</div>
       <h3>VERA-MH Findings (2026)</h3>
-      <p>First open-source evaluation for AI mental health safety. Found significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat addresses these gaps.</p>
+      <p>Clinically grounded, open-source evaluation for AI mental health safety. SafeChat provides local detection and human-care routing relevant to parts of its rubric, but has not yet been evaluated or scored with VERA-MH.</p>
     </div>
   </div>
 </div>
@@ -762,7 +776,7 @@
   <div class="features" style="grid-template-columns: 1fr;">
     <div class="feature">
       <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;">
-        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Crisis resource data is verified twice monthly. The test suite (currently 601 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
+        <strong style="color:rgba(255,255,255,0.75);">False negatives are treated as critical defects.</strong> Automated resource checks are scheduled twice monthly, with human verification still required for service details. The test suite (currently 647 automated tests) must pass before every release. Detection patterns are reviewed against published clinical literature. A public <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG</a> and full <a href="https://github.com/rob-e-graham/safechat/commits/main" target="_blank" rel="noopener">git history</a> document every improvement.
         <br><br>
         <strong style="color:rgba(255,255,255,0.75);">Expert guidance being incorporated.</strong> SafeChat is incorporating feedback from Professor Stevie Chancellor and public work such as VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K. The cross-classifier module integrates local ML models like MindGuard and MentalLLaMA alongside the regex engine to catch nuanced distress that keyword matching can miss, without presenting this as a research partnership or clinical validation.
       </p>
@@ -843,9 +857,19 @@
       ' toward LOW escalation. Categories: ' + formatCategories(summary.categories) + '.';
   }
 
+  function formatReviewedEvidence(reviewed) {
+    if (!reviewed || reviewed.level === 'none') return '';
+    var source = reviewed.source || {};
+    var label = source.shortName || reviewed.sourceId || 'reviewed source';
+    var family = reviewed.family ? reviewed.family.replace(/_/g, ' ') : 'signal family';
+    return ' Reviewed source: ' + label + ' / ' + family + '.';
+  }
+
   function renderDemo(trackMessage) {
     var text = input.value || '';
     var direct = Safechat.detect(text);
+    var reviewed = Safechat.detectReviewed ? Safechat.detectReviewed(text) : { level: 'none' };
+    var moderation = Safechat.detectModeration ? Safechat.detectModeration(text) : { level: 'none', category: null, matched: null };
     var subtle = Safechat.detectSubtle ? Safechat.detectSubtle(text) : [];
     var tracked = null;
     var level = direct.level;
@@ -867,18 +891,23 @@
       result.className = 'demo-result level-high';
       result.textContent = tracked && tracked.accumulated
         ? 'Level: HIGH — accumulated subtle crisis signals. Session weight: ' + tracked.sessionWeight + '.'
-        : 'Level: HIGH — crisis signal detected: "' + direct.matched + '"';
+        : 'Level: HIGH — crisis signal detected: "' + direct.matched + '".' + formatReviewedEvidence(reviewed);
     } else if (level === 'low') {
       result.className = 'demo-result level-low';
       result.textContent = tracked && tracked.accumulated
         ? 'Level: LOW — accumulated subtle distress. Session weight: ' + tracked.sessionWeight + '. Categories: ' + formatCategories(tracked.sessionCategories) + '.'
-        : 'Level: LOW — distress signal detected: "' + direct.matched + '"';
+        : 'Level: LOW — distress signal detected: "' + direct.matched + '".' + formatReviewedEvidence(reviewed);
     } else if (subtle.length > 0) {
       result.className = 'demo-result level-subtle';
       result.textContent =
         'Subtle signal observed — ' + subtle.map(function(hit) {
           return hit.category.replace(/_/g, ' ') + ' (' + hit.weight + ')';
         }).join(', ') + '. Not a crisis trigger on its own; add messages to see session accumulation.';
+    } else if (moderation.level !== 'none') {
+      result.className = 'demo-result level-moderation';
+      result.textContent =
+        'Moderation: ' + moderation.level.toUpperCase() + ' ' + moderation.category +
+        ' signal detected: "' + moderation.matched + '". This is separate from crisis-resource routing.';
     } else {
       result.className = 'demo-result level-none';
       result.textContent = 'Level: none — no crisis signals detected';

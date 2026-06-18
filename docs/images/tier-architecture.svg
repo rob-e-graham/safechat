@@ -61,7 +61,7 @@
   <rect x="120" y="395" width="8" height="80" rx="4" fill="url(#t0)"/>
   <text x="145" y="420" fill="#2ecc71" font-size="11" font-weight="700">TIER 0 — ALWAYS ON</text>
   <text x="145" y="441" fill="#fff" font-size="15" font-weight="600">Regex Engine + ConversationTracker</text>
-  <text x="145" y="461" fill="#999" font-size="11.5">48 HIGH + 43 LOW + 35 SUBTLE patterns · deterministic · zero dependencies</text>
+  <text x="145" y="461" fill="#999" font-size="11.5">53 HIGH + 43 LOW + 45 SUBTLE + 32 reviewed signals · deterministic · zero dependencies</text>
   <text x="760" y="420" text-anchor="end" fill="#777" font-size="11">KBs</text>
   <text x="760" y="441" text-anchor="end" fill="#777" font-size="11">everything, always, offline</text>
 

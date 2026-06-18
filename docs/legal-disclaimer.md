@@ -62,8 +62,8 @@ If you integrate SafeChat into a product or service, you are responsible for:
 SafeChat is under active, continuous development. The project maintains:
 
 - A public **CHANGELOG** documenting all detection improvements, new patterns, and accuracy gains.
-- A public **test suite** (currently 446 automated tests) that must pass before any release.
-- A **twice-monthly verification** process for crisis resource data (phone numbers, URLs, operating hours).
+- A public **test suite** (currently 647 automated tests) that must pass before any release.
+- **Twice-monthly automated checks** for resource structure, phone formatting, and chat-link reachability, with human verification still required for service details.
 - A **false-negative-first** triage policy: reports of missed crisis signals are treated as critical defects.
 - A public **git history** providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure.
 
@@ -79,7 +79,7 @@ SafeChat collects zero user data. All detection runs locally on the user's devic
 
 ## 8. Crisis Resources
 
-Crisis resource data (phone numbers, URLs, operating hours) is verified twice monthly but may become outdated between verification cycles. SafeChat provides resource information as a convenience. Rob Graham, FAMTEC, and contributors do not operate, endorse, or guarantee the availability, quality, or suitability of any listed crisis service.
+Automated checks for crisis-resource structure, phone formatting, and chat-link reachability are scheduled twice monthly, but service details, operating hours, and availability require human verification and may become outdated. SafeChat provides resource information as a convenience. Rob Graham, FAMTEC, and contributors do not operate, endorse, or guarantee the availability, quality, or suitability of any listed crisis service.
 
 In an emergency, always contact local emergency services directly.
 

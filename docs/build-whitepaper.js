@@ -214,7 +214,7 @@ const doc = new Document({
         boldPara("2.1 Local-first processing. ", "All crisis detection runs on the user's device using regex pattern matching. No API calls are made. No user data leaves the device. This eliminates the privacy, latency, and availability risks inherent in cloud-based content moderation, and ensures the system functions offline."),
         boldPara("2.2 Zero-permission operation. ", "Geographic location is determined through a cascade of browser-native signals (locale, timezone, cached data) rather than GPS or IP geolocation. No device permissions are requested. This removes the consent friction that could delay help-seeking behaviour."),
         boldPara("2.3 False-negative minimisation. ", "The detection engine is calibrated to prioritise sensitivity over specificity. A false positive (showing crisis resources to someone not in crisis) produces minimal harm: the user sees a help modal and dismisses it. A false negative (missing a genuine crisis signal) could cost a life. The system includes explicit false-positive guards to reduce alarm fatigue without compromising recall."),
-        boldPara("2.4 Verified, auto-updating data. ", "The helpline database currently covers 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. Data is served from CDN with fallback to GitHub raw, localStorage cache, and inline emergency numbers. A verification workflow checks all resources twice monthly."),
+        boldPara("2.4 Maintained resource data. ", "The helpline database currently covers 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. Data is served from CDN with fallback to GitHub raw, localStorage cache, and inline emergency numbers. A twice-monthly workflow checks structure, phone formatting, and reachable chat URLs; service details and operating information still require human verification."),
         boldPara("2.5 Drop-in integration. ", "SafeChat can be added to any web application with a single script tag. No build step, no API key, no account creation. The system provides modal, banner, and full-page popup interfaces, an Express middleware for server-side integration, and AI prompt overrides that inject crisis-response instructions into any LLM system prompt."),
 
         // ── 3. DETECTION ARCHITECTURE ──
@@ -233,7 +233,8 @@ const doc = new Document({
         para("Normalised input is matched against two tiers of regex patterns:"),
         boldPara("HIGH signals ", "indicate explicit suicidal language, self-harm, or crisis-level distress. These include direct statements of intent (\"kill myself\", \"end my life\"), method references (\"overdose\", \"jumping off\"), finality language (\"the end for me\", \"this will all be over soon\"), and behavioural indicators (\"writing goodbye letters\", \"gave away everything\"). HIGH signals trigger immediate crisis intervention with full helpline resources."),
         boldPara("LOW signals ", "indicate hopelessness, worthlessness, or passive distress without explicit intent. These include expressions of hopelessness (\"can't go on\", \"no point\"), worthlessness (\"I'm a burden\", \"nobody cares\"), and passive ideation (\"done with life\", \"no hope left\"). LOW signals trigger a softer safety response with helpline links embedded in the AI's normal response."),
-        para("The current engine (v1.3.0) includes 48 HIGH patterns, 43 LOW patterns, 35 SUBTLE patterns (see Section 3.4), and 601 automated tests covering true positives, true negatives, false-positive guards, misspellings, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
+        para("The current engine (v1.3.0) includes 53 HIGH patterns, 43 LOW patterns, 45 SUBTLE patterns across 17 categories (see Section 3.4), 32 reviewed source-linked signals, and 647 automated tests covering true positives, true negatives, false-positive guards, VERA-MH public risk-presentation families, misspellings, slang, protected-class slur moderation, text-speak, negation variants, contraction consistency, adversarial inputs, session accumulation, ReDoS protection, type coercion, HTML injection, and security edge cases."),
+        para("The reviewed signal pack is deliberately compressed. It distils signal families from public or peer-reviewed crisis-language resources such as C-SSRS, Reddit C-SSRS, CLPsych, eRisk, MindGuard, MentalLLaMA, and MentalChat16K without embedding raw restricted posts, transcripts, or donated private text. This is the basis for a living signal database: updateable normalisation rules, phrase templates, slang/code-word lexicons, false-positive guards, reviewed exemplars, compact embeddings, and optional distilled local classifiers."),
 
         heading(2, "3.3 False-Positive Guards"),
         para("Context-aware guards prevent triggering on figurative or idiomatic language:"),
@@ -248,9 +249,9 @@ const doc = new Document({
 
         // ── 3.4 SUBTLE SIGNAL ACCUMULATION ──
         heading(2, "3.4 Subtle Signal Accumulation"),
-        para("Many people in crisis do not use explicit language. Instead, they exhibit clusters of individually unremarkable behaviours that together indicate accumulating distress: social withdrawal, sleep disruption, loss of interest, farewell-like language, self-worth erosion, loss of future orientation, escalating substance use, reckless behaviour, and persistent expressions of pain."),
-        para("SafeChat addresses this through a ConversationTracker that monitors signals across a conversation session. Thirty-five SUBTLE patterns are organised into nine categories, each weighted by clinical significance (1–3 points). When accumulated weight crosses a threshold (4 points for LOW escalation, 8 points for HIGH), the system escalates its response as if an explicit signal had been detected."),
-        para("Critically, the tracker stores no message content. Only signal categories and numerical weights are retained in memory, and all data is garbage-collected when the session ends. This preserves the zero-data-collection principle while enabling multi-message risk assessment."),
+        para("Many people in crisis do not use explicit language. Instead, a conversation may contain clusters of individually ambiguous signals: social withdrawal, sleep disruption, loss of interest, farewell-like language, self-worth erosion, method-information queries, escalating thoughts, minimisation, barriers to help, acute timeframe, and persistent expressions of pain."),
+        para("SafeChat addresses this through a ConversationTracker that monitors signals across a conversation session. Forty-five SUBTLE patterns are organised into 17 categories. Each match contributes a configured routing weight of 1–3. A method-information query, for example, contributes 3 but does not trigger alone; an additional overwhelm signal contributes 1 and crosses the LOW threshold of 4. Broader combinations reaching 8 trigger HIGH routing."),
+        para("Critically, these numbers are deterministic routing controls, not probabilities, diagnoses, or a clinically validated suicide-risk score. The tracker stores no message content. Only signal categories, weights, and timestamps are retained in memory, pruned after 30 minutes, and garbage-collected with the session."),
         new Table({
           width: { size: 9026, type: WidthType.DXA },
           columnWidths: [1800, 4426, 1400, 1400],
@@ -270,10 +271,14 @@ const doc = new Document({
             new TableRow({ children: [tableCell("Substance", 1800), tableCell("\"drinking every night\", \"using every day\"", 4426), tableCell("1", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Reckless", 1800), tableCell("\"don't care about my safety\", \"driving drunk\"", 4426), tableCell("2", 1400), tableCell("", 1400)] }),
             new TableRow({ children: [tableCell("Pain", 1800), tableCell("\"the pain never stops\", \"every day gets worse\"", 4426), tableCell("1–2", 1400), tableCell("", 1400)] }),
+            new TableRow({ children: [tableCell("Method research", 1800), tableCell("contextual method or lethality information queries", 4426), tableCell("3", 1400), tableCell("", 1400)] }),
+            new TableRow({ children: [tableCell("Escalating thoughts", 1800), tableCell("thoughts getting louder or not stopping", 4426), tableCell("2", 1400), tableCell("", 1400)] }),
+            new TableRow({ children: [tableCell("Minimisation / barriers", 1800), tableCell("not a crisis; unable or unwilling to seek help", 4426), tableCell("1", 1400), tableCell("", 1400)] }),
+            new TableRow({ children: [tableCell("Isolation / timeframe", 1800), tableCell("nobody to talk to; help getting through tonight", 4426), tableCell("2", 1400), tableCell("", 1400)] }),
           ],
         }),
         para(""),
-        para("This approach reflects clinical literature on suicide risk assessment, where the accumulation of warning signs across multiple domains is a stronger predictor than any single statement."),
+        para("This accumulation model is informed by sequential-evidence research and VERA-MH's multi-turn risk presentations. It is designed to decide when SafeChat should offer support, not to predict an outcome or assign a clinical risk level to a person."),
 
         // ── 4. GEO-DETECTION CASCADE ──
         heading(1, "4. Geo-Detection Cascade"),
@@ -369,7 +374,7 @@ const doc = new Document({
         para("SafeChat's design anticipates and addresses requirements from multiple regulatory frameworks:"),
         boldPara("New York AI Companion Law (2026): ", "Mandates detection of suicidal ideation, referral to crisis services, and disclosure of AI's non-human nature. SafeChat provides the detection and referral components as drop-in infrastructure."),
         boldPara("FTC Chatbot Safety Inquiry (2026): ", "Investigating duty-of-care standards for emotionally responsive AI across major platforms. SafeChat demonstrates that meaningful crisis detection is achievable without surveillance infrastructure or cloud dependencies."),
-        boldPara("VERA-MH Framework (Spring Health, 2026): ", "The first open-source evaluation for AI mental health safety, documenting significant gaps in how major AI chatbots respond to suicidal ideation. SafeChat's 601-test suite addresses the categories of failure identified by VERA-MH."),
+        boldPara("VERA-MH Framework (Spring Health, 2026): ", "A clinically grounded, open-source evaluation for AI mental health safety that documents variation in how major AI chatbots respond to suicidal ideation. SafeChat's local detector and human-care routing are relevant to parts of the VERA-MH rubric, but SafeChat has not yet been run through or scored by VERA-MH. VERA-MH evaluates multi-turn chatbot responses at the API level, while SafeChat is a routing component whose user interface and external escalation workflow sit partly outside that evaluation boundary."),
         boldPara("EU AI Act (2024–2026): ", "Establishes risk-based requirements for AI systems, with high-risk systems requiring safety measures and human oversight. SafeChat provides vendor-independent, source-available safety infrastructure that supports compliance without creating cloud dependencies."),
         boldPara("Samaritans Safe Messaging Guidelines: ", "SafeChat follows established safe messaging principles in its resource presentation, avoiding sensationalisation, providing actionable contact information, and using warm, non-clinical language."),
 
@@ -379,7 +384,7 @@ const doc = new Document({
         bulletItem("Language coverage: Detection patterns currently target English-language input only. Multilingual expansion is planned but non-trivial due to the cultural and linguistic variation in crisis expression."),
         bulletItem("Indirect signals: While the subtle signal accumulation system (Section 3.4) addresses multi-message distress patterns, highly metaphorical or culturally specific expressions of distress may still evade detection. The cross-classifier module (Section 9) addresses this by running local ML models alongside the regex engine."),
         bulletItem("Not a clinical tool: SafeChat is a routing layer, not a diagnostic tool. It identifies signals and connects users to professional resources. It does not assess clinical risk, provide therapeutic intervention, or replace professional mental health services."),
-        bulletItem("Helpline data currency: Despite twice-monthly verification, helpline numbers, URLs, and operating hours can change between verification cycles."),
+        bulletItem("Helpline data currency: Automated checks do not confirm every service detail; numbers, URLs, and operating hours can change between human verification cycles."),
 
         // ── 9. CROSS-CLASSIFIER MODULE ──
         heading(1, "9. Cross-Classifier Module"),
@@ -419,8 +424,8 @@ const doc = new Document({
         heading(1, "10. Ongoing Development"),
         para("SafeChat is under continuous, active development. The project maintains:"),
         bulletItem("A public CHANGELOG documenting all detection improvements, new patterns, and accuracy gains."),
-        bulletItem("A test suite (currently 601 automated tests) that must pass before any release."),
-        bulletItem("A twice-monthly verification process for crisis resource data (phone numbers, URLs, operating hours)."),
+        bulletItem("A test suite (currently 647 automated tests) that must pass before any release."),
+        bulletItem("Twice-monthly automated checks for resource structure, phone formatting, and chat-link reachability, with human verification still required for service details."),
         bulletItem("A false-negative-first triage policy: reports of missed crisis signals are treated as critical defects."),
         bulletItem("A public git history providing a complete, timestamped record of every change to detection patterns, false-positive guards, and safety infrastructure."),
         bulletItem("Expert guidance and literature review are being incorporated for cross-classifier approaches and evaluation design, including feedback from Professor Stevie Chancellor and public work such as VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K."),
@@ -472,7 +477,7 @@ const doc = new Document({
         heading(1, "References"),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "New York State Legislature. (2026). AI Companion Safety Act.", font: "Cambria", size: 22 })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Federal Trade Commission. (2026). Orders to AI Companies Regarding Chatbot Safety Practices.", font: "Cambria", size: 22 })] }),
-        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Spring Health. (2026). VERA-MH: Validated Evaluation for Responsible AI in Mental Health.", font: "Cambria", size: 22 })] }),
+        new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Belli, L., Bentley, K. H. et al. (2026). VERA-MH: Validation of Ethical and Responsible AI in Mental Health.", font: "Cambria", size: 22 })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Samaritans. (2020). Media Guidelines for Reporting Suicide.", font: "Cambria", size: 22 })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "Graham, R. (2026). Cultivating a Living Archive: Sovereign AI for Cultural Heritage. ISEA2026 Dubai.", font: "Cambria", size: 22, italics: true })] }),
         new Paragraph({ numbering: { reference: "numbers", level: 0 }, spacing: { after: 100, line: 276 }, children: [new TextRun({ text: "International Association for Suicide Prevention. (2023). IASP Guidelines for Crisis Centre and Helpline Operations.", font: "Cambria", size: 22 })] }),

@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-07
 **Version:** 1.1.0
-**Status:** Mail-out ready. All disclaimers in place. 446 tests passing. Outreach should ask for review and verification, not endorsement.
+**Status:** Mail-out ready. All disclaimers in place. 647 tests passing. Outreach should ask for review and verification, not endorsement.
 
 ---
 
@@ -43,7 +43,7 @@ Send personalised emails using `priority-20-mailout-pack.md`. Start with crisis 
 
 [Personalised line from CSV]
 
-SafeChat is a free, source-available crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 446 automated tests.
+SafeChat is a free, source-available crisis safety protocol that detects distress signals in AI chat conversations and connects users to verified professional crisis resources. It runs entirely on the user's device -- zero data collection, works offline, 34 countries, 647 automated tests.
 
 It's a routing layer, not a diagnostic tool. It does not assess clinical risk or replace professional services. Threat and hate-speech signals are exposed separately for moderation and do not trigger crisis-resource routing by default.
 
@@ -93,7 +93,7 @@ Send to all Priority 2 contacts in the CSV: EU AI Office, UK DSIT, IASP, Befrien
 Post to subreddits (one per day, different angles):
 - r/opensource -- "SafeChat: source-available crisis safety protocol for AI chat systems" (only post here if the BSL-1.1 licence is stated clearly)
 - r/webdev -- "Drop-in crisis detection for any web app -- one script tag"
-- r/javascript -- "Built a regex-based crisis detection engine with 446 tests"
+- r/javascript -- "Built a regex-based crisis detection engine with 647 tests"
 - r/artificial -- "Source-available crisis safety infrastructure for AI chatbots"
 - r/ChatGPT -- "Why AI chatbots need crisis detection (and a source-available solution)"
 - r/privacy -- "Crisis detection that runs locally with zero data collection"

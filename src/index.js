@@ -16,7 +16,18 @@
  * @license BSL-1.1 — see LICENSE file
  */
 
-const { detect, detectModeration, detectSubtle, isHighCrisis, isAnyCrisis, ConversationTracker } = require("./detect");
+const {
+  detect,
+  detectModeration,
+  detectReviewed,
+  scanReviewedSignals,
+  detectSubtle,
+  isHighCrisis,
+  isAnyCrisis,
+  ConversationTracker,
+  REVIEWED_SIGNAL_PACK,
+  REVIEWED_SIGNAL_SOURCES,
+} = require("./detect");
 const { locate, locateSync, fromRequest, fromLocale, fromTimezone } = require("./locate");
 const { getResources, listCountries, getEmergencyNumber, search, formatForChat, formatForHTML, loadData } = require("./resources");
 const { Shield, createShield, PRESETS } = require("./shield");
@@ -143,9 +154,13 @@ module.exports = {
   // Detection
   detect,
   detectModeration,
+  detectReviewed,
+  scanReviewedSignals,
   detectSubtle,
   isHighCrisis,
   isAnyCrisis,
+  REVIEWED_SIGNAL_PACK,
+  REVIEWED_SIGNAL_SOURCES,
 
   // Session tracking
   ConversationTracker,

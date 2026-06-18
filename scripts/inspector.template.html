@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeChat — Detection Inspector</title>
+<meta name="referrer" content="no-referrer">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0b10;
+    --panel: rgba(255,255,255,0.035);
+    --panel-border: rgba(255,255,255,0.08);
+    --text: rgba(255,255,255,0.86);
+    --muted: rgba(255,255,255,0.42);
+    --faint: rgba(255,255,255,0.28);
+    --accent: #b4a0dc;
+    --none: #5cb88a;
+    --low: #e0a93b;
+    --high: #e94560;
+    --mod: #6ca0dc;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background:
+      radial-gradient(ellipse at 18% 0%, rgba(100,80,160,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 82% 12%, rgba(60,100,180,0.08) 0%, transparent 52%),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+
+  /* Header */
+  header { margin-bottom: 18px; }
+  .titlerow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 22px; font-weight: 500; letter-spacing: 0.01em; }
+  h1 .accent { color: var(--accent); }
+  .build-badge {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    color: #ffd27d; background: rgba(255,200,80,0.10); border: 1px solid rgba(255,200,80,0.28);
+    padding: 4px 9px; border-radius: 6px;
+  }
+  .positioning {
+    margin-top: 10px; font-size: 13px; color: var(--muted); max-width: 760px;
+  }
+  .positioning strong { color: rgba(255,255,255,0.7); font-weight: 600; }
+
+  /* Layout */
+  .grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 16px; margin-top: 18px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 14px; padding: 16px;
+  }
+  .panel-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--faint); margin-bottom: 12px; font-weight: 600;
+  }
+
+  /* Presets */
+  .presets { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .preset {
+    font-size: 12px; padding: 7px 11px; border-radius: 8px; cursor: pointer;
+    background: rgba(180,160,220,0.10); color: #d4c4f0;
+    border: 1px solid rgba(180,160,220,0.22); transition: all 150ms;
+  }
+  .preset:hover { background: rgba(180,160,220,0.2); }
+  .preset:disabled { opacity: 0.4; cursor: default; }
+
+  /* Input */
+  .inputrow { display: flex; gap: 8px; margin-bottom: 6px; }
+  #msg {
+    flex: 1; padding: 11px 13px; border-radius: 9px; font-size: 14px;
+    background: rgba(0,0,0,0.25); border: 1px solid var(--panel-border); color: var(--text);
+  }
+  #msg:focus { outline: none; border-color: rgba(180,160,220,0.5); }
+  .btn {
+    padding: 11px 16px; border-radius: 9px; font-size: 14px; cursor: pointer; border: none;
+    background: rgba(180,160,220,0.2); color: #e4d8fb; border: 1px solid rgba(180,160,220,0.28);
+  }
+  .btn:hover { background: rgba(180,160,220,0.3); }
+  .btn-reset {
+    background: rgba(255,255,255,0.05); color: var(--muted); border-color: var(--panel-border);
+    font-size: 12px; padding: 6px 11px;
+  }
+
+  /* Conversation log */
+  #log { margin-top: 6px; max-height: 460px; overflow-y: auto; }
+  .turn { margin-top: 14px; }
+  .bubble {
+    background: rgba(108,160,220,0.10); border: 1px solid rgba(108,160,220,0.18);
+    border-radius: 12px 12px 12px 4px; padding: 9px 13px; font-size: 14px;
+    display: inline-block; max-width: 92%;
+  }
+  .read {
+    margin-top: 7px; margin-left: 8px; padding-left: 12px;
+    border-left: 2px solid var(--panel-border);
+  }
+  .read-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; margin: 4px 0; }
+  .read-key { color: var(--faint); min-width: 78px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .chip {
+    font-size: 11.5px; padding: 2px 8px; border-radius: 20px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .chip.none { color: var(--none); background: rgba(92,184,138,0.12); }
+  .chip.low  { color: var(--low);  background: rgba(224,169,59,0.14); }
+  .chip.high { color: var(--high); background: rgba(233,69,96,0.14); }
+  .chip.mod  { color: var(--mod);  background: rgba(108,160,220,0.14); border: 1px dashed rgba(108,160,220,0.4); }
+  .chip.subtle { color: #c9b8ec; background: rgba(180,160,220,0.10); font-weight: 500; }
+  .matched { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .cite {
+    font-size: 11px; color: var(--accent); background: rgba(180,160,220,0.08);
+    border: 1px solid rgba(180,160,220,0.18); padding: 2px 7px; border-radius: 5px;
+  }
+  .cite a { color: var(--accent); text-decoration: none; }
+  .rationale { font-size: 11.5px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .escalation { font-size: 11.5px; color: var(--low); margin-top: 5px; font-weight: 600; }
+  .escalation.high { color: var(--high); }
+
+  /* Score gauge */
+  .level-display { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+  .level-word { font-size: 30px; font-weight: 700; letter-spacing: 0.01em; }
+  .level-word.none { color: var(--none); }
+  .level-word.low  { color: var(--low); }
+  .level-word.high { color: var(--high); }
+  .level-action { font-size: 12px; color: var(--muted); }
+
+  .bar-wrap { position: relative; margin: 18px 0 8px; }
+  .bar-track { height: 12px; background: rgba(255,255,255,0.06); border-radius: 7px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; border-radius: 7px; transition: width 350ms ease, background 350ms ease; background: var(--none); }
+  .bar-marks { position: relative; height: 16px; margin-top: 4px; font-size: 10px; color: var(--faint); }
+  .bar-mark { position: absolute; transform: translateX(-50%); }
+  .bar-mark::before { content: ''; position: absolute; top: -22px; left: 50%; width: 1px; height: 14px; background: rgba(255,255,255,0.18); }
+  .score-num { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  .cats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+  /* Memory panel */
+  .mem {
+    font-family: var(--mono); font-size: 11.5px; color: #a8c8a0;
+    background: rgba(0,0,0,0.28); border: 1px solid var(--panel-border);
+    border-radius: 8px; padding: 11px 13px; min-height: 44px; white-space: pre-wrap; word-break: break-word;
+  }
+  .mem-caption { font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+  .mem-caption strong { color: var(--none); }
+
+  /* Resources */
+  #resources { display: none; }
+  .res-item {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border);
+    border-radius: 9px; padding: 9px 12px; margin-bottom: 6px; font-size: 13px;
+  }
+  .res-item strong { display: block; color: rgba(255,255,255,0.9); font-size: 13px; }
+  .res-item span { color: var(--accent); font-size: 12px; }
+  .res-caption { font-size: 11.5px; color: var(--muted); margin: 4px 0 10px; }
+  .geo { font-size: 11px; color: var(--faint); margin-bottom: 8px; }
+
+  .err {
+    background: rgba(233,69,96,0.12); border: 1px solid rgba(233,69,96,0.3);
+    color: #ffb3c0; padding: 12px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;
+  }
+  .err code { font-family: var(--mono); background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 4px; }
+  footer { margin-top: 22px; font-size: 11.5px; color: var(--faint); text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="titlerow">
+      <h1>SafeChat <span class="accent">Detection Inspector</span></h1>
+      <span class="build-badge" id="buildBadge">local preview build</span>
+    </div>
+    <p class="positioning">
+      SafeChat <strong>detects crisis signals and routes to help</strong> — it does not generate the conversation.
+      The reply a user sees still comes from the host chatbot. This inspector shows exactly what the deterministic
+      layer sees: matched signals, their clinical source, and a running session score.
+      <strong>No message text is stored</strong> — only categories, weights, and timestamps (shown live below).
+    </p>
+  </header>
+
+  <div id="loadError"></div>
+
+  <div class="grid">
+    <!-- LEFT: conversation -->
+    <div class="panel">
+      <div class="panel-label">Conversation — type, or run a scenario</div>
+      <div class="presets" id="presets"></div>
+      <div class="inputrow">
+        <input id="msg" type="text" placeholder="Type a message and press Enter…" autocomplete="off">
+        <button class="btn" id="sendBtn">Send</button>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button class="btn btn-reset" id="resetBtn">↺ Reset session</button>
+      </div>
+      <div id="log"></div>
+    </div>
+
+    <!-- RIGHT: inspector -->
+    <div>
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-label">Session routing state</div>
+        <div class="level-display">
+          <span class="level-word none" id="levelWord">NONE</span>
+          <span class="level-action" id="levelAction">no routing — normal conversation</span>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+          <div class="bar-marks">
+            <span class="bar-mark" id="markLow">LOW · 4</span>
+            <span class="bar-mark" id="markHigh">HIGH · 8</span>
+          </div>
+        </div>
+        <div class="score-num">accumulated weight: <span id="scoreNum">0</span></div>
+        <div class="cats" id="cats"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-label">Session memory — everything SafeChat retains</div>
+        <div class="mem" id="mem">[ ]  (empty)</div>
+        <div class="mem-caption"><strong>No message content.</strong> Only signal category, weight, and time. Held in memory, cleared on reset.</div>
+      </div>
+
+      <div class="panel" id="resources">
+        <div class="panel-label">What SafeChat would surface</div>
+        <div class="geo" id="geo"></div>
+        <div id="resList"></div>
+        <div class="res-caption">SafeChat routes to these resources. The empathetic conversational reply remains the host chatbot's responsibility.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Local-first · deterministic · no data leaves the device · regex floor + reviewed clinical signal families.
+    Demonstration tool — not a diagnostic or clinical instrument.
+  </footer>
+</div>
+
+<script src="../src/browser.js"></script>
+<script>
+(function () {
+  "use strict";
+  var SC = window.Safechat;
+  if (!SC || !SC.ConversationTracker) {
+    document.getElementById("loadError").innerHTML =
+      '<div class="err">Could not load the SafeChat engine from <code>../src/browser.js</code>. ' +
+      'Serve the repo root: run <code>npm run demo</code> and open <code>http://localhost:3333/app/inspector.html</code>.</div>';
+    return;
+  }
+  document.getElementById("buildBadge").textContent =
+    "local build · v" + (SC.version || "?") + " · not yet on public site";
+
+  function esc(s){ return String(s == null ? "" : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+  var ACTIONS = {
+    none: "no routing — normal conversation",
+    low:  "soft safety response — helpline offered in the reply",
+    high: "interrupt — crisis resources shown immediately"
+  };
+
+  var tracker = new SC.ConversationTracker();
+  var sessionStart = Date.now();
+  var sessionLevel = "none";
+  var country = (SC.locateCountry && SC.locateCountry()) || "AU";
+
+  var logEl = document.getElementById("log");
+  var memEl = document.getElementById("mem");
+  var levelWord = document.getElementById("levelWord");
+  var levelAction = document.getElementById("levelAction");
+  var barFill = document.getElementById("barFill");
+  var scoreNum = document.getElementById("scoreNum");
+  var catsEl = document.getElementById("cats");
+  var resPanel = document.getElementById("resources");
+
+  // Position threshold marks on the 0..8 bar
+  document.getElementById("markLow").style.left = (4/8*100) + "%";
+  document.getElementById("markHigh").style.left = "100%";
+
+  function rank(l){ return l === "high" ? 2 : l === "low" ? 1 : 0; }
+
+  function analyse(text) {
+    var routing = tracker.process(text);          // authoritative level + session weight
+    var direct  = SC.detect(text);                // matched phrase
+    var reviewed = SC.detectReviewed(text);       // clinical source attribution
+    var subtle  = SC.detectSubtle(text);          // per-message subtle hits
+    var mod     = SC.detectModeration(text);      // separate moderation lane
+
+    renderTurn(text, routing, direct, reviewed, subtle, mod);
+
+    if (rank(routing.level) > rank(sessionLevel)) sessionLevel = routing.level;
+    updateDashboard(routing);
+  }
+
+  function renderTurn(text, routing, direct, reviewed, subtle, mod) {
+    var t = document.createElement("div");
+    t.className = "turn";
+
+    var lines = '';
+
+    // Crisis routing line
+    var lvl = routing.level;
+    var matchTxt = (direct && direct.matched) ? '<span class="matched">“' + esc(direct.matched) + '”</span>' : '';
+    lines += '<div class="read-line"><span class="read-key">crisis</span>' +
+             '<span class="chip ' + lvl + '">' + lvl.toUpperCase() + '</span>' + matchTxt;
+    if (routing.accumulated) lines += '<span class="matched">via accumulation</span>';
+    lines += '</div>';
+
+    // Clinical source attribution (if any reviewed family recognises this phrasing)
+    if (reviewed && reviewed.level && reviewed.level !== "none" && reviewed.source) {
+      var url = reviewed.source.url || "#";
+      lines += '<div class="read-line"><span class="read-key">source</span>' +
+               '<span class="cite"><a href="' + esc(url) + '" target="_blank" rel="noopener">' +
+               esc(reviewed.source.shortName) + '</a></span>' +
+               '<span class="matched">' + esc(reviewed.family || "") + '</span></div>';
+      if (reviewed.rationale) lines += '<div class="rationale">' + esc(reviewed.rationale) + '</div>';
+    }
+
+    // Subtle signals this message
+    if (subtle && subtle.length) {
+      var chips = subtle.map(function(s){
+        return '<span class="chip subtle">' + esc(s.category) + ' +' + s.weight + '</span>';
+      }).join(" ");
+      lines += '<div class="read-line"><span class="read-key">subtle</span>' + chips + '</div>';
+    }
+
+    // Moderation — explicitly separate lane
+    if (mod && mod.level !== "none") {
+      lines += '<div class="read-line"><span class="read-key">moderation</span>' +
+               '<span class="chip mod">' + esc(mod.category) + ' · ' + mod.level + '</span>' +
+               '<span class="matched">separate from crisis routing</span></div>';
+    }
+
+    // Escalation note
+    if (routing.accumulated) {
+      var cls = routing.level === "high" ? "escalation high" : "escalation";
+      lines += '<div class="' + cls + '">↑ session crossed the ' + routing.level.toUpperCase() +
+               ' threshold (weight ' + routing.sessionWeight + ')</div>';
+    }
+
+    t.innerHTML =
+      '<div class="bubble">' + esc(text) + '</div>' +
+      '<div class="read">' + lines + '</div>';
+    logEl.appendChild(t);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function updateDashboard(routing) {
+    var w = routing.sessionWeight || 0;
+    scoreNum.textContent = w;
+    var pct = Math.max(0, Math.min(100, (w / 8) * 100));
+    barFill.style.width = pct + "%";
+    barFill.style.background = w >= 8 ? "var(--high)" : w >= 4 ? "var(--low)" : "var(--none)";
+
+    // Current routing level reflects the strongest signal this session
+    levelWord.className = "level-word " + sessionLevel;
+    levelWord.textContent = sessionLevel.toUpperCase();
+    levelAction.textContent = ACTIONS[sessionLevel];
+
+    var cats = routing.sessionCategories || [];
+    catsEl.innerHTML = cats.map(function(c){ return '<span class="chip subtle">' + esc(c) + '</span>'; }).join("");
+
+    // Live memory dump — proves only category/weight/time retained
+    var sig = tracker.signals || [];
+    if (!sig.length) {
+      memEl.textContent = "[ ]  (empty)";
+    } else {
+      memEl.textContent = "[\n" + sig.map(function(s){
+        var rel = ((s.timestamp - sessionStart) / 1000).toFixed(1);
+        return '  { category: "' + s.category + '", weight: ' + s.weight + ', t: "+' + rel + 's" }';
+      }).join(",\n") + "\n]";
+    }
+
+    if (sessionLevel !== "none") renderResources();
+  }
+
+  function renderResources() {
+    var data = SC.getResources(country);
+    var list = (data.resources && data.resources.length) ? data.resources : (data.globalResources || []);
+    var html = list.slice(0, 3).map(function(r){
+      var detail = r.phone ? r.phone : (r.sms ? r.sms : (r.url ? r.url : ""));
+      return '<div class="res-item"><strong>' + esc(r.name) + '</strong><span>' +
+             esc(detail) + (r.hours ? ' · ' + esc(r.hours) : '') + '</span></div>';
+    }).join("");
+    document.getElementById("resList").innerHTML = html;
+    document.getElementById("geo").textContent =
+      "Country: " + (data.country || country) + "  ·  detected from locale/timezone — no GPS, no permission requested";
+    resPanel.style.display = "block";
+  }
+
+  // ── Scenarios ──
+  var SCENARIOS = [
+    { label: "Everyday idiom", msgs: ["this homework is killing me"],
+      note: "specificity — a guard prevents a false alarm" },
+    { label: "Explicit crisis", msgs: ["I want to kill myself"],
+      note: "the deterministic floor fires immediately" },
+    { label: "Passive ideation", msgs: ["I wish I could go to sleep and never wake up"],
+      note: "clinically-sourced signal family (C-SSRS)" },
+    { label: "Concealed risk → accumulation", msgs: ["what's the highest bridge in the city?", "everything is just piling up"],
+      note: "turn 1 does NOT trigger; multi-turn accumulation crosses the threshold" },
+    { label: "Threat ≠ crisis", msgs: ["I'm going to kill you"],
+      note: "moderation lane — not routed to crisis helplines" },
+    { label: "VERA-MH hedged passive", msgs: ["it would be easier if I wasn't here"],
+      note: "VERA-MH v1.1 public risk-presentation family" }
+  ];
+
+  var presetsEl = document.getElementById("presets");
+  var allButtons = [];
+  SCENARIOS.forEach(function (sc) {
+    var b = document.createElement("button");
+    b.className = "preset";
+    b.textContent = sc.label;
+    b.title = sc.note;
+    b.onclick = function () { playScenario(sc); };
+    presetsEl.appendChild(b);
+    allButtons.push(b);
+  });
+
+  function setBusy(busy) {
+    allButtons.forEach(function (b) { b.disabled = busy; });
+    document.getElementById("sendBtn").disabled = busy;
+  }
+
+  function playScenario(sc) {
+    resetSession();
+    setBusy(true);
+    var i = 0;
+    (function step() {
+      if (i >= sc.msgs.length) { setBusy(false); return; }
+      analyse(sc.msgs[i]);
+      i++;
+      setTimeout(step, 1100);
+    })();
+  }
+
+  function resetSession() {
+    tracker.reset();
+    sessionStart = Date.now();
+    sessionLevel = "none";
+    logEl.innerHTML = "";
+    resPanel.style.display = "none";
+    updateDashboard({ sessionWeight: 0, sessionCategories: [], level: "none" });
+  }
+
+  // ── Manual input ──
+  function sendManual() {
+    var v = document.getElementById("msg").value.trim();
+    if (!v) return;
+    analyse(v);
+    document.getElementById("msg").value = "";
+  }
+  document.getElementById("sendBtn").onclick = sendManual;
+  document.getElementById("msg").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") sendManual();
+  });
+  document.getElementById("resetBtn").onclick = resetSession;
+
+  resetSession();
+})();
+</script>
+</body>
+</html>

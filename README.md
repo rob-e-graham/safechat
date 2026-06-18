@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <strong>34 countries &middot; 67 resource records &middot; 94 contact methods &middot; 601 safety tests &middot; 0 permissions</strong>
+  <strong>34 countries &middot; 67 resource records &middot; 94 contact methods &middot; 647 safety tests &middot; 0 permissions</strong>
 </p>
 
 <p align="center">
@@ -37,10 +37,10 @@ SafeChat is an **international register and toolkit for chat safety protocol**. 
 
 - **Crisis Detection** — Regex-based detection runs locally. No API calls. No data leaves the device. Catches misspellings, text-speak, indirect warning signs, and passive suicidality.
 - **Geo-Location (No GPS)** — Finds the user's country from timezone and locale. No permissions needed. 7-layer cascade.
-- **Verified Helpline Database** — 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. CC0 public domain.
+- **Maintained Helpline Database** — 67 resource records across 34 countries, providing 94 phone, text, chat, email, WhatsApp, and web contact methods. CC0 public domain.
 - **AI Prompt Override** — System prompt injections that tell your LLM to show crisis resources. Works with any AI provider.
 - **Drop-in UI** — Modal, banner, and full-page popup. One script tag. PWA-capable. Works offline.
-- **Compliance-Ready** — Aligned with NY AI Companion Law, FTC chatbot safety requirements, VERA-MH framework, and Samaritans guidelines.
+- **Safety-oriented** — Designed to support crisis-routing implementations and informed by VERA-MH and Samaritans guidance; compliance and clinical suitability remain the integrator's responsibility.
 
 ---
 
@@ -119,11 +119,12 @@ app.post('/api/chat', (req, res) => {
 
 ![How Safechat Works](docs/images/how-it-works.svg)
 
-Detection uses regex pattern matching with three layers:
+Detection uses local pattern matching with four pieces:
 
-1. **Input normalisation** — Smart quotes → ASCII, whitespace collapse, misspelling correction, text-speak expansion
-2. **Pattern matching** — HIGH signals (explicit suicidal language, methods) and LOW signals (hopelessness, worthlessness)
-3. **False-positive guards** — Context-aware filtering skips figurative language ("cut my hair", "suicide squeeze play", "overdosed on coffee")
+1. **Input normalisation** — Smart quotes → ASCII, whitespace collapse, misspelling correction, slang/code-word expansion
+2. **Core pattern matching** — HIGH signals (explicit suicidal language, methods) and LOW signals (hopelessness, worthlessness)
+3. **Reviewed signal pack** — source-linked signal families distilled from public or peer-reviewed crisis-language resources
+4. **False-positive guards** — Context-aware filtering skips figurative language ("cut my hair", "suicide squeeze play", "overdosed on coffee")
 
 | Level | Triggers | Action |
 |-------|----------|--------|
@@ -131,9 +132,35 @@ Detection uses regex pattern matching with three layers:
 | **low** | Hopelessness, worthlessness, feeling trapped | Soft safety response with helpline link |
 | **none** | No crisis signals | Normal operation |
 
-Threat and hate-speech detection are exposed separately through `detectModeration()`.
+Threat, hate-speech, and protected-class slur detection are exposed separately through `detectModeration()`.
 They do not trigger crisis-resource routing by default; they return local moderation
 signals that an app can use for review, de-escalation, or harm prevention.
+
+SafeChat also exposes an evidence-linked reviewed signal pack through
+`detectReviewed()`. This pack distils signal families from public or
+peer-reviewed crisis-language resources such as C-SSRS, CLPsych, eRisk,
+VERA-MH, MindGuard, MentalLLaMA, and MentalChat16K without embedding raw restricted
+posts or transcripts. The pack is local, auditable, versioned, and designed to
+be updated as expert review improves.
+
+### Multi-message accumulation
+
+`ConversationTracker` assigns transparent routing weights (`1-3`) to contextual
+signals that are not sufficient on their own. For example, a method-information
+query has weight `3` but does not trigger by itself; a separate overwhelm signal
+adds `1`, crossing the configurable LOW threshold of `4`. Broader combinations
+that reach `8` trigger HIGH routing. Only categories, weights, and timestamps are
+held in memory for 30 minutes; message text is not stored.
+
+These weights are deterministic routing controls, not probabilities, diagnoses,
+or a clinically validated suicide-risk score. Applications can configure the
+thresholds, but changes require their own safety evaluation.
+
+See [docs/living-signal-database.md](docs/living-signal-database.md) for the
+compression and governance model behind slang, misspellings, slurs, countries,
+and social-context expansion. See
+[docs/vera-mh-signal-integration.md](docs/vera-mh-signal-integration.md) for
+the VERA-MH provenance, integration boundary, and multi-turn scoring example.
 
 ---
 
@@ -165,7 +192,8 @@ SafeChat finds the user's country **without location permissions**:
 4. Inline emergency numbers              ← if never loaded
 ```
 
-Verification workflow runs twice monthly to check all phone numbers and URLs.
+Automated checks run twice monthly for data structure, phone formatting, and
+chat-link reachability. Service details still require human verification.
 
 ---
 
@@ -179,7 +207,7 @@ SafeChat is designed for trust:
 - **Input validation** — type checking, ReDoS protection, JSON structure validation
 - **Scoped service worker** — only intercepts same-origin requests
 - **No cookies, no analytics, no tracking**
-- **601 automated tests** including security/adversarial inputs
+- **647 automated tests** including security/adversarial inputs
 - **Referrer policy** — `no-referrer` on all pages
 
 ---
@@ -209,6 +237,13 @@ safechat.detectModeration("I want to kill you")
 
 safechat.detectModeration("great day today")
 // { level: "none", category: null, matched: null }
+```
+
+### `safechat.detectReviewed(text)`
+
+```javascript
+safechat.detectReviewed("I wish I could go to sleep and never wake up")
+// { level: "low", sourceId: "cssrs_2011", family: "wish_to_be_dead", ... }
 ```
 
 ### `safechat.promptOverride(level, countryCode)`
@@ -321,8 +356,8 @@ Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Finland, France, Ge
 SafeChat is under continuous, active development. See [CHANGELOG.md](CHANGELOG.md) for a full record of detection improvements, new patterns, and accuracy gains. Every change is tested, timestamped, and publicly documented.
 
 - **False negatives** are treated as critical defects
-- **Crisis resource data** is verified twice monthly
-- **Test suite** must pass before every release (currently 601 tests)
+- **Crisis resource checks** are scheduled twice monthly for structure, phone formatting, and reachable chat URLs; service details still require human verification
+- **Test suite** must pass before every release (currently 647 tests)
 - **Detection patterns** are reviewed against published clinical literature
 
 ---
