@@ -195,7 +195,10 @@
         <input id="msg" type="text" placeholder="Type a message and press Enter…" autocomplete="off">
         <button class="btn" id="sendBtn">Send</button>
       </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+        <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="popupToggle" checked> Show the live crisis popup
+        </label>
         <button class="btn btn-reset" id="resetBtn">↺ Reset session</button>
       </div>
       <div id="log"></div>
@@ -293,8 +296,24 @@
 
     renderTurn(text, routing, direct, reviewed, subtle, mod);
 
-    if (rank(routing.level) > rank(sessionLevel)) sessionLevel = routing.level;
+    if (rank(routing.level) > rank(sessionLevel)) {
+      sessionLevel = routing.level;
+      maybePopup(sessionLevel);
+    }
     updateDashboard(routing);
+  }
+
+  // Show the real SafeChat intervention UI — the same modal/banner a deployed
+  // app would surface. This is SafeChat's own output, not a chatbot reply.
+  function maybePopup(level) {
+    var t = document.getElementById("popupToggle");
+    if (!t || !t.checked) return;
+    if (level === "high") {
+      var bn = document.getElementById("safechat-banner"); if (bn) bn.remove();
+      try { SC.showModal(country); } catch (e) {}
+    } else if (level === "low") {
+      try { SC.showBanner({ country: country }); } catch (e) {}
+    }
   }
 
   function renderTurn(text, routing, direct, reviewed, subtle, mod) {
@@ -490,6 +509,8 @@
     sessionLevel = "none";
     logEl.innerHTML = "";
     resPanel.style.display = "none";
+    if (SC.hideModal) SC.hideModal();
+    var bn = document.getElementById("safechat-banner"); if (bn) bn.remove();
     updateDashboard({ sessionWeight: 0, sessionCategories: [], level: "none" });
   }
 
