@@ -402,9 +402,34 @@
     .hero h1 { font-size: 24px; }
   }
   @media (min-width: 768px) {
+    .container,
+    nav,
+    .hero,
+    .section,
+    footer,
+    .divider {
+      max-width: 1120px;
+    }
+    nav { padding: 18px 32px; }
+    nav .logo img { height: 28px; }
+    nav .links { gap: 24px; font-size: 13px; }
+    .hero { padding: 72px 32px 56px; }
+    .hero h1 { font-size: 42px; }
+    .hero .sub { max-width: 680px; font-size: 17px; }
+    .hero .stats { max-width: 760px; margin-left: auto; margin-right: auto; }
+    .hero .actions {
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero .actions .btn { width: auto; min-width: 220px; }
+    .section { padding: 64px 32px; }
+    .section h2 { font-size: 28px; }
+    .section .section-sub { max-width: 760px; }
     .features { display: grid; grid-template-columns: 1fr 1fr; }
     .download-grid { display: grid; grid-template-columns: 1fr 1fr; }
     .community-links { display: grid; grid-template-columns: 1fr 1fr; }
+    footer { padding: 44px 32px; }
   }
 </style>
 </head>
