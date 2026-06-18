@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">SafeChat print mark</title>
+  <desc id="desc">A white speech bubble with a dark navy outline and a purple medical cross.</desc>
+  <defs>
+    <linearGradient id="cross" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c16cff"/>
+      <stop offset="1" stop-color="#6b36f2"/>
+    </linearGradient>
+  </defs>
+  <path
+    d="M112 66h288c45 0 82 37 82 82v174c0 45-37 82-82 82H205l-96 66v-66c-44-2-79-38-79-82V148c0-45 37-82 82-82Z"
+    fill="#ffffff"
+    stroke="#0b2545"
+    stroke-width="18"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M225 139c0-14 11-25 25-25h12c14 0 25 11 25 25v73h73c14 0 25 11 25 25v12c0 14-11 25-25 25h-73v73c0 14-11 25-25 25h-12c-14 0-25-11-25-25v-73h-73c-14 0-25-11-25-25v-12c0-14 11-25 25-25h73v-73Z"
+    fill="url(#cross)"
+  />
+</svg>

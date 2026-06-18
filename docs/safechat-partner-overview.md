@@ -10,6 +10,20 @@ SafeChat is not a chatbot, diagnostic tool, clinical risk score, counselling ser
 
 **Project repository:** [View SafeChat on GitHub](https://github.com/rob-e-graham/safechat)
 
+## Sovereign and private by design
+
+SafeChat can run as sovereign infrastructure inside the organisation's own application and on the user's own device. The standard detection path does not send conversation text to SafeChat, FAMTEC, VERA-MH, an advertising network, or a separate cloud-classification service. It does not create a central profile of a person's distress disclosures.
+
+During multi-turn accumulation, SafeChat holds only signal categories, configured weights, and timestamps in temporary session memory. Message text is not retained by SafeChat, and the session state can be cleared or allowed to expire. Normal conversation does not trigger a referral: the deployment activates its configured support pathway only when a direct signal or accumulated threshold is reached.
+
+This makes SafeChat suitable for privacy-sensitive contexts such as workplaces, schools, universities, health-adjacent services, community organisations, and private-sector applications. It can help an organisation provide a safety response without centralising vulnerable conversation content or introducing covert behavioural profiling.
+
+That creates a basis for trust: employers, educators, and service providers can offer a protective pathway without spying on employees, students, or users. Trust still depends on clear disclosure, accountable governance, and a firm boundary preventing safety signals from being reused for discipline, performance monitoring, advertising, or unrelated profiling.
+
+Local-first processing supports data minimisation and can reduce privacy, security, retention, access, and breach exposure. It does not make every deployment automatically lawful or ethical. Implementers must disclose the safeguard appropriately and assess consent, purpose, proportionality, employment and education rules, safeguarding duties, privacy law, and any human escalation process in their jurisdiction.
+
+VERA-MH is an evaluation framework, not a crisis-referral destination. SafeChat can be evaluated as part of a VERA-MH study, but a triggered user should be routed to appropriate human care or another deployment-defined safeguarding pathway, not "referred to VERA-MH."
+
 ## Why it exists
 
 People increasingly disclose distress, self-harm, and suicidal thoughts to general-purpose and companion chatbots. The conversational model may miss an indirect disclosure, respond inconsistently, or fail to connect the person with appropriate human care.
@@ -64,7 +78,7 @@ The immediate request to VERA-MH researchers is methodological guidance on the c
 
 SafeChat may be useful as one layer within:
 
-- general-purpose, companion, education, wellbeing, and customer-support chatbots;
+- general-purpose, companion, education, workplace, wellbeing, and customer-support chatbots;
 - community, nonprofit, library, youth, and public-interest digital services;
 - human moderation and safeguarding workflows;
 - employee-assistance and workplace wellbeing platforms;

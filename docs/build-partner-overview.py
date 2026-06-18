@@ -13,7 +13,7 @@ from docx.shared import Inches, Pt, RGBColor
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs" / "safechat-partner-overview.md"
 OUTPUT = ROOT / "docs" / "SafeChat-Partner-Overview.docx"
-LOGO = ROOT / "app" / "images" / "logo-dark.png"
+LOGO = ROOT / "docs" / "images" / "safechat-print-mark.png"
 
 NAVY = RGBColor(0x0B, 0x25, 0x45)
 BLUE = RGBColor(0x2E, 0x74, 0xB5)
@@ -226,7 +226,7 @@ def add_cover(doc):
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.space_before = Pt(56)
         p.paragraph_format.space_after = Pt(30)
-        picture = p.add_run().add_picture(str(LOGO), width=Inches(1.05))
+        picture = p.add_run().add_picture(str(LOGO), width=Inches(0.72))
         doc_pr = picture._inline.docPr
         doc_pr.set("descr", "SafeChat logo")
         doc_pr.set("title", "SafeChat")
@@ -262,7 +262,7 @@ def add_cover(doc):
     shd.set(qn("w:fill"), LIGHT)
     p_pr.append(shd)
     set_run_font(
-        p.add_run("  Local detection. Transparent routing. Human support.\nNo conversation text sent to SafeChat.  "),
+        p.add_run("  Sovereign local detection. Transparent routing. Human support.\nNo conversation text sent to SafeChat.  "),
         size=12,
         color=NAVY,
         bold=True,

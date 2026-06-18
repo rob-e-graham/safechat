@@ -181,6 +181,7 @@
       The reply a user sees still comes from the host chatbot. This inspector shows exactly what the deterministic
       layer sees: matched signals, their clinical source, and a running session score.
       <strong>No message text is stored</strong> — only categories, weights, and timestamps (shown live below).
+      The goal is <strong>safety without surveillance</strong>: support people without profiling, advertising to, or spying on them.
     </p>
   </header>
 
@@ -220,6 +221,7 @@
           </div>
         </div>
         <div class="score-num">accumulated weight: <span id="scoreNum">0</span></div>
+        <div class="mem-caption">Only purple <strong>subtle</strong> signals add to this score. Direct LOW or HIGH signals route immediately without needing to reach a numeric threshold.</div>
         <div class="cats" id="cats"></div>
       </div>
 
@@ -1123,8 +1125,9 @@
       'Serve the repo root: run <code>npm run demo</code> and open <code>http://localhost:3333/app/inspector.html</code>.</div>';
     return;
   }
+  var isPublicBuild = /(^|\.)rob-e-graham\.github\.io$/i.test(window.location.hostname);
   document.getElementById("buildBadge").textContent =
-    "local build · v" + (SC.version || "?") + " · not yet on public site";
+    (isPublicBuild ? "live GitHub build" : "local preview build") + " · v" + (SC.version || "?");
 
   function esc(s){ return String(s == null ? "" : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
@@ -1156,13 +1159,15 @@
   function rank(l){ return l === "high" ? 2 : l === "low" ? 1 : 0; }
 
   function analyse(text) {
+    var beforeWeight = tracker.getWeight();
     var routing = tracker.process(text);          // authoritative level + session weight
+    var addedWeight = Math.max(0, (routing.sessionWeight || 0) - beforeWeight);
     var direct  = SC.detect(text);                // matched phrase
     var reviewed = SC.detectReviewed(text);       // clinical source attribution
     var subtle  = SC.detectSubtle(text);          // per-message subtle hits
     var mod     = SC.detectModeration(text);      // separate moderation lane
 
-    renderTurn(text, routing, direct, reviewed, subtle, mod);
+    renderTurn(text, routing, direct, reviewed, subtle, mod, addedWeight);
 
     if (rank(routing.level) > rank(sessionLevel)) {
       sessionLevel = routing.level;
@@ -1184,7 +1189,7 @@
     }
   }
 
-  function renderTurn(text, routing, direct, reviewed, subtle, mod) {
+  function renderTurn(text, routing, direct, reviewed, subtle, mod, addedWeight) {
     var t = document.createElement("div");
     t.className = "turn";
 
@@ -1214,6 +1219,9 @@
         return '<span class="chip subtle">' + esc(s.category) + ' +' + s.weight + '</span>';
       }).join(" ");
       lines += '<div class="read-line"><span class="read-key">subtle</span>' + chips + '</div>';
+      lines += '<div class="read-line"><span class="read-key">score</span>' +
+               '<span class="matched">+' + addedWeight + ' this turn → ' +
+               (routing.sessionWeight || 0) + ' accumulated</span></div>';
     }
 
     // Moderation — explicitly separate lane
