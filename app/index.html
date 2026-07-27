@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SafeChat</title>
-<meta name="description" content="Source-available crisis safety infrastructure for AI apps. Detects distress, finds local help. 34 countries, 67 resource records, zero tracking.">
+<meta name="description" content="Source-available chat safety infrastructure for AI apps, workplaces, education, and communities. Crisis routing, hate-speech and threat detection, sovereign privacy, zero tracking.">
 <meta name="theme-color" content="#0a0b10">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: cdn.jsdelivr.net; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: cdn.jsdelivr.net; connect-src 'self' cdn.jsdelivr.net raw.githubusercontent.com; font-src 'self'; frame-src 'self';">
 <meta name="referrer" content="no-referrer">
 <link rel="icon" href="./favicon.ico" sizes="any">
 <link rel="shortcut icon" href="./favicon.ico">
@@ -301,72 +301,77 @@
   .community-card h3 { font-size: 15px; margin-bottom: 4px; }
   .community-card p { font-size: 12px; color: rgba(255,255,255,0.38); }
 
-  /* Live demo */
+  /* Full inspector demo */
   .demo-box {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
-    padding: 20px;
+    padding: 16px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
   }
-  .demo-box input {
-    width: 100%;
-    padding: 14px 16px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    color: #fff;
+  .demo-intro {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .demo-intro strong {
+    color: rgba(255,255,255,0.82);
     font-size: 14px;
-    outline: none;
-    margin-bottom: 10px;
   }
-  .demo-box input:focus { border-color: rgba(180,160,220,0.3); }
-  .demo-result {
-    padding: 12px 14px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-family: monospace;
-    min-height: 40px;
+  .demo-intro span {
+    color: rgba(255,255,255,0.42);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .demo-frame-wrap {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0a0b10;
+  }
+  .demo-frame {
+    width: 100%;
+    height: 760px;
+    display: block;
+    border: 0;
   }
   .demo-actions {
     display: flex;
-    gap: 8px;
     flex-wrap: wrap;
-    margin: 10px 0;
+    gap: 10px;
+    margin-top: 14px;
   }
-  .demo-actions button,
-  .demo-examples button {
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.62);
-    border-radius: 999px;
-    padding: 8px 11px;
-    font-size: 11px;
-    cursor: pointer;
-  }
-  .demo-actions button:hover,
-  .demo-examples button:hover {
-    border-color: rgba(180,160,220,0.22);
-    color: rgba(255,255,255,0.82);
-  }
-  .demo-session {
-    color: rgba(255,255,255,0.38);
-    font-size: 11px;
-    line-height: 1.5;
-    margin-top: 8px;
-  }
-  .demo-examples {
+  .demo-actions .btn { flex: 1 1 190px; width: auto; }
+
+  /* Job chooser */
+  .job-grid {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
+    flex-direction: column;
+    gap: 12px;
   }
-  .level-none { background: rgba(92,184,138,0.1); color: #5cb88a; }
-  .level-subtle { background: rgba(120,150,210,0.12); color: #91a9e8; }
-  .level-low { background: rgba(212,160,74,0.1); color: #d4a04a; }
-  .level-high { background: rgba(180,100,120,0.12); color: #c87888; }
-  .level-moderation { background: rgba(233,69,96,0.12); color: #e98598; }
+  .job-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .job-card h3 { font-size: 15px; margin-bottom: 6px; }
+  .job-card p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+  .job-list {
+    margin-top: 10px;
+    display: grid;
+    gap: 6px;
+  }
+  .job-list span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.42);
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+  }
 
   /* Footer */
   footer {
@@ -429,6 +434,11 @@
     .features { display: grid; grid-template-columns: 1fr 1fr; }
     .download-grid { display: grid; grid-template-columns: 1fr 1fr; }
     .community-links { display: grid; grid-template-columns: 1fr 1fr; }
+    .demo-intro {
+      grid-template-columns: 0.8fr 1.2fr;
+      align-items: center;
+    }
+    .job-grid { display: grid; grid-template-columns: 1fr 1fr; }
     footer { padding: 44px 32px; }
   }
 </style>
@@ -438,6 +448,8 @@
 <nav>
   <div class="logo"><img src="./images/logo-nav.png" alt="SafeChat"></div>
   <div class="links">
+    <a href="#demo">Demo</a>
+    <a href="#jobs">Jobs</a>
     <a href="#registry">Registry</a>
     <a href="#download">Download</a>
     <a href="#community">Community</a>
@@ -448,8 +460,8 @@
 <!-- Hero -->
 <div class="hero">
   <img src="./images/icon-512.png" alt="SafeChat" class="hero-logo">
-  <h1>International <span class="accent">Chat Safety</span> Protocol</h1>
-  <p class="sub">Source-available crisis safety infrastructure for AI apps. Detects distress, finds local help. Zero tracking. Works offline.</p>
+  <h1>Sovereign <span class="accent">Chat Safety</span> Protocol</h1>
+  <p class="sub">Source-available safety infrastructure for AI chat, workplaces, education, and communities. Crisis routing, hate-speech and threat detection, human escalation, zero tracking.</p>
 
   <div class="stats">
     <div><div class="stat-num red">34</div><div class="stat-label">Countries</div></div>
@@ -460,7 +472,7 @@
 
   <div class="actions">
     <a href="./popup.html" class="btn btn-primary">Get Help Now</a>
-    <a href="./inspector.html" class="btn btn-secondary">Open Test Inspector</a>
+    <a href="#demo" class="btn btn-secondary">Open Full Demo</a>
     <a href="../docs/SafeChat-Partner-Overview.docx" class="btn btn-secondary">Partner Overview</a>
     <a href="https://github.com/rob-e-graham/safechat" class="btn btn-secondary" target="_blank" rel="noopener">View on GitHub</a>
     <a href="https://paypal.me/specialrequest" class="btn btn-paypal" target="_blank" rel="noopener">Donate via PayPal</a>
@@ -473,7 +485,7 @@
 <!-- What this is -->
 <div class="section">
   <h2>What is SafeChat?</h2>
-  <p class="section-sub">An international register and toolkit for chat safety protocol. Free for everyone. Built for developers, health professionals, and communities.</p>
+  <p class="section-sub">An all-round chat safety layer for crisis support, hate-speech moderation, threat routing, and responsible AI deployment, designed around privacy, sovereignty, and local control.</p>
 
   <div class="features">
     <div class="feature">
@@ -504,12 +516,22 @@
     <div class="feature">
       <div class="tag tag-tool">Developer Tool</div>
       <h3>Configurable Shield</h3>
-      <p>Drop-in safety layer with 6 response modes (interrupt, inject, flag, log, callback, none) and 6 presets (companion, chatbot, moderation, strict, shadow, museum). Route to a verified helpline, a human moderator, or your own escalation path. One line of code.</p>
+      <p>Drop-in safety layer with 6 response modes (interrupt, inject, flag, log, callback, none) and 6 presets (companion, chatbot, moderation, strict, shadow, museum). Route to a verified helpline, human moderator, teacher, workplace support, or your own escalation path. One line of code.</p>
     </div>
     <div class="feature">
       <div class="tag tag-tool">Developer Tool</div>
       <h3>AI Prompt Override</h3>
       <p>Generates system prompt injections that tell your LLM to stop normal behavior and show crisis resources. Works with any AI provider.</p>
+    </div>
+    <div class="feature">
+      <div class="tag tag-tool">Moderation</div>
+      <h3>Hate Speech and Threat Routing</h3>
+      <p>Flags hate, targeted abuse, threats, and harassment separately from crisis support, so a platform can manage harmful chat without treating every safety issue as a mental-health event.</p>
+    </div>
+    <div class="feature">
+      <div class="tag tag-standard">Sovereign</div>
+      <h3>Privacy by Design</h3>
+      <p>SafeChat can run locally, offline, or inside an organisation's own environment. The default posture is data minimisation: act on safety signals without centralising private conversations.</p>
     </div>
     <div class="feature">
       <div class="tag tag-tool">Developer Tool</div>
@@ -676,33 +698,98 @@
 
 <hr class="divider">
 
-<!-- Live Demo -->
-<div class="section">
-  <h2>Try It</h2>
-  <p class="section-sub">Type anything below. Detection runs locally in your browser — nothing is sent anywhere.</p>
+<!-- Full Demo -->
+<div class="section" id="demo">
+  <h2>Full Demo</h2>
+  <p class="section-sub">The Detection Inspector is the main demo. It shows crisis signals, hate-speech and threat moderation, subtle multi-turn accumulation, source-linked rationale, and the live routing state. Detection runs locally in your browser.</p>
   <div class="demo-box">
-    <input type="text" id="demo-input" placeholder="Type a message to test crisis detection..." autocomplete="off">
-    <div id="demo-result" class="demo-result level-none">Level: none — no crisis signals detected</div>
+    <div class="demo-intro">
+      <strong>Try different scenarios and watch the routing state change.</strong>
+      <span>The inspector makes SafeChat transparent: what it matched, why it matched, whether the signal is crisis support or moderation, and whether the system should stay quiet, show resources, alert a human, or follow a custom policy.</span>
+    </div>
+    <div class="demo-frame-wrap">
+      <iframe class="demo-frame" src="./inspector.html" title="SafeChat Detection Inspector"></iframe>
+    </div>
     <div class="demo-actions">
-      <button type="button" id="demo-add">Add message to session</button>
-      <button type="button" id="demo-reset">Reset session</button>
+      <a href="./inspector.html" class="btn btn-primary">Open Inspector Full Screen</a>
+      <a href="./popup.html" class="btn btn-secondary">Open Crisis Popup</a>
+      <a href="../docs/SafeChat-Partner-Overview.docx" class="btn btn-secondary">Partner Overview</a>
     </div>
-    <div id="demo-session" class="demo-session">Session: 0 subtle signals, weight 0/4 toward LOW escalation.</div>
-    <div class="demo-examples" aria-label="Demo examples">
-      <button type="button" data-demo-value="I feel hopeless">Low distress</button>
-      <button type="button" data-demo-value="I wish I could go to sleep and never wake up">C-SSRS signal</button>
-      <button type="button" data-demo-value="I can't keep myself safe tonight">Self-safety</button>
-      <button type="button" data-demo-value="Nobody will miss me">Passive ideation</button>
-      <button type="button" data-demo-value="I might self delete">Slang</button>
-      <button type="button" data-demo-value="I want to dissapear forever">Misspelling</button>
-      <button type="button" data-demo-value="I want to hurt you">Threat</button>
-      <button type="button" data-demo-value="I haven't left my room in days">Withdrawal</button>
-      <button type="button" data-demo-value="I can't sleep again">Sleep disruption</button>
-      <button type="button" data-demo-value="Nothing is fun anymore">Anhedonia</button>
-      <button type="button" data-demo-value="I can't imagine a future for myself">Future loss</button>
-      <button type="button" data-demo-value="What is the highest bridge in the city?">Method query (3)</button>
-      <button type="button" data-demo-value="Everything is piling up">Overwhelm (+1)</button>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- Job chooser -->
+<div class="section" id="jobs">
+  <h2>Choose SafeChat's Job</h2>
+  <p class="section-sub">SafeChat is not locked to one use case. You choose what job it performs by selecting the scenario, trigger families, response mode, escalation path, and privacy boundary.</p>
+
+  <div class="job-grid">
+    <div class="job-card">
+      <div class="tag tag-free">Crisis Support</div>
+      <h3>Route distress to help</h3>
+      <p>Use this when the priority is self-harm, suicidal ideation, acute distress, or repeated subtle signals over time.</p>
+      <div class="job-list">
+        <span>Job: detect distress and show local resources.</span>
+        <span>Route: crisis popup, helpline, trusted human, or clinical pathway.</span>
+        <span>Privacy: do not store message text by default.</span>
+      </div>
     </div>
+    <div class="job-card">
+      <div class="tag tag-tool">Moderation</div>
+      <h3>Manage hate, abuse, and threats</h3>
+      <p>Use this when the platform needs to identify harmful chat without confusing abuse moderation with mental-health support.</p>
+      <div class="job-list">
+        <span>Job: flag hate speech, harassment, and targeted threats.</span>
+        <span>Route: moderator queue, warning, block, callback, or audit flag.</span>
+        <span>Privacy: store only the minimum evidence your policy requires.</span>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="tag tag-standard">Education</div>
+      <h3>Support students without spying</h3>
+      <p>Use this for schools, universities, and learning tools where private student conversations should not become surveillance data.</p>
+      <div class="job-list">
+        <span>Job: detect support needs, bullying risk, or escalation points.</span>
+        <span>Route: student wellbeing, safeguarding, or crisis support.</span>
+        <span>Privacy: keep routine conversation private; escalate only clear triggers.</span>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="tag tag-standard">Workplace</div>
+      <h3>Duty of care without surveillance</h3>
+      <p>Use this for employee tools, internal copilots, and workplace chat where trust matters as much as risk management.</p>
+      <div class="job-list">
+        <span>Job: recognise distress, threats, or harmful conduct.</span>
+        <span>Route: EAP, HR policy, manager escalation, or anonymous support.</span>
+        <span>Privacy: local or sovereign deployment with transparent retention rules.</span>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="tag tag-research">AI Companion</div>
+      <h3>Interrupt unsafe AI behaviour</h3>
+      <p>Use this when a chatbot must stop normal replies and move into a safer support flow when risk appears.</p>
+      <div class="job-list">
+        <span>Job: override unsafe continuation and inject safer instructions.</span>
+        <span>Route: resources, human support, custom callback, or no automated reply.</span>
+        <span>Privacy: run on-device or inside the host app boundary.</span>
+      </div>
+    </div>
+    <div class="job-card">
+      <div class="tag tag-free">Sovereign</div>
+      <h3>Run under local control</h3>
+      <p>Use this when the organisation cannot or should not send sensitive chat to external safety APIs.</p>
+      <div class="job-list">
+        <span>Job: local safety classification and routing.</span>
+        <span>Route: internal support systems, local helplines, or offline PWA.</span>
+        <span>Privacy: no routine central collection of private conversation text.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legal-disclaimer">
+    <strong>How the job is edited:</strong> integrators choose a SafeChat preset, enable or disable crisis, moderation, subtle-signal, semantic, and classifier layers, set LOW and HIGH routing thresholds, and decide what each level does: interrupt, inject, flag, log, callback, or stay silent. The inspector is used to test those choices before deployment.
   </div>
 </div>
 
@@ -868,146 +955,7 @@
   <p style="margin-top:10px;font-size:10px;color:rgba(255,255,255,0.15);">v1.3.0 &middot; BSL-1.1 &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/docs/legal-disclaimer.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Legal</a> &middot; <a href="https://github.com/rob-e-graham/safechat/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.2);">Changelog</a></p>
 </footer>
 
-<!-- Detection engine (inline for demo) -->
-<script src="../src/browser.js"></script>
 <script>
-  var input = document.getElementById('demo-input');
-  var result = document.getElementById('demo-result');
-  var addButton = document.getElementById('demo-add');
-  var resetButton = document.getElementById('demo-reset');
-  var sessionStatus = document.getElementById('demo-session');
-  var demoTracker = Safechat.ConversationTracker ? new Safechat.ConversationTracker() : null;
-  var lastAlertLevel = 'none';
-  var alertTimer = null;
-
-  function scheduleSafetyUI(level) {
-    if (level === 'none') {
-      clearTimeout(alertTimer);
-      lastAlertLevel = 'none';
-      return;
-    }
-
-    if (level === lastAlertLevel) return;
-    lastAlertLevel = level;
-    clearTimeout(alertTimer);
-
-    alertTimer = setTimeout(function() {
-      if (level === 'high') {
-        var existingBanner = document.getElementById('safechat-banner');
-        if (existingBanner) existingBanner.remove();
-        Safechat.showModal(Safechat.locateCountry() || 'US');
-      } else if (level === 'low') {
-        Safechat.showBanner({
-          country: Safechat.locateCountry() || 'US',
-          message: 'SafeChat found a distress signal in this demo.'
-        });
-      }
-    }, 350);
-  }
-
-  function formatCategories(categories) {
-    if (!categories || categories.length === 0) return 'none';
-    return categories.map(function(cat) { return cat.replace(/_/g, ' '); }).join(', ');
-  }
-
-  function updateDemoSession() {
-    if (!demoTracker || !sessionStatus) return;
-    var summary = demoTracker.summary();
-    sessionStatus.textContent =
-      'Session: ' + summary.signalCount + ' subtle signal' + (summary.signalCount === 1 ? '' : 's') +
-      ', weight ' + summary.totalWeight + '/' + summary.thresholdLow +
-      ' toward LOW escalation. Categories: ' + formatCategories(summary.categories) + '.';
-  }
-
-  function formatReviewedEvidence(reviewed) {
-    if (!reviewed || reviewed.level === 'none') return '';
-    var source = reviewed.source || {};
-    var label = source.shortName || reviewed.sourceId || 'reviewed source';
-    var family = reviewed.family ? reviewed.family.replace(/_/g, ' ') : 'signal family';
-    return ' Reviewed source: ' + label + ' / ' + family + '.';
-  }
-
-  function renderDemo(trackMessage) {
-    var text = input.value || '';
-    var direct = Safechat.detect(text);
-    var reviewed = Safechat.detectReviewed ? Safechat.detectReviewed(text) : { level: 'none' };
-    var moderation = Safechat.detectModeration ? Safechat.detectModeration(text) : { level: 'none', category: null, matched: null };
-    var subtle = Safechat.detectSubtle ? Safechat.detectSubtle(text) : [];
-    var tracked = null;
-    var level = direct.level;
-
-    if (trackMessage && demoTracker && text.trim()) {
-      tracked = demoTracker.process(text);
-      level = tracked.level;
-      updateDemoSession();
-    }
-
-    if (!text.trim()) {
-      result.className = 'demo-result level-none';
-      result.textContent = 'Level: none — no crisis signals detected';
-      scheduleSafetyUI('none');
-      return;
-    }
-
-    if (level === 'high') {
-      result.className = 'demo-result level-high';
-      result.textContent = tracked && tracked.accumulated
-        ? 'Level: HIGH — accumulated subtle crisis signals. Session weight: ' + tracked.sessionWeight + '.'
-        : 'Level: HIGH — crisis signal detected: "' + direct.matched + '".' + formatReviewedEvidence(reviewed);
-    } else if (level === 'low') {
-      result.className = 'demo-result level-low';
-      result.textContent = tracked && tracked.accumulated
-        ? 'Level: LOW — accumulated subtle distress. Session weight: ' + tracked.sessionWeight + '. Categories: ' + formatCategories(tracked.sessionCategories) + '.'
-        : 'Level: LOW — distress signal detected: "' + direct.matched + '".' + formatReviewedEvidence(reviewed);
-    } else if (subtle.length > 0) {
-      result.className = 'demo-result level-subtle';
-      result.textContent =
-        'Subtle signal observed — ' + subtle.map(function(hit) {
-          return hit.category.replace(/_/g, ' ') + ' (' + hit.weight + ')';
-        }).join(', ') + '. Not a crisis trigger on its own; add messages to see session accumulation.';
-    } else if (moderation.level !== 'none') {
-      result.className = 'demo-result level-moderation';
-      result.textContent =
-        'Moderation: ' + moderation.level.toUpperCase() + ' ' + moderation.category +
-        ' signal detected: "' + moderation.matched + '". This is separate from crisis-resource routing.';
-    } else {
-      result.className = 'demo-result level-none';
-      result.textContent = 'Level: none — no crisis signals detected';
-    }
-    scheduleSafetyUI(level);
-  }
-
-  input.addEventListener('input', function() {
-    renderDemo(false);
-  });
-
-  input.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      renderDemo(true);
-    }
-  });
-
-  addButton.addEventListener('click', function() {
-    renderDemo(true);
-  });
-
-  resetButton.addEventListener('click', function() {
-    if (demoTracker) demoTracker.reset();
-    updateDemoSession();
-    renderDemo(false);
-  });
-
-  document.querySelectorAll('[data-demo-value]').forEach(function(button) {
-    button.addEventListener('click', function() {
-      input.value = button.getAttribute('data-demo-value') || '';
-      renderDemo(false);
-      input.focus();
-    });
-  });
-
-  updateDemoSession();
-
   // Cross-origin download handler — fetch as blob then trigger save
   document.querySelectorAll('.dl-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
