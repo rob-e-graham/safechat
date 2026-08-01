@@ -3,11 +3,12 @@
 </p>
 
 <h1 align="center">SafeChat</h1>
-<h3 align="center">International Chat Safety Protocol</h3>
+<h3 align="center">Sovereign Chat Safety Protocol</h3>
 
 <p align="center">
-  Source-available crisis safety infrastructure for AI apps.<br>
-  Detects distress, finds local help. Zero tracking. Works offline.
+  Source-available, sovereign safety layer for AI chat.<br>
+  Monitors both the user and the AI's own responses — for crisis, hate, and threats —<br>
+  and escalates to a human. Zero tracking. Works offline.
 </p>
 
 <p align="center">
@@ -35,7 +36,7 @@
 
 ## What is SafeChat?
 
-SafeChat is an **international register and toolkit for chat safety protocol**. Free for everyone. Built for developers, health professionals, and communities.
+SafeChat is a **sovereign safety layer for AI chat** — covering crisis support, hate-speech and threat moderation, and oversight of the AI's own responses, with a human always in the loop. Free for everyone. Built for developers, health professionals, and communities.
 
 - **Crisis Detection** — Regex-based detection runs locally. No API calls. No data leaves the device. Catches misspellings, text-speak, indirect warning signs, and passive suicidality.
 - **Geo-Location (No GPS)** — Finds the user's country from timezone and locale. No permissions needed. 7-layer cascade.
@@ -43,6 +44,7 @@ SafeChat is an **international register and toolkit for chat safety protocol**. 
 - **AI Prompt Override** — System prompt injections that tell your LLM to show crisis resources. Works with any AI provider.
 - **Drop-in UI** — Modal, banner, and full-page popup. One script tag. PWA-capable. Works offline.
 - **Configurable Routing** — Verified helplines by default, or hand off to a human moderator, safeguarding lead, or your own escalation path — the deployment decides where a signal goes.
+- **AI Output Oversight** — The same local detection runs on any text, including the model's *own* responses. Monitor your chatbot's output for unsafe, harmful, or off-policy content and escalate it to the human in charge — sovereign oversight for any LLM you deploy.
 - **Safety-oriented** — Designed to support crisis-routing implementations and informed by VERA-MH and Samaritans guidance; compliance and clinical suitability remain the integrator's responsibility.
 
 ---
